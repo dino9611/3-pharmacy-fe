@@ -48,7 +48,7 @@ const LandingPage = () => {
                         <ColorButton2 variant="text" sx={{
                             
                         }} >
-                            Login
+                            Login Up
                         </ColorButton2>
                         <ColorButton variant="contained" onClick={handleOpen} >
                             Sign Up
