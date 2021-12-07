@@ -15,7 +15,7 @@ const getRawMaterialsDebounce = (async (dispatch, API_URL, page, limit) => {
     API_URL + `/raw_material/?page=${page}&limit=${limit}`
   );
   dispatch(setRawMaterials(data.result));
-}).debouncify(1000);
+}).debouncify(250);
 export const getRawMaterials = (page, limit) => {
   return (dispatch, getState, API_URL) => {
     getRawMaterialsDebounce(dispatch, API_URL, page, limit);
