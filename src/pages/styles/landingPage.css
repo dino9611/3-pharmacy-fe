@@ -25,3 +25,7 @@
     width: 100%;
     max-height: 15rem;
 }
+
+.shop-bttn div:last-child{
+    text-align: center;
+}
