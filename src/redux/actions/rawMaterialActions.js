@@ -10,6 +10,20 @@ const setRawMaterials = (payload) => {
   };
 };
 
+// ! CREATE
+const addRawMaterialDebounce = (async (dispatch, API_URL, input) => {
+  // console.log(input);
+  await axios.post(API_URL + '/raw_material', input);
+  // const { data } = await axios.post(API_URL + '/raw_material', input);
+  // console.log(data);
+}).debouncify(250);
+export const addRawMaterial = (input) => {
+  return (dispatch, getState, API_URL) => {
+    addRawMaterialDebounce(dispatch, API_URL, input);
+  };
+};
+
+// ! READ
 const getRawMaterialsDebounce = (async (dispatch, API_URL, page, limit) => {
   const { data } = await axios.get(
     API_URL + `/raw_material/?page=${page}&limit=${limit}`
@@ -21,3 +35,5 @@ export const getRawMaterials = (page, limit) => {
     getRawMaterialsDebounce(dispatch, API_URL, page, limit);
   };
 };
+
+// ! UPDATE
