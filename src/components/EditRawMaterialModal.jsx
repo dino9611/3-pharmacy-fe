@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -50,23 +50,23 @@ const CssTextField = styled(TextField)({
   },
 });
 
-const EditModal = ({ title, open, handleClose, setOpen }) => {
+const EditModal = ({
+  title,
+  initInput,
+  input,
+  setinput,
+  open,
+  setOpen,
+  handleClose,
+}) => {
   const dispatch = useDispatch();
-
-  const [input, setinput] = useState({
-    materialName: '',
-    bottles: '',
-    unitPerBottle: '',
-    priceRpPerUnit: '',
-    unit: '',
-  });
 
   const onCancelClick = (e) => {
     e.preventDefault();
     setOpen(false);
     setinput({
       materialName: '',
-      bottles: '',
+      bottleChange: '',
       unitPerBottle: '',
       priceRpPerUnit: '',
       unit: '',
@@ -74,9 +74,35 @@ const EditModal = ({ title, open, handleClose, setOpen }) => {
   };
   const onConfirmClick = (e) => {
     e.preventDefault();
+    const {
+      id,
+      materialName,
+      bottleChange,
+      unitPerBottle,
+      priceRpPerUnit,
+      unit,
+    } = input;
+    const init = initInput.current;
+    dispatch(
+      editRawMaterial({
+        id,
+        materialName: init.materialName !== materialName && materialName,
+        bottleChange: init.bottleChange !== bottleChange && bottleChange,
+        unitPerBottle: init.unitPerBottle !== unitPerBottle && unitPerBottle,
+        priceRpPerUnit:
+          init.priceRpPerUnit !== priceRpPerUnit && priceRpPerUnit,
+        unit: init.unit !== unit && unit,
+      })
+    );
     setOpen(false);
-    dispatch(editRawMaterial(input));
-    // window.location.reload(false);
+    setinput({
+      materialName: '',
+      bottleChange: '',
+      unitPerBottle: '',
+      priceRpPerUnit: '',
+      unit: '',
+    });
+    window.location.reload(false);
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });
@@ -111,12 +137,12 @@ const EditModal = ({ title, open, handleClose, setOpen }) => {
             sx={{ mt: 1 }}
           />
           <CssTextField
-            name='bottles'
-            value={input.bottles}
+            name='bottleChange'
+            value={input.bottleChange}
             onChange={inputHandler}
             fullWidth
             type='number'
-            label='bottles'
+            label='bottle change'
             id='custom-css-outlined-input'
             sx={{ mt: 1 }}
           />

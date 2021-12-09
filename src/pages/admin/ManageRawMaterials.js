@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRawMaterials } from '../../redux/actions/rawMaterialActions';
 // ? components
 import CreateModal from '../../components/CreateRawMaterialModal';
+import EditModal from '../../components/EditRawMaterialModal';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -98,12 +99,24 @@ TablePaginationActions.propTypes = {
 
 export default function RawMaterialsTable() {
   const dispatch = useDispatch();
+  // * pagination states
   const rows = useSelector((state) => state.rawMaterialReducers);
-
-  const [modalIsOpen, setmodalIsOpen] = React.useState(false);
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // * modal states
+  const [editModalIsOpen, seteditModalIsOpen] = React.useState(false);
+  const [modalIsOpen, setmodalIsOpen] = React.useState(false);
+
+  const [input, setinput] = React.useState({
+    materialName: '',
+    bottleChange: '',
+    bottles: '',
+    unitPerBottle: '',
+    priceRpPerUnit: '',
+    unit: '',
+  });
+  const initInput = React.useRef(null);
 
   React.useEffect(() => {
     dispatch(getRawMaterials(page + 1, rowsPerPage));
@@ -124,8 +137,24 @@ export default function RawMaterialsTable() {
     setPage(0);
   };
 
-  const handleRowDoubleClick = (i, id) => {
-    console.log(i, id);
+  const handleRowDoubleClick = (row) => {
+    const { id, materialName, unitPerBottle, priceRpPerUnit, unit } = row;
+    initInput.current = {
+      materialName,
+      bottleChange: 0,
+      unitPerBottle,
+      priceRpPerUnit,
+      unit,
+    };
+    setinput({
+      id,
+      materialName,
+      bottleChange: 0,
+      unitPerBottle,
+      priceRpPerUnit,
+      unit,
+    });
+    seteditModalIsOpen(true);
     // update raw_material based on id of the element with index i in rows array
     // get id of raw_material in rows array and get the single
     // replace element of index i in rows array with the updated raw_material
@@ -133,11 +162,19 @@ export default function RawMaterialsTable() {
 
   return (
     <>
+      <EditModal
+        title='Edit Raw Material'
+        initInput={initInput}
+        input={input}
+        setinput={setinput}
+        open={editModalIsOpen}
+        setOpen={seteditModalIsOpen}
+      />
       <CreateModal
         title='Add Raw Material'
         open={modalIsOpen}
         setOpen={setmodalIsOpen}
-      ></CreateModal>
+      />
       <TableContainer elevation={12} component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
           <TableHead>
@@ -146,6 +183,7 @@ export default function RawMaterialsTable() {
                 raw material name
               </TableCell>
               <TableCell align='right'>inventory</TableCell>
+              <TableCell align='right'>unit per bottle</TableCell>
               <TableCell align='right'>price per bottle</TableCell>
             </TableRow>
           </TableHead>
@@ -154,10 +192,10 @@ export default function RawMaterialsTable() {
               // * for frontend pagination
               // (rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map
               // * for backend pagination
-              rows.map((row, i) => (
+              rows.map((row) => (
                 <TableRow
                   className=' hover:bg-gray-200 cursor-pointer'
-                  onDoubleClick={() => handleRowDoubleClick(i, row.id)}
+                  onDoubleClick={() => handleRowDoubleClick(row)}
                   key={row.id}
                 >
                   <TableCell component='th' scope='row'>
@@ -172,6 +210,9 @@ export default function RawMaterialsTable() {
                     )} bottles ${row.inventory % row.unitPerBottle} ${
                       row.unit
                     }`}
+                  </TableCell>
+                  <TableCell align='right'>
+                    {`${row.unitPerBottle} ${row.unit} per bottle`}
                   </TableCell>
                   <TableCell align='right'>
                     {`${(row.priceRpPerUnit * row.unitPerBottle).toLocaleString(

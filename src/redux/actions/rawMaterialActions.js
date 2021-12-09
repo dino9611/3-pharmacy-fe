@@ -37,3 +37,12 @@ export const getRawMaterials = (page, limit) => {
 };
 
 // ! UPDATE
+const editRawMaterialDebounce = (async (dispatch, API_URL, input) => {
+  await axios.patch(API_URL + `/raw_material/${input.id}`, input);
+}).debouncify(250);
+export const editRawMaterial = (input) => {
+  return (dispatch, getState, API_URL) => {
+    console.log(input);
+    editRawMaterialDebounce(dispatch, API_URL, input);
+  };
+};
