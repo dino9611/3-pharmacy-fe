@@ -175,7 +175,11 @@ export default function RawMaterialsTable() {
         open={modalIsOpen}
         setOpen={setmodalIsOpen}
       />
-      <TableContainer elevation={12} component={Paper}>
+      <TableContainer
+        sx={{ width: 3 / 4, top: 15, right: 15, position: 'absolute' }}
+        elevation={12}
+        component={Paper}
+      >
         <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
           <TableHead>
             <TableRow>
@@ -235,7 +239,7 @@ export default function RawMaterialsTable() {
               <TableCell>
                 <button
                   onClick={() => setmodalIsOpen(!modalIsOpen)}
-                  className='btn bg-primary text-white hover:bg-secondary transition-colors'
+                  className='btn bg-third text-white hover:bg-primary-450 transition-colors'
                 >
                   Add New Raw Material
                 </button>

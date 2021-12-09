@@ -1,19 +1,17 @@
 // ? css
 import './App.css';
+// ? react-router-dom
+import { Routes, Route } from 'react-router-dom';
 // ? pages
-import ManageRawMaterials from './pages/admin/ManageRawMaterials';
-// import ManageProducts from './pages/admin/ManageProducts';
-
-import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import Admin from './pages/admin/AdminDashboard';
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path={'/'} element={<LandingPage />} />
-        <Route path={'/raw_material'} element={<ManageRawMaterials />} />
-        {/* <Route path={'/products'} element={<ManageProducts />} /> */}
+        <Route path={'/admin/*'} element={<Admin />} />
       </Routes>
     </div>
   );
