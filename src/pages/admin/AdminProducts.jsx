@@ -11,6 +11,7 @@ import axios from 'axios';
 import { API_URL } from '../../constants/api';
 import EmptyProducts from './assets/empty-products.svg'
 import AdminNavbar from '../../components/AdminNavbar';
+import { toRupiah } from '../../helpers/toRupiah';
 
 const AdminProducts = () => {
     // state product
@@ -99,7 +100,7 @@ const AdminProducts = () => {
                                             <TableCell component="th" scope="row">
                                                 {row.productName}
                                             </TableCell>
-                                            <TableCell align="right">{row.productPriceRp}</TableCell>
+                                            <TableCell align="right">{toRupiah(row.productPriceRp)}</TableCell>
                                             <TableCell align="right">{row.stock}</TableCell>
                                             <TableCell align="right">{row.imagePath}</TableCell>
                                             <TableCell align="right">{row.description}</TableCell>

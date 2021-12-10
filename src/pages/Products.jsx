@@ -18,6 +18,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { toRupiah } from '../helpers/toRupiah';
+import Footer from '../components/Footer';
 
 // Modal style
 const style = {
@@ -247,15 +248,7 @@ const Products = () => {
                 <div className="mb-10 w-max mx-auto">
                     <Pagination count={Math.ceil(products.length / 8)} page={page} onChange={handleChange} />
                 </div>
-                <div className="h-72 w-full bg-green-dark flex">
-                    <h1 className="footer-font-style w-1/4 pt-10 pl-20 ">Tokobat</h1>
-                    <div className="pt-10 pl-20">
-                        <h1 className="font-bold text-light-light mb-4">Contact us</h1>
-                        <p className="text-light-light">hahaha@mail</p>
-                        <p className="text-light-light">089888989</p>
-                        <p className="text-light-light">Jl. hahahhahaha</p>
-                    </div>
-                </div>
+                <Footer />
             </div>
         </div>
     )
