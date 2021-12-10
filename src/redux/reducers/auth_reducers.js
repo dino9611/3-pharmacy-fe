@@ -1,5 +1,18 @@
 const initial_state = {
+    address: "",
+    avatar: "",
+    birthdate: "",
+    createdAt: "",
+    email: "",
+    firstName: "",
+    gender: "",
     id: 0,
+    isVerified: 0,
+    lastName: "",
+    role: "",
+    updatedAt: "",
+    username: "",
+    isLogin: false
 }
 
 export const authReducers = (state = initial_state, action) => {
