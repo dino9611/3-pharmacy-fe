@@ -5,15 +5,20 @@ import Logo1 from "./Asset/Landingpage1.svg"
 import Logo2 from "./Asset/Landingpage2.svg"
 import Button from '@mui/material/Button';
 import Register from "../components/Register";
+import ForgetPass from "../components/ForgetPassword";
 
 const LandingPage = () => {
-
 
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false)
-    
-    
+
+    const [openDialog, setopenDialog] = useState(false)
+    const handleopenDialog = () => {
+        setOpen(false)
+        setopenDialog(true)
+    }
+    const handlecloseDialog = () => setopenDialog(false)
 
     const ColorButton = styled(Button)(({ theme }) => ({
         borderRadius: 16,
@@ -36,11 +41,12 @@ const LandingPage = () => {
 
     return (
         <div>
-            <Register setOpen={setOpen} open={open} handleClose={handleClose}/>
+            <ForgetPass setopenDialog={setopenDialog} openDialog={openDialog} handlecloseDialog={handlecloseDialog} />
+            <Register setOpen={setOpen} open={open} handleClose={handleClose} handleopenDialog={handleopenDialog}/>
             <div className="top-cont container px-10">
                 <div className="flex justify-between items-center pt-3 pb-3 ">
                     <div className="flex gap-20 items-center">
-                        <div className="logo-uniqfont logo-set">Tokobat</div>
+                        <div className="logo-uniqfont logo-set text-cCol ">Tokobat</div>
                         <div>Beranda</div>
                         <div>Obat</div>
                     </div>
@@ -66,7 +72,7 @@ const LandingPage = () => {
                 </div>
                 
             </div>
-            <div className=" flex justify-evenly items-center pt-8 container">
+            <div className=" flex justify-evenly items-center pt-8 ">
                     <div className="img-cont">
                         <img src={Logo2} alt="Default"className="image-2" />
                     </div>

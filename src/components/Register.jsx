@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -13,8 +13,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import axios from 'axios';
 import { API_URL } from '../constants/api';
 import Swal from 'sweetalert2'
-// import withReactContent from 'sweetalert2-react-content'
 import {toast} from 'react-toastify'
+import Link from '@mui/material/Link';
 
 const style = {
     position: 'absolute',
@@ -57,19 +57,16 @@ const CssTextField = styled(TextField)({
     },
 });
 // const MySwal = withReactContent(Swal)
-const Register = ({open, handleClose, setOpen}) => {
+const Register = ({open, handleClose, setOpen, handleopenDialog}) => {
 
-    //! ini dibawah taro dihalaman lain.
-    // const [open, setOpen] = useState(false)
-    // const handleOpen = () => setOpen(true);
-    // const handleClose = () => setOpen(false);
-    // <Button onClick={handleOpen}>Open modal</Button>
-    // <Register open={open} handleClose={handleClose}/>
     const [mistakeName, setmistakeName] = useState(false)
     const [mistakeEmail, setmistakeEmail] = useState(false)
     const [mistakePassword, setmistakePassword] = useState(false)
     const [mistakeFirst, setmistakeFirst] = useState(false)
     const [passwordError, setpasswordError] = useState("")
+    // const [usernameError, setusernameError] = useState("Username Harap Diisi")
+    // const [emailError, setemailError] = useState("")
+    const [errors, setErrors] = useState([])
     const [showPassword, setshowPassword] = useState(false)
     const [addAccount, setaddAccount] = useState({
         username: "",
@@ -85,15 +82,15 @@ const Register = ({open, handleClose, setOpen}) => {
     const regexCaps = new RegExp("^(?=.*[A-Z])")
     const regexLow = new  RegExp("^(?=.*[a-z])")
     const regexNumb = new RegExp("^(?=.*[0-9])")
+    const regexSpace = new RegExp("^(?!.*?[\\s])")
+    const regexEmail = new RegExp("^(?=.*?[@])")
+    // const regexSymbol = new RegExp("^(?!.*?[#?!@$%^&*}{:;])")
     // const passRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})")
 
 
     const handleShowPassword = () => {
         setshowPassword(!showPassword)
     }
-    // useEffect (() => {
-
-    // }, [passwordError])
     const formChecker = () => {
         let {username, email, password, firstName} = addAccount
         setmistakeName(username ? false : true)
@@ -101,46 +98,66 @@ const Register = ({open, handleClose, setOpen}) => {
         setmistakeEmail(email ? false : true)
         setmistakeFirst(firstName ? false : true)
     }
-
+    
+    const checkpass = (pass) => {
+        let arr = [{func : regexChar, message : "6 Character Minimum"}, {func : regexCaps, message: "Password Must Have Uppercase"}, {func : regexLow, message: "Password Must Have Lowercase"}, {func : regexNumb, message: "Password Must Have Number"}, {func: regexSpace, message: "Password Cannot Have Spaces"}]
+        for (let i = 0 ; i < arr.length ; i++){
+            if (!arr[i].func.test(pass)){
+                setmistakePassword(true)
+                setpasswordError(arr[i].message)
+                return arr[i].message
+            }
+        }
+        return ""
+    }
 
     const passwordChecker = () => {
         let {username,email,password, retype, firstName} = addAccount
-        // let passRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})")
+        //! Intinya password Minimal ada 6 Character, Capital,Lowercase,Number dan TIDAK BOLEH ada spasi
+        //! Email harus ada @
+        //! error akan dipush ke array
+        let arr = []
         if (password && retype){
-            if (regexChar.test(password)){
-                if (regexCaps.test(password)){
-                    if(regexLow.test(password)){
-                        if(regexNumb.test(password)){
-                            if(password === retype){
-                                if(username && email && password && retype && firstName){
-                                    registerHandler()
-                                }else {
-                                    return
-                                }
-                            }else{
-                                setmistakePassword(true)
-                                setpasswordError("Password Tidak Sama")
-                            }
-                        }else {
-                            setmistakePassword(true)
-                            setpasswordError("Password Harus ada Minimal 1 Angka")
-                        }
-                    }else {
-                        setmistakePassword(true)
-                        setpasswordError("Password Harus ada Minimal 1 Lower Case")
-                    }
-                }else {
-                    setmistakePassword(true)
-                    setpasswordError("Password Harus ada Minimal 1 Capital")
-                }
-            }else {
+            if (checkpass(password)){
+                arr[0] = checkpass(password)
                 setmistakePassword(true)
-                setpasswordError("Karakter Minimal 6 Character")
             }
         }else {
+            arr[0] = "Please fill Password & Retype Password"
             setmistakePassword(true)
-            setpasswordError("Password Harap Diisi")
         }
+        if(password !== retype){
+            arr[0] = "Password Are Not the Same"
+            setmistakePassword(true)
+        }
+        if (username){
+            if (!regexChar.test(username)){
+                arr[1] = "6 Character Minimum"
+                setmistakeName(true)
+            }
+        }else {
+            arr[1] = "Please fill Username"
+            setmistakeName(true)
+        }
+        if (email){
+            if (!regexEmail.test(email)){
+                arr[2] = "Email Isnt Correct"
+                setmistakeEmail(true)
+            }
+        }else {
+            arr[2] = "Please fill Email"
+            setmistakeEmail(true)
+        }
+        if (!firstName){
+            arr[3] = "Please fill Username"
+        }
+        if (!arr.length){
+            registerHandler()
+        }else {
+            setErrors([...arr])
+            console.log(arr)
+        }
+        
     }
     const registerClick = (e) => {
         // let {username,email,password,retype,firstName} = addAccount
@@ -181,6 +198,7 @@ const Register = ({open, handleClose, setOpen}) => {
 
     return (
         <div>
+            {/* <ForgetPass setopenDialog={setopenDialog} openDialog={openDialog} handlecloseDialog={handlecloseDialog} /> */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -193,9 +211,9 @@ const Register = ({open, handleClose, setOpen}) => {
                         Register an Account
                     </Typography>
                     <CssTextField name="username" value={addAccount.username} onChange={inputHandler} fullWidth label="Username" id="custom-css-outlined-input" sx={{mt: 1}}  />
-                        <Typography display={mistakeName ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />Username Harap diisi</Typography>
+                        <Typography display={mistakeName ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />{errors[1]}</Typography>
                     <CssTextField name="email" value={addAccount.email} onChange={inputHandler} fullWidth label="Email" id="custom-css-outlined-input" sx={{mt: 1}} />
-                        <Typography display={mistakeEmail ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />Email Harap diisi</Typography>
+                        <Typography display={mistakeEmail ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />{errors[2]}</Typography>
                     <CssTextField name="password" value={addAccount.password} onChange={inputHandler} fullWidth label="Password" id="custom-css-outlined-input" sx={{mt: 1}} type={showPassword ? "text" : "password" }
                     InputProps={{
                         endAdornment: 
@@ -216,10 +234,23 @@ const Register = ({open, handleClose, setOpen}) => {
                             </InputAdornment>,
                         }}
                     />
-                        <Typography display={mistakePassword ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />{passwordError}</Typography>
+                        <Typography display={mistakePassword ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />{errors[0]}</Typography>
                     <CssTextField name="firstName" value={addAccount.firstName} onChange={inputHandler} fullWidth label="First Name" id="custom-css-outlined-input" sx={{mt: 1}} />
                         <Typography display={mistakeFirst ? "block" : "none"} color='error' sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />First Name Harap diisi</Typography>
                     <CssTextField name="lastName" value={addAccount.lastName} onChange={inputHandler} fullWidth label="Last Name" id="custom-css-outlined-input" sx={{mt: 1}} />
+                    <div className="Forgot-Register">
+                        <Link
+                            underline='hover'
+                            component="button"
+                            variant="body2"
+                            onClick={handleopenDialog}
+                            sx={{
+                                color: '#66806A'
+                            }}
+                            >
+                            Forget Password?
+                        </Link>
+                    </div>
                     <ColorButton  fullWidth variant="contained" sx={{mt:2}} size='large' onClick={registerClick} >
                             Register
                     </ColorButton>

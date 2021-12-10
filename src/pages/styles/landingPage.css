@@ -1,9 +1,11 @@
 .top-cont {
     background-color: #66806A;
     max-width: 100%;
-    max-height: 60vh;
+    max-height: 70vh;
 }
-
+.change-cont{
+    max-width: 100%;
+}
 .header-cont {
     background-color: bisque;
 }
@@ -13,19 +15,27 @@
 }
 
 .img-cont {
-    height: 15rem;
+    height: 20rem;
 }
 .image-1 {
     width: 100%;
-    max-height: 15rem;
+    max-height: 20rem;
 }
 
+.neu-change {
+    border-radius: 25px;
+    background: #66806A;
+    box-shadow:  20px 20px 60px #576d5a,
+                -20px -20px 60px #75937a;
+}
 
 .image-2 {
     width: 100%;
-    max-height: 15rem;
+    max-height: 20rem;
 }
-
+.Forgot-Register {
+    text-align: end;
+}
 .shop-bttn div:last-child{
     text-align: center;
 }
