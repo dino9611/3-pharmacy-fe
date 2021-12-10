@@ -19,12 +19,15 @@ module.exports = {
         light: {
           light: "#ffffff",
           dark: "#000000"
-        }
+        },
+        'gCol': '#e0e0e0',
+        'bCol' :'#66806A',
+        'cCol' : '#FFC286'
       }
-    },
   },
   variants: {
     extend: {},
   },
   plugins: [],
+  }
 }
