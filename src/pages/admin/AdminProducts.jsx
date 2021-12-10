@@ -54,7 +54,6 @@ const AdminProducts = () => {
 
         // search
         setSearch(search)
-        console.log(search);
 
         // paginated product list
         const paginate = async () => {
@@ -124,7 +123,7 @@ const AdminProducts = () => {
 
                 ) : (
                     <>
-                        <div className="text-center mt-24">
+                        <div className="text-center mt-24 text-green-dark">
                             <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
                             <p className="text-lg font-bold">Tidak ada produk</p>
                         </div>

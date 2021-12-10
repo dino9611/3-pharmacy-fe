@@ -23,6 +23,7 @@
     "redux-thunk": "^2.4.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.3.0",
+    "use-debounce": "^7.0.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
