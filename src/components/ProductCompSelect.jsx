@@ -45,8 +45,9 @@ export default function MultipleSelect({ input, setinput, label, options }) {
     if (prevLength.current <= value.length) {
       setOpen(true);
     } else {
-      input.compositionsAmount.pop();
-      input.compositions.pop();
+      const removeIndex = value.length - 1;
+      input.compositions.splice(removeIndex, 1);
+      input.compositionsAmount.splice(removeIndex, 1);
     }
     prevLength.current = value.length;
     setinput({
@@ -66,10 +67,15 @@ export default function MultipleSelect({ input, setinput, label, options }) {
   };
   const handleConfirm = () => {
     setOpen(false);
-    input.compositionsAmount.push(parseFloat(amount));
+    const compositionsAmount = [
+      ...input.compositionsAmount,
+      parseFloat(amount),
+    ];
+    setinput({ ...input, compositionsAmount });
     setamount(0);
   };
 
+  // console.log(input);
   return (
     <div>
       <Dialog open={open} onClose={handleCancel}>

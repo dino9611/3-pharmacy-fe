@@ -46,9 +46,9 @@ const addProductDebounce = (async (
         'Content-Type': 'multipart/form-data',
       },
     });
-    handleSuccess && handleSuccess();
+    handleSuccess !== undefined && handleSuccess();
   } catch (error) {
-    handleFail && handleFail();
+    handleFail !== undefined && handleFail();
   }
 }).debouncify(250);
 export const addProduct = (file, input, handleSuccess, handleFail) => {
