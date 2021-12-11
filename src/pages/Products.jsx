@@ -12,6 +12,7 @@ import { styled } from '@mui/material/styles';
 import { toRupiah } from '../helpers/toRupiah';
 import Footer from '../components/Footer';
 import EmptyProducts from './Asset/empty-products.svg'
+import { useDebounce } from 'use-debounce';
 
 // Modal style
 const style = {
@@ -72,6 +73,7 @@ const Products = () => {
 
     // untuk cari produk
     const [search, setSearch] = useState('')
+    const [debouncedSearch] = useDebounce(search, 1000)
     const searchHandler = (e) => {
         setSearch(e.target.value)
     }
@@ -179,7 +181,7 @@ const Products = () => {
         const offset = ((page - 1)) * 8
 
         // filter
-        setSearch(search)
+        setSearch(debouncedSearch)
         setFilter(filter)
         setKategori(kategori)
 
@@ -198,7 +200,7 @@ const Products = () => {
             }
         }
         paginated()
-    }, [page, search, filter, kategori])
+    }, [page, debouncedSearch, filter, kategori])
 
     return (
         <div>
