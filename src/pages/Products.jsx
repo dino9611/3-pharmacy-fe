@@ -13,6 +13,8 @@ import { toRupiah } from '../helpers/toRupiah';
 import Footer from '../components/Footer';
 import EmptyProducts from './Asset/empty-products.svg'
 import { useDebounce } from 'use-debounce';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 // Modal style
 const style = {
@@ -28,6 +30,9 @@ const style = {
 };
 
 const Products = () => {
+    // global state
+    const authState = useSelector(state => state.auth)
+
     // Get semua produk
     const [products, setProducts] = useState([])
 
@@ -63,12 +68,26 @@ const Products = () => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="success">Add to cart</Button>
+                        <Button size="small" color="success" onClick={addToCart}>Add to cart</Button>
                         <Button size="small" color="success" onClick={() => { productDetailsHandler(index) }}>Details</Button>
                     </CardActions>
                 </Card >
             )
         })
+    }
+
+    // add to cart
+    const addToCart = () => {
+        if (!authState.isLogin) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You need to login first!',
+                timer: 1500,
+                timerProgressBar: true
+            })
+            return
+        }
     }
 
     // untuk cari produk
