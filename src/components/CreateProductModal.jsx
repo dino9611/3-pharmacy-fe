@@ -91,7 +91,6 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
   const initialInputVal = React.useMemo(() => {
     return {
       productName: '',
-      productPriceRp: '',
       stock: '',
       description: '',
       categories: [],
@@ -111,12 +110,12 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
   const onConfirmClick = (e) => {
     e.preventDefault();
     setOpen(false);
-    dispatch(
-      addProduct(file, input, () => {
-        setinput(initialInputVal);
-        setfile(null);
-      })
-    );
+
+    const handleSuccess = () => {
+      setinput(initialInputVal);
+      setfile(null);
+    };
+    dispatch(addProduct(file, input, handleSuccess, handleSuccess));
     // window.location.reload(false);
   };
   const inputHandler = (e) =>

@@ -28,42 +28,39 @@ const addProductDebounce = (async (
   API_URL,
   file,
   input,
-  handleSuccess
+  handleSuccess,
+  handleFail
 ) => {
-  // productName: 'obat hh',
-  // stock: 11111,
-  // description: 'description',
-  // categories: [1, 2, 4], // array of product_category_id
-  // compositions: [
-  //   [1, 1.3],
-  //   [2, 3.1],
-  //   [3, 6.9],
-  // ], // array of [raw_material_id, amountInUnit]
-
   const { compositionsAmount } = input;
   input.compositions.forEach((el, i, arr) => {
     arr[i] = [el, compositionsAmount[i]];
   });
   delete input.compositionsAmount;
 
-  console.log(input);
-
   const formData = new FormData();
   formData.append('image', file);
   formData.append('data', JSON.stringify(input));
-  // const { data } = await axios.post(API_URL + `/product`, formData, {
-  await axios.post(API_URL + `/product`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  // console.log(data);
-
-  handleSuccess && handleSuccess();
+  try {
+    await axios.post(API_URL + `/product`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    handleSuccess && handleSuccess();
+  } catch (error) {
+    handleFail && handleFail();
+  }
 }).debouncify(250);
-export const addProduct = (file, input, handleSuccess) => {
+export const addProduct = (file, input, handleSuccess, handleFail) => {
   return (dispatch, getState, API_URL) => {
-    addProductDebounce(dispatch, API_URL, file, input, handleSuccess);
+    addProductDebounce(
+      dispatch,
+      API_URL,
+      file,
+      input,
+      handleSuccess,
+      handleFail
+    );
   };
 };
 

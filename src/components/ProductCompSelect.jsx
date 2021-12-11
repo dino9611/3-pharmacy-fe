@@ -53,8 +53,6 @@ export default function MultipleSelect({ input, setinput, label, options }) {
       ...input,
       compositions: value,
     });
-    // console.log(value);
-    console.log(input);
   };
 
   // * dialog
@@ -65,15 +63,11 @@ export default function MultipleSelect({ input, setinput, label, options }) {
     setOpen(false);
     input.compositions.pop();
     setamount(0);
-
-    console.log(input);
   };
   const handleConfirm = () => {
     setOpen(false);
     input.compositionsAmount.push(parseFloat(amount));
     setamount(0);
-
-    console.log(input);
   };
 
   return (
