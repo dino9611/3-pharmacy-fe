@@ -87,11 +87,18 @@ export const getProductCategories = () => {
 };
 
 // ! UPDATE
-const editProductDebounce = (async (dispatch, API_URL, input) => {
-  await axios.patch(API_URL + `/product/${input.id}`, input);
+const editProductDebounce = (async (dispatch, API_URL, file, input) => {
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('data', JSON.stringify(input));
+  await axios.patch(API_URL + '/product', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 }).debouncify(250);
-export const editProduct = (input) => {
+export const editProduct = (file, input) => {
   return (dispatch, getState, API_URL) => {
-    editProductDebounce(dispatch, API_URL, input);
+    editProductDebounce(dispatch, API_URL, file, input);
   };
 };

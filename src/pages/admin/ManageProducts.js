@@ -108,14 +108,7 @@ export default function RawMaterialsTable() {
   const [editModalIsOpen, seteditModalIsOpen] = React.useState(false);
   const [modalIsOpen, setmodalIsOpen] = React.useState(false);
 
-  const [input, setinput] = React.useState({
-    materialName: '',
-    bottleChange: '',
-    bottles: '',
-    unitPerBottle: '',
-    priceRpPerUnit: '',
-    unit: '',
-  });
+  const [input, setinput] = React.useState({ stock: '' });
   const initInput = React.useRef(null);
 
   React.useEffect(() => {

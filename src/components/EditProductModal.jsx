@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 // ? redux
 import { useDispatch } from 'react-redux';
-import { editRawMaterial } from '../redux/actions/rawMaterialActions';
+import { editProduct } from '../redux/actions/productActions';
 
 const style = {
   position: 'absolute',
@@ -60,55 +60,37 @@ const EditModal = ({
   handleClose,
 }) => {
   const dispatch = useDispatch();
+  const [file, setfile] = React.useState(null);
+  const onFileChange = (e) => {
+    if (e.target.files[0]) {
+      setfile(e.target.files[0]);
+    } else {
+      setfile(null);
+    }
+  };
 
   const onCancelClick = (e) => {
     e.preventDefault();
     setOpen(false);
-    setinput({
-      materialName: '',
-      bottleChange: '',
-      unitPerBottle: '',
-      priceRpPerUnit: '',
-      unit: '',
-    });
+    setinput({ stock: '' });
   };
   const onConfirmClick = (e) => {
     e.preventDefault();
-    const {
-      id,
-      materialName,
-      bottleChange,
-      unitPerBottle,
-      priceRpPerUnit,
-      unit,
-    } = input;
+    const { id, stock } = input;
     const init = initInput.current;
     dispatch(
-      editRawMaterial({
-        id,
-        materialName: init.materialName !== materialName && materialName,
-        bottleChange: init.bottleChange !== bottleChange && bottleChange,
-        unitPerBottle: init.unitPerBottle !== unitPerBottle && unitPerBottle,
-        priceRpPerUnit:
-          init.priceRpPerUnit !== priceRpPerUnit && priceRpPerUnit,
-        unit: init.unit !== unit && unit,
-      })
+      editProduct(file, { id, stock: init.stock !== stock && parseInt(stock) })
     );
     setOpen(false);
-    setinput({
-      materialName: '',
-      bottleChange: '',
-      unitPerBottle: '',
-      priceRpPerUnit: '',
-      unit: '',
-    });
-    window.location.reload(false);
+    setinput({ stock: '' });
+    // window.location.reload(false);
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });
 
   return (
     <div>
+      <input type='file' className='hidden' onChange={onFileChange} />
       <Modal
         open={open}
         onClose={handleClose}
@@ -128,51 +110,12 @@ const EditModal = ({
 
           {/*//! inputs */}
           <CssTextField
-            name='materialName'
-            value={input.materialName}
-            onChange={inputHandler}
-            fullWidth
-            label='raw material name'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <CssTextField
-            name='bottleChange'
-            value={input.bottleChange}
+            name='stock'
+            value={input.stock}
             onChange={inputHandler}
             fullWidth
             type='number'
-            label='bottle change'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <CssTextField
-            name='unitPerBottle'
-            value={input.unitPerBottle}
-            onChange={inputHandler}
-            fullWidth
-            type='number'
-            label='unit per bottle'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <CssTextField
-            name='priceRpPerUnit'
-            value={input.priceRpPerUnit}
-            onChange={inputHandler}
-            fullWidth
-            type='number'
-            label='price Rp per unit'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <CssTextField
-            name='unit'
-            value={input.unit}
-            onChange={inputHandler}
-            fullWidth
-            type='text'
-            label='unit'
+            label='stock'
             id='custom-css-outlined-input'
             sx={{ mt: 1 }}
           />
