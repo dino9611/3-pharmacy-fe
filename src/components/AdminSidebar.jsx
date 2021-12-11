@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function AdminSideBar() {
+export default function AdminSideBar(props) {
+  const location = useLocation();
   const [collapseShow, setCollapseShow] = React.useState('hidden');
   return (
     <>
@@ -20,7 +21,7 @@ export default function AdminSideBar() {
             className=' text-white md:block text-left md:pb-2 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0'
             to='/'
           >
-            Tokobat
+            Tokobat Admin
           </Link>
           {/* User */}
           {/* <ul className='md:hidden items-center flex flex-wrap list-none'>
@@ -75,137 +76,51 @@ export default function AdminSideBar() {
             <hr className='my-4 md:min-w-full' />
             {/* Heading */}
             <h6 className='md:min-w-full text-fourth text-xs uppercase font-bold block pt-1 pb-4 no-underline'>
-              Admin Manage
+              Manage
             </h6>
             {/* Navigation */}
 
             <ul className='md:flex-col md:min-w-full flex flex-col list-none'>
-              <li
-                className={
-                  'items-center rounded-lg ' +
-                  (window.location.href.indexOf('/admin/dashboard') !== -1 ||
-                  true
-                    ? 'bg-secondary'
-                    : '')
-                }
-              >
-                <Link
-                  className={
-                    'text-xs uppercase py-3 font-bold block ' +
-                    (window.location.href.indexOf('/admin/dashboard') !== -1 ||
-                    true
-                      ? 'text-primary-400 hover:text-primary-300'
-                      : 'text-primary-400 hover:text-primary-300')
-                  }
-                  to='/admin/dashboard'
-                >
-                  <i
-                    className={
-                      'fas fa-tv mr-2 text-sm ' +
-                      (window.location.href.indexOf('/admin/dashboard') !== -1
-                        ? 'opacity-75'
-                        : 'text-blueGray-300')
-                    }
-                  ></i>{' '}
-                  Raw Materials
-                </Link>
-              </li>
-
-              <li className='items-center'>
-                <Link
-                  className={
-                    'text-xs uppercase py-3 font-bold block ' +
-                    (window.location.href.indexOf('/admin/settings') !== -1
-                      ? 'text-lightBlue-500 hover:text-lightBlue-600'
-                      : 'text-blueGray-700 hover:text-blueGray-500')
-                  }
-                  to='/admin/settings'
-                >
-                  <i
-                    className={
-                      'fas fa-tools mr-2 text-sm ' +
-                      (window.location.href.indexOf('/admin/settings') !== -1
-                        ? 'opacity-75'
-                        : 'text-blueGray-300')
-                    }
-                  ></i>{' '}
-                  Products
-                </Link>
-              </li>
-
-              <li className='items-center'>
-                <Link
-                  className={
-                    'text-xs uppercase py-3 font-bold block ' +
-                    (window.location.href.indexOf('/admin/tables') !== -1
-                      ? 'text-lightBlue-500 hover:text-lightBlue-600'
-                      : 'text-blueGray-700 hover:text-blueGray-500')
-                  }
-                  to='/admin/tables'
-                >
-                  <i
-                    className={
-                      'fas fa-table mr-2 text-sm ' +
-                      (window.location.href.indexOf('/admin/tables') !== -1
-                        ? 'opacity-75'
-                        : 'text-blueGray-300')
-                    }
-                  ></i>{' '}
-                  Users
-                </Link>
-              </li>
-
-              <li className='items-center'>
-                <Link
-                  className={
-                    'text-xs uppercase py-3 font-bold block ' +
-                    (window.location.href.indexOf('/admin/maps') !== -1
-                      ? 'text-lightBlue-500 hover:text-lightBlue-600'
-                      : 'text-blueGray-700 hover:text-blueGray-500')
-                  }
-                  to='/admin/maps'
-                >
-                  <i
-                    className={
-                      'fas fa-map-marked mr-2 text-sm ' +
-                      (window.location.href.indexOf('/admin/maps') !== -1
-                        ? 'opacity-75'
-                        : 'text-blueGray-300')
-                    }
-                  ></i>{' '}
-                  Prescriptions
-                </Link>
-              </li>
+              <SidebarLink
+                name={'Raw Materials'}
+                pathname={'/admin/raw_materials'}
+                location={location}
+              />
+              <SidebarLink
+                name={'Products'}
+                pathname={'/admin/products'}
+                location={location}
+              />
+              <SidebarLink
+                name={'Users'}
+                pathname={'/admin/users'}
+                location={location}
+              />
+              <SidebarLink
+                name={'Prescriptions'}
+                pathname={'/admin/prescriptions'}
+                location={location}
+              />
             </ul>
-
             {/* Divider */}
             <hr className='my-4 md:min-w-full' />
+
             {/* Heading */}
             <h6 className='md:min-w-full text-fourth text-xs uppercase font-bold block pt-1 pb-4 no-underline'>
-              Admin Stats
+              Stats
             </h6>
             {/* Navigation */}
-
             <ul className='md:flex-col md:min-w-full flex flex-col list-none md:mb-4'>
-              <li className='items-center'>
-                <Link
-                  className='text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block'
-                  to='/auth/login'
-                >
-                  <i className='fas fa-fingerprint text-blueGray-400 mr-2 text-sm'></i>{' '}
-                  Stats
-                </Link>
-              </li>
-
-              <li className='items-center'>
-                <Link
-                  className='text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block'
-                  to='/auth/register'
-                >
-                  <i className='fas fa-clipboard-list text-blueGray-300 mr-2 text-sm'></i>{' '}
-                  Register
-                </Link>
-              </li>
+              <SidebarLink
+                name={'Revenue'}
+                pathname={'/admin/revenue'}
+                location={location}
+              />
+              <SidebarLink
+                name={'Sales Report'}
+                pathname={'/admin/sales_report'}
+                location={location}
+              />
             </ul>
 
             {/* Divider */}
@@ -215,31 +130,57 @@ export default function AdminSideBar() {
               History
             </h6>
             {/* Navigation */}
-
             <ul className='md:flex-col md:min-w-full flex flex-col list-none md:mb-4'>
-              <li className='items-center'>
-                <Link
-                  className='text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block'
-                  to='/landing'
-                >
-                  <i className='fas fa-newspaper text-blueGray-400 mr-2 text-sm'></i>{' '}
-                  Order History
-                </Link>
-              </li>
-
-              <li className='items-center'>
-                <Link
-                  className='text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block'
-                  to='/profile'
-                >
-                  <i className='fas fa-user-circle text-blueGray-400 mr-2 text-sm'></i>{' '}
-                  Prescription History
-                </Link>
-              </li>
+              <SidebarLink
+                name={'Raw Materials Record'}
+                pathname={'/admin/raw_materials_record'}
+                location={location}
+              />
+              <SidebarLink
+                name={'Order History'}
+                pathname={'/admin/order_history'}
+                location={location}
+              />
+              <SidebarLink
+                name={'Prescription History'}
+                pathname={'/admin/prescription_history'}
+                location={location}
+              />
             </ul>
           </div>
         </div>
       </nav>
     </>
+  );
+}
+
+function SidebarLink({ name, pathname, location }) {
+  return (
+    <li
+      className={
+        'items-center rounded-lg ' +
+        (location.pathname === pathname ? 'bg-secondary' : '')
+      }
+    >
+      <Link
+        className={
+          'text-xs uppercase py-3 font-bold block ' +
+          (location.pathname === pathname
+            ? 'text-primary-450 '
+            : 'text-secondary hover:text-white')
+        }
+        to={pathname}
+      >
+        <i
+          className={
+            'fas fa-tv mr-2 text-sm ' +
+            (location.pathname === pathname
+              ? 'opacity-75'
+              : 'text-blueGray-300')
+          }
+        ></i>{' '}
+        {name}
+      </Link>
+    </li>
   );
 }

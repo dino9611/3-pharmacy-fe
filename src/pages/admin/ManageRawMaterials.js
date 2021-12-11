@@ -23,7 +23,10 @@ import {
 } from '@mui/icons-material';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getRawMaterials } from '../../redux/actions/rawMaterialActions';
+import {
+  getRawMaterials,
+  resetState,
+} from '../../redux/actions/rawMaterialActions';
 // ? components
 import CreateModal from '../../components/CreateRawMaterialModal';
 import EditModal from '../../components/EditRawMaterialModal';
@@ -100,9 +103,9 @@ TablePaginationActions.propTypes = {
 export default function RawMaterialsTable() {
   const dispatch = useDispatch();
   // * pagination states
-  const rows = useSelector((state) => state.rawMaterialReducers);
+  const rows = useSelector((state) => state.rawMaterialReducers.rawMaterials);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(9);
 
   // * modal states
   const [editModalIsOpen, seteditModalIsOpen] = React.useState(false);
@@ -120,6 +123,7 @@ export default function RawMaterialsTable() {
 
   React.useEffect(() => {
     dispatch(getRawMaterials(page + 1, rowsPerPage));
+    return () => dispatch(resetState('rawMaterials'));
   }, [dispatch, page, rowsPerPage]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -176,7 +180,8 @@ export default function RawMaterialsTable() {
         setOpen={setmodalIsOpen}
       />
       <TableContainer
-        sx={{ width: 3 / 4, top: 15, right: 15, position: 'absolute' }}
+        // sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
+        sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
         elevation={12}
         component={Paper}
       >
@@ -211,9 +216,9 @@ export default function RawMaterialsTable() {
                   <TableCell align='right'>
                     {`${Math.floor(
                       row.inventory / row.unitPerBottle
-                    )} bottles ${row.inventory % row.unitPerBottle} ${
-                      row.unit
-                    }`}
+                    )} bottles ${(row.inventory % row.unitPerBottle).toFixed(
+                      2
+                    )} ${row.unit}`}
                   </TableCell>
                   <TableCell align='right'>
                     {`${row.unitPerBottle} ${row.unit} per bottle`}
@@ -245,7 +250,8 @@ export default function RawMaterialsTable() {
                 </button>
               </TableCell>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                // rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[5, 9]}
                 colSpan={3}
                 // * for frontend pagination
                 // count={rows.length}

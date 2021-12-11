@@ -1,5 +1,3 @@
-const colors = require('tailwindcss/colors');
-
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
@@ -21,8 +19,6 @@ module.exports = {
         secondary: '#B4C6AA',
         third: '#FFC286',
         fourth: '#FFF1AF',
-
-        ...colors,
       },
     },
   },

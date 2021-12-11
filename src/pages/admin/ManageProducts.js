@@ -23,10 +23,10 @@ import {
 } from '@mui/icons-material';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getRawMaterials } from '../../redux/actions/rawMaterialActions';
+import { getProducts, resetState } from '../../redux/actions/productActions';
 // ? components
-import CreateModal from '../../components/CreateRawMaterialModal';
-import EditModal from '../../components/EditRawMaterialModal';
+import CreateModal from '../../components/CreateProductModal';
+import EditModal from '../../components/EditProductModal';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -100,9 +100,9 @@ TablePaginationActions.propTypes = {
 export default function RawMaterialsTable() {
   const dispatch = useDispatch();
   // * pagination states
-  const rows = useSelector((state) => state.rawMaterialReducers);
+  const rows = useSelector((state) => state.productReducers.products);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(9);
 
   // * modal states
   const [editModalIsOpen, seteditModalIsOpen] = React.useState(false);
@@ -119,7 +119,8 @@ export default function RawMaterialsTable() {
   const initInput = React.useRef(null);
 
   React.useEffect(() => {
-    dispatch(getRawMaterials(page + 1, rowsPerPage));
+    dispatch(getProducts(page + 1, rowsPerPage));
+    return () => dispatch(resetState('products'));
   }, [dispatch, page, rowsPerPage]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -138,32 +139,21 @@ export default function RawMaterialsTable() {
   };
 
   const handleRowDoubleClick = (row) => {
-    const { id, materialName, unitPerBottle, priceRpPerUnit, unit } = row;
+    const { id, stock } = row;
     initInput.current = {
-      materialName,
-      bottleChange: 0,
-      unitPerBottle,
-      priceRpPerUnit,
-      unit,
+      stock,
     };
     setinput({
       id,
-      materialName,
-      bottleChange: 0,
-      unitPerBottle,
-      priceRpPerUnit,
-      unit,
+      stock,
     });
     seteditModalIsOpen(true);
-    // update raw_material based on id of the element with index i in rows array
-    // get id of raw_material in rows array and get the single
-    // replace element of index i in rows array with the updated raw_material
   };
 
   return (
     <>
       <EditModal
-        title='Edit Raw Material'
+        title='Edit Product'
         initInput={initInput}
         input={input}
         setinput={setinput}
@@ -171,12 +161,12 @@ export default function RawMaterialsTable() {
         setOpen={seteditModalIsOpen}
       />
       <CreateModal
-        title='Add Raw Material'
+        title='Add Product'
         open={modalIsOpen}
         setOpen={setmodalIsOpen}
       />
       <TableContainer
-        sx={{ width: 3 / 4, top: 15, right: 15, position: 'absolute' }}
+        sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
         elevation={12}
         component={Paper}
       >
@@ -184,11 +174,10 @@ export default function RawMaterialsTable() {
           <TableHead>
             <TableRow>
               <TableCell component='th' scope='row'>
-                raw material name
+                product name
               </TableCell>
-              <TableCell align='right'>inventory</TableCell>
-              <TableCell align='right'>unit per bottle</TableCell>
-              <TableCell align='right'>price per bottle</TableCell>
+              <TableCell align='right'>stock</TableCell>
+              <TableCell align='right'>product price</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -203,26 +192,14 @@ export default function RawMaterialsTable() {
                   key={row.id}
                 >
                   <TableCell component='th' scope='row'>
-                    {row.materialName}
+                    {row.productName}
                   </TableCell>
-                  {/* <TableCell style={{ width: 160 }} align='right'>
-                {row.inventory}
-              </TableCell> */}
+
+                  <TableCell align='right'>{row.stock}</TableCell>
                   <TableCell align='right'>
-                    {`${Math.floor(
-                      row.inventory / row.unitPerBottle
-                    )} bottles ${row.inventory % row.unitPerBottle} ${
-                      row.unit
-                    }`}
-                  </TableCell>
-                  <TableCell align='right'>
-                    {`${row.unitPerBottle} ${row.unit} per bottle`}
-                  </TableCell>
-                  <TableCell align='right'>
-                    {`${(row.priceRpPerUnit * row.unitPerBottle).toLocaleString(
-                      'en-US',
-                      { maximumFractionDigits: 2 }
-                    )} Rp`}
+                    {`${row.productPriceRp.toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })} Rp`}
                   </TableCell>
                 </TableRow>
               ))
@@ -241,11 +218,12 @@ export default function RawMaterialsTable() {
                   onClick={() => setmodalIsOpen(!modalIsOpen)}
                   className='btn bg-third text-white hover:bg-primary-450 transition-colors'
                 >
-                  Add New Raw Material
+                  Add New Product
                 </button>
               </TableCell>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                // rowsPerPageOptions={[5, 9, 25, { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[5, 9]}
                 colSpan={3}
                 // * for frontend pagination
                 // count={rows.length}

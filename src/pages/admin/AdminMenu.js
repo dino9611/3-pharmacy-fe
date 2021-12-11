@@ -3,10 +3,10 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 // ? pages
 import AdminSidebar from '../../components/AdminSidebar';
-import ManageRawMaterials from '../../pages/admin/ManageRawMaterials';
-import ManageProducts from '../../pages/admin/ManageProducts';
+import ManageRawMaterials from './ManageRawMaterials';
+import ManageProducts from './ManageProducts';
 
-export default function AdminDashboard() {
+export default function AdminMenu() {
   return (
     <>
       <AdminSidebar />

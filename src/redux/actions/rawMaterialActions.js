@@ -9,10 +9,15 @@ const setRawMaterials = (payload) => {
     payload,
   };
 };
+export const resetState = (payload) => {
+  return {
+    type: actionTypes.rawMaterial.RESET_STATE,
+    payload,
+  };
+};
 
 // ! CREATE
 const addRawMaterialDebounce = (async (dispatch, API_URL, input) => {
-  // console.log(input);
   await axios.post(API_URL + '/raw_material', input);
   // const { data } = await axios.post(API_URL + '/raw_material', input);
   // console.log(data);
@@ -42,7 +47,6 @@ const editRawMaterialDebounce = (async (dispatch, API_URL, input) => {
 }).debouncify(250);
 export const editRawMaterial = (input) => {
   return (dispatch, getState, API_URL) => {
-    console.log(input);
     editRawMaterialDebounce(dispatch, API_URL, input);
   };
 };

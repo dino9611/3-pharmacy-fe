@@ -4,14 +4,14 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 // ? pages
 import LandingPage from './pages/LandingPage';
-import Admin from './pages/admin/AdminDashboard';
+import AdminMenu from './pages/admin/AdminMenu';
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path={'/'} element={<LandingPage />} />
-        <Route path={'/admin/*'} element={<Admin />} />
+        <Route path={'/admin/*'} element={<AdminMenu />} />
       </Routes>
     </div>
   );
