@@ -12,6 +12,7 @@ import { API_URL } from '../../constants/api';
 import EmptyProducts from './assets/empty-products.svg'
 import AdminNavbar from '../../components/AdminNavbar';
 import { toRupiah } from '../../helpers/toRupiah';
+import { useDebounce } from 'use-debounce';
 
 const AdminProducts = () => {
     // state product
@@ -35,6 +36,7 @@ const AdminProducts = () => {
 
     // search
     const [search, setSearch] = useState('')
+    const [debouncedSearch] = useDebounce(search, 1000)
     const searchHandler = (e) => {
         setSearch(e.target.value)
     }
@@ -53,7 +55,7 @@ const AdminProducts = () => {
         const offset = page * rowsPerPage
 
         // search
-        setSearch(search)
+        setSearch(debouncedSearch)
 
         // paginated product list
         const paginate = async () => {
@@ -62,7 +64,7 @@ const AdminProducts = () => {
         }
         paginate()
 
-    }, [rowsPerPage, page, search])
+    }, [rowsPerPage, page, debouncedSearch])
 
     return (
         <div>
