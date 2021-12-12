@@ -1,4 +1,4 @@
 export const actionTypes = {
-  rawMaterial: { RESET_STATE: 5, SET: 1 },
-  product: { RESET_STATE: 4, SET: 2, SET_CATEGORIES: 3 },
+  rawMaterial: { RESET_STATE: 1, SET_STATE: 2 },
+  product: { SET_STATE: 2, RESET_STATE: 3 },
 };

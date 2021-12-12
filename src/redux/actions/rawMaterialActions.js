@@ -3,16 +3,17 @@ import { actionTypes } from '../action-types';
 // ? axios
 import axios from 'axios';
 
-const setRawMaterials = (payload) => {
+const setState = (propName, payload) => {
   return {
-    type: actionTypes.rawMaterial.SET,
+    type: actionTypes.rawMaterial.SET_STATE,
+    propName,
     payload,
   };
 };
-export const resetState = (payload) => {
+export const resetState = (propName) => {
   return {
     type: actionTypes.rawMaterial.RESET_STATE,
-    payload,
+    propName,
   };
 };
 
@@ -33,11 +34,29 @@ const getRawMaterialsDebounce = (async (dispatch, API_URL, page, limit) => {
   const { data } = await axios.get(
     API_URL + `/raw_material/?page=${page}&limit=${limit}`
   );
-  dispatch(setRawMaterials(data.result));
+  dispatch(setState('rawMaterials', data.result));
 }).debouncify(250);
 export const getRawMaterials = (page, limit) => {
   return (dispatch, getState, API_URL) => {
     getRawMaterialsDebounce(dispatch, API_URL, page, limit);
+  };
+};
+
+const getRawMaterialsRecordDebounce = (async (
+  dispatch,
+  API_URL,
+  page,
+  limit
+) => {
+  const { data } = await axios.get(
+    API_URL + `/raw_material/record/?page=${page}&limit=${limit}`
+  );
+  // console.log(data);
+  dispatch(setState('rawMaterialsRecord', data.result));
+}).debouncify(250);
+export const getRawMaterialsRecord = (page, limit) => {
+  return (dispatch, getState, API_URL) => {
+    getRawMaterialsRecordDebounce(dispatch, API_URL, page, limit);
   };
 };
 

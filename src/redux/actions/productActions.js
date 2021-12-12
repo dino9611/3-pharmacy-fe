@@ -3,22 +3,17 @@ import { actionTypes } from '../action-types';
 // ? axios
 import axios from 'axios';
 
-const setProducts = (payload) => {
+const setState = (propName, payload) => {
   return {
     type: actionTypes.product.SET,
+    propName,
     payload,
   };
 };
-const setProductCategories = (payload) => {
-  return {
-    type: actionTypes.product.SET_CATEGORIES,
-    payload,
-  };
-};
-export const resetState = (payload) => {
+export const resetState = (propName) => {
   return {
     type: actionTypes.product.RESET_STATE,
-    payload,
+    propName,
   };
 };
 
@@ -69,7 +64,7 @@ const getProductsDebounce = (async (dispatch, API_URL, page, limit) => {
   const { data } = await axios.get(
     API_URL + `/product/?page=${page}&limit=${limit}`
   );
-  dispatch(setProducts(data.result));
+  dispatch(setState('products', data.result));
 }).debouncify(250);
 export const getProducts = (page, limit) => {
   return (dispatch, getState, API_URL) => {
@@ -78,7 +73,7 @@ export const getProducts = (page, limit) => {
 };
 const getProductCategoriesDebounce = (async (dispatch, API_URL) => {
   const { data } = await axios.get(API_URL + '/product/category');
-  dispatch(setProductCategories(data.result));
+  dispatch(setState('categories', data.result));
 }).debouncify(250);
 export const getProductCategories = () => {
   return (dispatch, getState, API_URL) => {
