@@ -1,6 +1,12 @@
 // Uncomment this part for Development
+<<<<<<< HEAD
+const DOMAIN = 'localhost';
+const PORT = '2003';
+// const SUBDOMAIN = '3-pharmacy';
+=======
 const DOMAIN = "localhost"
 const PORT = "2003"
+>>>>>>> origin/develop-fe
 
 export const API_URL = `http://${DOMAIN}:${PORT}`;
 
