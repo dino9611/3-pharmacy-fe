@@ -190,9 +190,9 @@ export default function RawMaterialsTable() {
 
                   <TableCell align='right'>{row.stock}</TableCell>
                   <TableCell align='right'>
-                    {`${row.productPriceRp.toLocaleString('en-US', {
+                    {`Rp ${row.productPriceRp.toLocaleString('en-US', {
                       maximumFractionDigits: 2,
-                    })} Rp`}
+                    })}`}
                   </TableCell>
                 </TableRow>
               ))

@@ -224,10 +224,9 @@ export default function RawMaterialsTable() {
                     {`${row.unitPerBottle} ${row.unit} per bottle`}
                   </TableCell>
                   <TableCell align='right'>
-                    {`${(row.priceRpPerUnit * row.unitPerBottle).toLocaleString(
-                      'en-US',
-                      { maximumFractionDigits: 2 }
-                    )} Rp`}
+                    {`Rp ${(
+                      row.priceRpPerUnit * row.unitPerBottle
+                    ).toLocaleString('en-US', { maximumFractionDigits: 2 })}`}
                   </TableCell>
                 </TableRow>
               ))

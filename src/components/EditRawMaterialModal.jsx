@@ -87,7 +87,8 @@ const EditModal = ({
       editRawMaterial({
         id,
         materialName: init.materialName !== materialName && materialName,
-        bottleChange: init.bottleChange !== bottleChange && bottleChange,
+        bottleChange:
+          init.bottleChange !== bottleChange && parseInt(bottleChange),
         unitPerBottle: init.unitPerBottle !== unitPerBottle && unitPerBottle,
         priceRpPerUnit:
           init.priceRpPerUnit !== priceRpPerUnit && priceRpPerUnit,
@@ -102,7 +103,7 @@ const EditModal = ({
       priceRpPerUnit: '',
       unit: '',
     });
-    window.location.reload(false);
+    // window.location.reload(false);
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });

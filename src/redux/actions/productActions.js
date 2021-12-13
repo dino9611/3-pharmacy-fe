@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const setState = (propName, payload) => {
   return {
-    type: actionTypes.product.SET,
+    type: actionTypes.product.SET_STATE,
     propName,
     payload,
   };
