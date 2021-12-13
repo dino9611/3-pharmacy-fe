@@ -72,8 +72,8 @@ export const getProducts = (page, limit) => {
   };
 };
 const getProductCategoriesDebounce = (async (dispatch, API_URL) => {
-  const { data } = await axios.get(API_URL + '/product/category');
-  dispatch(setState('categories', data.result));
+  const { data } = await axios.get(API_URL + '/product/getcategories');
+  dispatch(setState('categories', data));
 }).debouncify(250);
 export const getProductCategories = () => {
   return (dispatch, getState, API_URL) => {
