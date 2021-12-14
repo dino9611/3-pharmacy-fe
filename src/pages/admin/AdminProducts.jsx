@@ -6,17 +6,37 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { TablePagination, TextField, Button } from '@mui/material';
+import { TablePagination, TextField, Button, Modal, Box, Typography } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../../constants/api';
 import EmptyProducts from './assets/empty-products.svg'
 import AdminNavbar from '../../components/AdminNavbar';
 import { toRupiah } from '../../helpers/toRupiah';
 import { useDebounce } from 'use-debounce';
+import CreateModal from '../../components/CreateProductModal';
+
+// Modal style
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.paper',
+    borderRadius: '15px',
+    boxShadow: 24,
+    p: 4,
+};
 
 const AdminProducts = () => {
     // state product
     const [products, setProducts] = useState([])
+
+    // modal tambah produk
+    const [addModalOpen, setAddModalOpen] = useState(false)
+    const openAddModal = () => {
+        setAddModalOpen(!addModalOpen)
+    }
 
     // state rows per page
     const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -41,11 +61,68 @@ const AdminProducts = () => {
         setSearch(e.target.value)
     }
 
+    // modal detail produk
+    const [indexProduk, setIndexProduk] = useState(-1)
+    const [openModal, setOpenModal] = useState(false)
+    const productDetailsHandler = (index) => {
+        if (index >= 0) {
+            setIndexProduk(index)
+            setOpenModal(!openModal)
+        } else {
+            setIndexProduk(-1)
+            setOpenModal(!openModal)
+        }
+    }
+    const productDetails = () => {
+        const cekIndex = indexProduk < 0
+        const produkIndex = paginatedProducts[indexProduk]
+        return (
+            <Modal
+                open={openModal}
+                onClose={productDetailsHandler}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+
+            >
+                <Box sx={style}>
+                    <div className="mb-4">
+                        <Typography variant="h5" color="text.secondary">
+                            {cekIndex ? "" : produkIndex.productName}
+                        </Typography>
+                    </div>
+                    <div className="mb-4">
+                        <img src="https://image.shutterstock.com/z/stock-photo-pharmaceuticals-antibiotics-pills-medicine-colorful-antibacterials-pills-on-white-background-1061962874.jpg" alt="" />
+                    </div>
+                    <div className="mb-4">
+                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                            Description :
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {cekIndex ? "" : produkIndex.description}
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                            Category :
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {cekIndex ? "" : produkIndex.categoryName}
+                        </Typography>
+                    </div>
+                </Box>
+            </Modal>
+        )
+    }
+
     useEffect(() => {
         // fetch data products
         const getProducts = async () => {
-            let res = await axios.get(`${API_URL}/product/admingetproducts?search=${search}`)
-            setProducts(res.data)
+            try {
+                let res = await axios.get(`${API_URL}/product/admingetproducts?search=${search}`)
+                setProducts(res.data)
+            } catch (error) {
+                alert(error)
+            }
         }
         getProducts()
 
@@ -59,8 +136,12 @@ const AdminProducts = () => {
 
         // paginated product list
         const paginate = async () => {
-            let res = await axios.get(`${API_URL}/product/getproductspagination/${rowsPerPage}/${offset}?search=${search}`)
-            setPaginatedProducts(res.data)
+            try {
+                let res = await axios.get(`${API_URL}/product/getproductspagination/${rowsPerPage}/${offset}?search=${search}`)
+                setPaginatedProducts(res.data)
+            } catch (error) {
+                alert(error)
+            }
         }
         paginate()
 
@@ -68,10 +149,16 @@ const AdminProducts = () => {
 
     return (
         <div>
-            <AdminNavbar />
-            <div className="ml-80 py-6">
+            <CreateModal title='Add Product' open={addModalOpen} handleClose={openAddModal} setOpen={openAddModal} />
+            {productDetails()}
+            <div className=" ml-60 py-6">
                 <div className="mb-6 text-center">
-                    <Button variant="contained" style={{ marginRight: 10, backgroundColor: "#66806a" }}>Add Product</Button>
+                    <Button
+                        variant="contained" style={{ marginRight: 10, backgroundColor: "#66806a" }}
+                        onClick={openAddModal}
+                    >
+                        Add Product
+                    </Button>
                     <TextField
                         size="small"
                         id="outlined-basic" label="Search products"
@@ -84,28 +171,31 @@ const AdminProducts = () => {
                             <Table aria-label="simple table">
                                 <TableHead>
                                     <TableRow sx={{ height: "13vh", backgroundColor: "#b4c6a6" }}>
-                                        <TableCell sx={{ width: "20vw" }}>Nama</TableCell>
-                                        <TableCell sx={{ width: "15vw" }} align="right">Harga</TableCell>
-                                        <TableCell sx={{ width: "10vw" }} align="right">Stok</TableCell>
-                                        <TableCell sx={{ width: "5vw" }} align="right">Image</TableCell>
-                                        <TableCell sx={{ width: "15vw" }} align="right">Deskripsi</TableCell>
-                                        <TableCell sx={{ width: "15vw" }} align="right">Kategori</TableCell>
+                                        <TableCell sx={{ width: "33vw" }} align="left" >Product</TableCell>
+                                        <TableCell sx={{ width: "33vw" }} align="left">Price</TableCell>
+                                        <TableCell sx={{ width: "33vw" }} align="left">Stock</TableCell>
+                                        <TableCell sx={{ width: "0vw" }} align="left"></TableCell>
+                                        <TableCell sx={{ width: "0vw" }} align="left"></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {paginatedProducts.map((row) => (
+                                    {paginatedProducts.map((row, index) => (
                                         <TableRow
                                             key={row.productName}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 }, height: "13vh" }}
+                                            hover={true}
                                         >
-                                            <TableCell component="th" scope="row">
+                                            <TableCell component="th" scope="row" align="left">
                                                 {row.productName}
                                             </TableCell>
-                                            <TableCell align="right">{toRupiah(row.productPriceRp)}</TableCell>
-                                            <TableCell align="right">{row.stock}</TableCell>
-                                            <TableCell align="right">{row.imagePath}</TableCell>
-                                            <TableCell align="right">{row.description}</TableCell>
-                                            <TableCell align="right">{row.categoryName}</TableCell>
+                                            <TableCell align="left">{toRupiah(row.productPriceRp)}</TableCell>
+                                            <TableCell align="left">{row.stock}</TableCell>
+                                            <TableCell align="left">
+                                                <Button sx={{ color: "#66806a" }} onClick={() => productDetailsHandler(index)} variant="text">Details</Button>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <Button sx={{ color: "#66806a" }} variant="text">Edit</Button>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -127,12 +217,12 @@ const AdminProducts = () => {
                     <>
                         <div className="text-center mt-24 text-green-dark">
                             <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
-                            <p className="text-lg font-bold">Tidak ada produk</p>
+                            <p className="text-lg font-bold">Product is not found</p>
                         </div>
                     </>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 
