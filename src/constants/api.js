@@ -1,6 +1,7 @@
 // Uncomment this part for Development
-const DOMAIN = "localhost"
-const PORT = "2003"
+const DOMAIN = 'localhost';
+const PORT = '2003';
+// const SUBDOMAIN = '3-pharmacy';
 
 export const API_URL = `http://${DOMAIN}:${PORT}`;
 

@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
+import { Box, Typography, Modal, TextField, Button, Alert } from '@mui/material'
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { API_URL } from '../constants/api';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Alert } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -47,20 +42,19 @@ const Login = ({ open, handleClose }) => {
 
     // Alert akun tidak terdaftar
     const [accAlert, setAccAlert] = useState(true)
+    const [fillAlert, setFillAlert] = useState(true)
+
+    // button
+    const [disableButton, setDisableButton] = useState(false)
 
     const onLogin = async () => {
         const { usernamemail, password } = inputLogin
         // Kalo inputnya kurang gaboleh
         if (!usernamemail || !password) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                timer: 1500,
-                timerProgressBar: true
-            })
+            setFillAlert(false)
             return
         }
+        setDisableButton(true)
         try {
             let res = await axios.post(`${API_URL}/auth/login`, {
                 username: usernamemail,
@@ -72,10 +66,11 @@ const Login = ({ open, handleClose }) => {
                 setAccAlert(false)
                 return
             }
-            setAccAlert(true)
             localStorage.setItem("token", res.headers["access-token"])
             dispatch({ type: "login", payload: res.data[0] })
             handleClose()
+            setFillAlert(true)
+            setAccAlert(true)
             Swal.fire({
                 icon: 'success',
                 title: 'Yay!',
@@ -83,9 +78,14 @@ const Login = ({ open, handleClose }) => {
                 timer: 1500,
                 timerProgressBar: true
             })
+            setInputLogin({
+                usernamemail: "",
+                password: ""
+            })
         } catch (error) {
-            console.log(error);
             alert(error.message)
+        } finally {
+            setDisableButton(false)
         }
     }
 
@@ -123,6 +123,9 @@ const Login = ({ open, handleClose }) => {
                             name="password" onChange={inputHandler} color="success"
                         />
                     </div>
+                    <div className="mb-3" hidden={fillAlert}>
+                        <Alert severity="error">Fill all fields!</Alert>
+                    </div>
                     <div className="mb-3" hidden={accAlert}>
                         <Alert severity="error">Account is not registered!</Alert>
                     </div>
@@ -132,7 +135,11 @@ const Login = ({ open, handleClose }) => {
                         </div>
                         <Link to="/" className="text-indigo-500 hover:underline" style={{ color: "#0000EE" }}>Forgot password?</Link>
                     </div>
-                    <Button variant="contained" onClick={onLogin} style={{ backgroundColor: "#66806a" }}>Login</Button>
+                    {disableButton ? (
+                        <Button disabled variant="contained" style={{ backgroundColor: "#b4c6a6" }}>Login</Button>
+                    ) : (
+                        <Button variant="contained" onClick={onLogin} style={{ backgroundColor: "#66806a" }}>Login</Button>
+                    )}
                 </Box>
             </Modal>
         </div>

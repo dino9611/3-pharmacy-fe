@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../components/Header'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+    Card, CardActions, CardContent, CardMedia, Button, Typography,
+    CircularProgress, Pagination, InputLabel, MenuItem, FormControl,
+    Select, Box, Modal
+} from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../constants/api';
-import { Pagination } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import './styles/Products.css'
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import { toRupiah } from '../helpers/toRupiah';
 import Footer from '../components/Footer';
+import EmptyProducts from './Asset/empty-products.svg'
+import { useDebounce } from 'use-debounce';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 // Modal style
 const style = {
@@ -34,6 +30,9 @@ const style = {
 };
 
 const Products = () => {
+    // global state
+    const authState = useSelector(state => state.auth)
+
     // Get semua produk
     const [products, setProducts] = useState([])
 
@@ -45,7 +44,6 @@ const Products = () => {
 
     // get produk hasil paginasi
     const [paginatedProducts, setPaginatedProducts] = useState([])
-
 
     // render produk hasil paginasi
     const renderProducts = () => {
@@ -70,7 +68,7 @@ const Products = () => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="success">Add to cart</Button>
+                        <Button size="small" color="success" onClick={addToCart}>Add to cart</Button>
                         <Button size="small" color="success" onClick={() => { productDetailsHandler(index) }}>Details</Button>
                     </CardActions>
                 </Card >
@@ -78,8 +76,23 @@ const Products = () => {
         })
     }
 
+    // add to cart
+    const addToCart = () => {
+        if (!authState.isLogin) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You need to login first!',
+                timer: 1500,
+                timerProgressBar: true
+            })
+            return
+        }
+    }
+
     // untuk cari produk
     const [search, setSearch] = useState('')
+    const [debouncedSearch] = useDebounce(search, 1000)
     const searchHandler = (e) => {
         setSearch(e.target.value)
     }
@@ -93,7 +106,7 @@ const Products = () => {
         display: 'none',
     });
 
-    // kategoriii
+    // data kategoriii
     const [dataKategori, setDataKategori] = useState([])
 
     // untuk filter produk berdasarkan kategori
@@ -154,18 +167,31 @@ const Products = () => {
         )
     }
 
+    // spinner
+    const [spinner, setSpinner] = useState(true)
+    // product list
+    const [hideproductlist, setHideProductlist] = useState(false)
+
     useEffect(() => {
         // Fetch produk untuk jumlah nomor page aja
         const getProducts = async () => {
-            let res = await axios.get(`${API_URL}/product/getproducts?kategori=${kategori}`)
-            setProducts(res.data)
+            try {
+                let res = await axios.get(`${API_URL}/product/getproducts?search=${search}&kategori=${kategori}`)
+                setProducts(res.data)
+            } catch (error) {
+                alert(error);
+            }
         }
         getProducts()
 
         // fetch kategori
         const getCategories = async () => {
-            let res = await axios.get(`${API_URL}/product/getcategories`)
-            setDataKategori(res.data)
+            try {
+                let res = await axios.get(`${API_URL}/product/getcategories`)
+                setDataKategori(res.data)
+            } catch (error) {
+                alert(error);
+            }
         }
         getCategories()
 
@@ -174,18 +200,26 @@ const Products = () => {
         const offset = ((page - 1)) * 8
 
         // filter
-        setSearch(search)
-        console.log(search);
+        setSearch(debouncedSearch)
         setFilter(filter)
         setKategori(kategori)
 
         // fetch produk yg sudah dipaginasi
         const paginated = async () => {
-            let res = await axios.get(`${API_URL}/product/gethomepagination/${offset}?filter=${filter}&kategori=${kategori}`)
-            setPaginatedProducts(res.data)
+            setSpinner(false)
+            setHideProductlist(true)
+            try {
+                let res = await axios.get(`${API_URL}/product/gethomepagination/${offset}?search=${search}&filter=${filter}&kategori=${kategori}`)
+                setPaginatedProducts(res.data)
+            } catch (error) {
+                alert(error);
+            } finally {
+                setSpinner(true)
+                setHideProductlist(false)
+            }
         }
         paginated()
-    }, [page, search, filter, kategori])
+    }, [page, debouncedSearch, filter, kategori])
 
     return (
         <div>
@@ -200,18 +234,18 @@ const Products = () => {
                         onChange={searchHandler}
                     />
                     <FormControl sx={{ minWidth: 120, marginRight: 1 }}>
-                        <InputLabel id="demo-simple-select-label" color="success">Filter</InputLabel>
+                        <InputLabel id="demo-simple-select-label" color="success">Sort</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}
-                            label="Filter"
+                            label="Sort"
                             onChange={handleChangeFilter}
                             color="success"
                         >
                             <MenuItem value="default">Default</MenuItem>
-                            <MenuItem value="lowest">Lowest</MenuItem>
-                            <MenuItem value="highest">Highest</MenuItem>
+                            <MenuItem value="lowest">Lowest to Highest</MenuItem>
+                            <MenuItem value="highest">Highest to Lowest</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl sx={{ minWidth: 120 }}>
@@ -242,9 +276,21 @@ const Products = () => {
                         <Input accept="image/*" id="icon-button-file" type="file" />
                     </label>
                 </div>
-                <div className="grid grid-cols-4 grid-flow-row gap-2 w-3/4 mx-auto mb-10">
-                    {renderProducts()}
+                <div hidden={spinner} className="text-center mb-10">
+                    <CircularProgress sx={{ color: "#66806a" }} />
                 </div>
+                {paginatedProducts.length ? (
+                    <div hidden={hideproductlist}>
+                        <div className="grid grid-cols-4 grid-flow-row gap-2 w-3/4 mx-auto mb-10">
+                            {renderProducts()}
+                        </div>
+                    </div>
+                ) : (
+                    <div hidden={hideproductlist} className="text-center mt-24 mb-10">
+                        <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
+                        <p className="text-lg font-bold text-green-dark">Tidak ada produk</p>
+                    </div>
+                )}
                 <div className="mb-10 w-max mx-auto">
                     <Pagination count={Math.ceil(products.length / 8)} page={page} onChange={handleChange} />
                 </div>

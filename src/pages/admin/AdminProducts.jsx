@@ -12,6 +12,7 @@ import { API_URL } from '../../constants/api';
 import EmptyProducts from './assets/empty-products.svg'
 import AdminNavbar from '../../components/AdminNavbar';
 import { toRupiah } from '../../helpers/toRupiah';
+import { useDebounce } from 'use-debounce';
 
 const AdminProducts = () => {
     // state product
@@ -35,6 +36,7 @@ const AdminProducts = () => {
 
     // search
     const [search, setSearch] = useState('')
+    const [debouncedSearch] = useDebounce(search, 1000)
     const searchHandler = (e) => {
         setSearch(e.target.value)
     }
@@ -53,8 +55,7 @@ const AdminProducts = () => {
         const offset = page * rowsPerPage
 
         // search
-        setSearch(search)
-        console.log(search);
+        setSearch(debouncedSearch)
 
         // paginated product list
         const paginate = async () => {
@@ -63,7 +64,7 @@ const AdminProducts = () => {
         }
         paginate()
 
-    }, [rowsPerPage, page, search])
+    }, [rowsPerPage, page, debouncedSearch])
 
     return (
         <div>
@@ -124,7 +125,7 @@ const AdminProducts = () => {
 
                 ) : (
                     <>
-                        <div className="text-center mt-24">
+                        <div className="text-center mt-24 text-green-dark">
                             <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
                             <p className="text-lg font-bold">Tidak ada produk</p>
                         </div>
