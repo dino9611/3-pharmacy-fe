@@ -22,7 +22,8 @@ module.exports = {
         },
         'gCol': '#e0e0e0',
         'bCol' :'#66806A',
-        'cCol' : '#FFC286'
+        'cCol' : '#FFC286',
+        'dCol' : '#B4C6A6'
       }
   },
   variants: {

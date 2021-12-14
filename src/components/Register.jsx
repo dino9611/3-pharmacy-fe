@@ -108,12 +108,11 @@ const Register = ({open, handleClose, setOpen, handleopenDialog}) => {
                 return arr[i].message
             }
         }
-        return ""
     }
 
     const passwordChecker = () => {
         let {username,email,password, retype, firstName} = addAccount
-        //! Intinya password Minimal ada 6 Character, Capital,Lowercase,Number dan TIDAK BOLEH ada spasi
+        // Intinya password Minimal ada 6 Character, Capital,Lowercase,Number dan TIDAK BOLEH ada spasi
         //! Email harus ada @
         //! error akan dipush ke array
         let arr = []
