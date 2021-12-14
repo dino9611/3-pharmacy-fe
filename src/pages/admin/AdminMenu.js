@@ -12,13 +12,18 @@ import RawMaterialsRecord from './RawMaterialsRecord';
 export default function AdminMenu() {
   return (
     <>
-      <AdminSidebar />
-      <Routes>
-        <Route path={'raw_materials'} element={<ManageRawMaterials />} />
-        <Route path={'products'} element={<ManageProducts />} />
+      <div className='flex justify-between'>
+        <AdminSidebar />
+        <Routes>
+          <Route path={'raw_materials'} element={<ManageRawMaterials />} />
+          <Route path={'products'} element={<ManageProducts />} />
 
-        <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
-      </Routes>
+          <Route
+            path={'raw_materials_record'}
+            element={<RawMaterialsRecord />}
+          />
+        </Routes>
+      </div>
     </>
   );
 }

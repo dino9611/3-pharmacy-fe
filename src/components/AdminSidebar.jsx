@@ -6,7 +6,8 @@ export default function AdminSideBar(props) {
   const [collapseShow, setCollapseShow] = React.useState('hidden');
   return (
     <>
-      <nav className='AdminSidebar-nav'>
+      {/* <nav className='bg-primary-450 md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6'> */}
+      <nav className='w-1/5 bg-primary-450 left-0 block fixed top-0 bottom-0 overflow-y-auto overflow-hidden shadow-xl flex-wrap items-center justify-between z-10 py-4 px-6'>
         <div className='md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto'>
           {/* Toggler */}
           <button
@@ -18,10 +19,10 @@ export default function AdminSideBar(props) {
           </button>
           {/* Brand */}
           <Link
-            className=' text-white md:block text-left md:pb-2 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0'
+            className='md:block md:pb-2 mr-0 inline-block whitespace-nowrap text-sm p-4 px-0 admin-font-style'
             to='/'
           >
-            Tokobat Admin
+            <span className='tokobat-font-style'>Tokobat</span> admin
           </Link>
           {/* User */}
           {/* <ul className='md:hidden items-center flex flex-wrap list-none'>
@@ -146,6 +147,12 @@ export default function AdminSideBar(props) {
                 pathname={'/admin/prescription_history'}
                 location={location}
               />
+
+              <div>
+                <button className='bg-peach-dark hover:bg-peach-light w-3/4 rounded-lg py-2 mt-12'>
+                  Log out
+                </button>
+              </div>
             </ul>
           </div>
         </div>
@@ -164,21 +171,21 @@ function SidebarLink({ name, pathname, location }) {
     >
       <Link
         className={
-          'text-xs uppercase py-3 font-bold block ' +
+          'pl-3 text-xs uppercase py-3 font-bold block ' +
           (location.pathname === pathname
             ? 'text-primary-450 '
             : 'text-secondary hover:text-white')
         }
         to={pathname}
       >
-        <i
+        {/* <i
           className={
             'fas fa-tv mr-2 text-sm ' +
             (location.pathname === pathname
               ? 'opacity-75'
               : 'text-blueGray-300')
           }
-        ></i>{' '}
+        ></i>{' '} */}
         {name}
       </Link>
     </li>

@@ -75,6 +75,7 @@ const EditModal = ({
   const onConfirmClick = (e) => {
     e.preventDefault();
     const {
+      index,
       id,
       materialName,
       bottleChange,
@@ -85,6 +86,7 @@ const EditModal = ({
     const init = initInput.current;
     dispatch(
       editRawMaterial({
+        index,
         id,
         materialName: init.materialName !== materialName && materialName,
         bottleChange:

@@ -19,6 +19,7 @@ import {
 // ? components
 import CategorySelect from './ProductCategorySelect';
 import CompositionSelect from './ProductCompSelect';
+import { toast } from 'react-toastify';
 
 const style = {
   position: 'absolute',
@@ -111,11 +112,17 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
     e.preventDefault();
     setOpen(false);
 
-    const handleSuccess = () => {
-      setinput(initialInputVal);
-      setfile(null);
-    };
-    dispatch(addProduct(file, input, handleSuccess, handleSuccess));
+    dispatch(
+      addProduct(file, input, {
+        handleSuccess: () => toast.success('success'),
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+        handleFinally: () => {
+          setinput(initialInputVal);
+          setfile(null);
+        },
+      })
+    );
     // window.location.reload(false);
   };
   const inputHandler = (e) =>
