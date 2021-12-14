@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useSelector } from 'react-redux';
 import './styles/Header.css'
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router";
 import { useDispatch } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
@@ -71,6 +72,12 @@ const Header = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false)
 
+
+    // Navigate
+    const navigate = useNavigate()
+    const toProfile = () => {
+        navigate("/profile")
+    }
     return (
         <div className="flex items-center bg-green-dark h-24 px-6">
             <Login open={openLogin} handleClose={handleCloseLogin} />
@@ -140,7 +147,7 @@ const Header = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <MenuItem onClick={handleCloseNavMenu}>
+                            <MenuItem onClick={toProfile}>
                                 <Typography textAlign="center">My profile</Typography>
                             </MenuItem>
                             <MenuItem onClick={onLogout}>
