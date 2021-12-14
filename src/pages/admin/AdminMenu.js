@@ -12,7 +12,7 @@ import RawMaterialsRecord from './RawMaterialsRecord';
 export default function AdminMenu() {
   return (
     <>
-      <div className='flex justify-between'>
+      <div className='flex justify-end'>
         <AdminSidebar />
         <Routes>
           <Route path={'raw_materials'} element={<ManageRawMaterials />} />

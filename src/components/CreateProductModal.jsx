@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
+import { toast } from 'react-toastify';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -19,7 +21,6 @@ import {
 // ? components
 import CategorySelect from './ProductCategorySelect';
 import CompositionSelect from './ProductCompSelect';
-import { toast } from 'react-toastify';
 
 const style = {
   position: 'absolute',
@@ -123,7 +124,6 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
         },
       })
     );
-    // window.location.reload(false);
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });

@@ -7,7 +7,7 @@ export default function AdminSideBar(props) {
   return (
     <>
       {/* <nav className='bg-primary-450 md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6'> */}
-      <nav className='w-1/5 bg-primary-450 left-0 block fixed top-0 bottom-0 overflow-y-auto overflow-hidden shadow-xl flex-wrap items-center justify-between z-10 py-4 px-6'>
+      <nav className='w-1/5 fixed bg-primary-450 left-0 block top-0 bottom-0 overflow-y-auto overflow-hidden shadow-xl flex-wrap items-center justify-between z-10 py-4 px-6'>
         <div className='md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto'>
           {/* Toggler */}
           <button

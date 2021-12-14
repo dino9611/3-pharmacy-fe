@@ -104,7 +104,7 @@ export default function RawMaterialsTable() {
     (state) => state.rawMaterialReducers.rawMaterialsRecord
   );
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(9);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
 
   React.useEffect(() => {
     dispatch(getRawMaterialsRecord(page + 1, rowsPerPage));
@@ -140,31 +140,24 @@ export default function RawMaterialsTable() {
 
   return (
     <>
-      <TableContainer
-        // sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
-        sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
-        elevation={12}
-        component={Paper}
-      >
-        <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
-          <TableHead>
-            <TableRow>
-              <TableCell component='th' scope='row'>
-                raw material name
-              </TableCell>
-              <TableCell align='right'>inventory change</TableCell>
-              <TableCell align='right'>unit per bottle</TableCell>
-              <TableCell align='right'>datetime</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              // * for frontend pagination
-              // (rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map
-              // * for backend pagination
-              rows.map((row, i) => (
+      <div className='w-4/5'>
+        <div className='mb-3 pt-0 h-24'></div>
+        <TableContainer elevation={12} component={Paper}>
+          <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#b4c6a6' }}>
+                <TableCell component='th' scope='row'>
+                  raw material name
+                </TableCell>
+                <TableCell align='right'>inventory change</TableCell>
+                <TableCell align='right'>unit per bottle</TableCell>
+                <TableCell align='right'>datetime</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, i) => (
                 <TableRow
-                  className=' hover:bg-gray-200 cursor-pointer'
+                  sx={{ height: 60 }}
                   onDoubleClick={() => handleRowDoubleClick(row)}
                   key={i}
                 >
@@ -181,46 +174,43 @@ export default function RawMaterialsTable() {
                   <TableCell align='right'>
                     {`${row.unitPerBottle} ${row.unit} per bottle`}
                   </TableCell>
-                  {/* <TableCell align='right'>
-                    {Date.parse(row.datetime).toString()}
-                  </TableCell> */}
                   <TableCell align='right'>{row.datetime}</TableCell>
                 </TableRow>
-              ))
-            }
+              ))}
 
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+              {emptyRows > 0 && (
+                <TableRow sx={{ height: 60 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow sx={{ backgroundColor: '#b4c6a6' }}>
+                <TablePagination
+                  // rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                  rowsPerPageOptions={[10, 7]}
+                  colSpan={5}
+                  // * for frontend pagination
+                  // count={rows.length}
+                  // * for backend pagination (use number of rows from backend. Don't use 'SELECT COUNT(*)')
+                  count={100}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                // rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                rowsPerPageOptions={[5, 9]}
-                colSpan={3}
-                // * for frontend pagination
-                // count={rows.length}
-                // * for backend pagination (use number of rows from backend. Don't use 'SELECT COUNT(*)')
-                count={100}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </div>
     </>
   );
 }

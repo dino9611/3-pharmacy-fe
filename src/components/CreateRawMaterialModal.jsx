@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
+import { toast } from 'react-toastify';
 // ? redux
 import { useDispatch } from 'react-redux';
 import { addRawMaterial } from '../redux/actions/rawMaterialActions';
@@ -75,8 +77,20 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
   const onConfirmClick = (e) => {
     e.preventDefault();
     setOpen(false);
-    dispatch(addRawMaterial(input));
-    // window.location.reload(false);
+    dispatch(
+      addRawMaterial(input, {
+        handleSuccess: () => toast.success('success'),
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+      })
+    );
+    setinput({
+      materialName: '',
+      bottles: '',
+      unitPerBottle: '',
+      priceRpPerUnit: '',
+      unit: '',
+    });
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });
