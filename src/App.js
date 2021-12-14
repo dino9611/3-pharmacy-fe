@@ -49,7 +49,6 @@ function App() {
         <Route path={'/verified'} element={<Verified />} />
         <Route path={'/change'} element={<ChangePassword />} />
         <Route path={'/profile'} element={<Userprofile />} />
-        <Route path={'/adminproducts'} element={<AdminProducts />} />
         <Route path={'/products'} element={<Products />} />
         <Route path={'/adminhome'} element={<AdminHome />} />
       </Routes>
