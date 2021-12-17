@@ -1,9 +1,25 @@
 import { useCallback } from 'react';
 
 export default function useDebounce(fn, delay, immediate) {
-  let cb;
-  if (Array.isArray(fn)) cb = Function.debounce(fn[0], fn[1], delay);
-  else cb = fn.debouncify(delay, immediate);
+  let timeoutID;
 
-  return useCallback(cb, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // prettier-ignore
+  return useCallback( // eslint-disable-line react-hooks/exhaustive-deps
+    immediate // ! immediate debounce
+      ? function returnFunc() {
+          if (!timeoutID) {
+            fn.call(this, ...arguments);
+          }
+          clearTimeout(timeoutID);
+          timeoutID = setTimeout(() => {
+            timeoutID = false;
+          }, delay);
+        }
+      : // ! normal debounce
+        function returnFunc() {
+          clearTimeout(timeoutID);
+          timeoutID = setTimeout(fn.bind(this, ...arguments), delay);
+        },
+    []
+  );
 }

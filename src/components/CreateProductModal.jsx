@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
+import { toast } from 'react-toastify';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -111,12 +113,17 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
     e.preventDefault();
     setOpen(false);
 
-    const handleSuccess = () => {
-      setinput(initialInputVal);
-      setfile(null);
-    };
-    dispatch(addProduct(file, input, handleSuccess, handleSuccess));
-    // window.location.reload(false);
+    dispatch(
+      addProduct(file, input, {
+        handleSuccess: () => toast.success('success'),
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+        handleFinally: () => {
+          setinput(initialInputVal);
+          setfile(null);
+        },
+      })
+    );
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });

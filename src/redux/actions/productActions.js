@@ -17,83 +17,105 @@ export const resetState = (propName) => {
   };
 };
 
-// ! CREATE
-const addProductDebounce = (async (
-  dispatch,
-  API_URL,
-  file,
-  input,
-  handleSuccess,
-  handleFail
-) => {
-  const { compositionsAmount } = input;
-  input.compositions.forEach((el, i, arr) => {
-    arr[i] = [el, compositionsAmount[i]];
-  });
-  delete input.compositionsAmount;
+const DEBOUNCE_DELAY = 100;
 
-  const formData = new FormData();
-  formData.append('image', file);
-  formData.append('data', JSON.stringify(input));
-  try {
-    await axios.post(API_URL + `/product`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    handleSuccess !== undefined && handleSuccess();
-  } catch (error) {
-    handleFail !== undefined && handleFail();
-  }
-}).debouncify(250);
-export const addProduct = (file, input, handleSuccess, handleFail) => {
+// ! CREATE
+let addProduct_timeoutID;
+export const addProduct = (file, input, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    addProductDebounce(
-      dispatch,
-      API_URL,
-      file,
-      input,
-      handleSuccess,
-      handleFail
-    );
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(addProduct_timeoutID);
+
+    addProduct_timeoutID = setTimeout(async () => {
+      const { compositionsAmount } = input;
+      input.compositions.forEach((el, i, arr) => {
+        arr[i] = [el, compositionsAmount[i]];
+      });
+      delete input.compositionsAmount;
+
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('data', JSON.stringify(input));
+      try {
+        await axios.post(API_URL + `/product`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
 
 // ! READ
-const getProductsDebounce = (async (dispatch, API_URL, page, limit) => {
-  const { data } = await axios.get(
-    API_URL + `/product/?page=${page}&limit=${limit}`
-  );
-  dispatch(setState('products', data.result));
-}).debouncify(250);
-export const getProducts = (page, limit) => {
+// * products
+let getProduct_timeoutID;
+export const getProducts = (page, limit, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    getProductsDebounce(dispatch, API_URL, page, limit);
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getProduct_timeoutID);
+
+    getProduct_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(
+          API_URL + `/product/?page=${page}&limit=${limit}`
+        );
+        dispatch(setState('products', data.result));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
-const getProductCategoriesDebounce = (async (dispatch, API_URL) => {
-  const { data } = await axios.get(API_URL + '/product/getcategories');
-  dispatch(setState('categories', data));
-}).debouncify(250);
-export const getProductCategories = () => {
+
+// * categories
+let getProductCategories_timeoutID;
+export const getProductCategories = (handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    getProductCategoriesDebounce(dispatch, API_URL);
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getProductCategories_timeoutID);
+
+    getProductCategories_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(API_URL + '/product/getcategories');
+        dispatch(setState('categories', data));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
 
 // ! UPDATE
-const editProductDebounce = (async (dispatch, API_URL, file, input) => {
-  const formData = new FormData();
-  formData.append('image', file);
-  formData.append('data', JSON.stringify(input));
-  await axios.patch(API_URL + '/product', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-}).debouncify(250);
-export const editProduct = (file, input) => {
+let editProduct_timeoutID;
+export const editProduct = (file, input, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    editProductDebounce(dispatch, API_URL, file, input);
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(editProduct_timeoutID);
+
+    editProduct_timeoutID = setTimeout(async () => {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('data', JSON.stringify(input));
+      try {
+        await axios.patch(API_URL + '/product', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
