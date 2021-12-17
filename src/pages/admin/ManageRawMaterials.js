@@ -178,7 +178,7 @@ export default function RawMaterialsTable() {
         open={modalIsOpen}
         setOpen={setmodalIsOpen}
       />
-      <div className='flex flex-col w-4/5'>
+      <div className='flex flex-col w-4/5 absolute right-0'>
         <div className='mb-3 pt-0 h-24'></div>
         {/* <TableContainer sx={{ width: 4 / 5 }} elevation={12} component={Paper}> */}
         <TableContainer elevation={12} component={Paper}>

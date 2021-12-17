@@ -140,7 +140,7 @@ export default function RawMaterialsTable() {
 
   return (
     <>
-      <div className='w-4/5'>
+      <div className='w-4/5 absolute right-0'>
         <div className='mb-3 pt-0 h-24'></div>
         <TableContainer elevation={12} component={Paper}>
           <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>

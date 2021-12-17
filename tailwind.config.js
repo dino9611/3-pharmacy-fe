@@ -36,14 +36,14 @@ module.exports = {
           light: '#ffffff',
           dark: '#000000',
         },
-        gCol: '#e0e0e0',
-        bCol: '#66806A',
-        cCol: '#FFC286',
-      },
-    },
-    variants: {
-      extend: {},
-    },
-    plugins: [],
+        'gCol': '#e0e0e0',
+        'bCol' :'#66806A',
+        'cCol' : '#FFC286',
+        'dCol' : '#B4C6A6'
+      }
   },
-};
+  variants: {
+    extend: {},
+  },
+  }
+}
