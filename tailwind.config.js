@@ -37,13 +37,20 @@ module.exports = {
           dark: '#000000',
         },
         'gCol': '#e0e0e0',
-        'bCol' :'#66806A',
-        'cCol' : '#FFC286',
-        'dCol' : '#B4C6A6'
+        'bCol': '#66806A',
+        'cCol': '#FFC286',
+        'dCol': '#B4C6A6'
+      },
+      screens: {
+        'phone': { 'max': '640px' },
+        // => @media (max-width: 640px) { ... }
+
+        'laptop': { 'max': '1440px' },
+        // => @media (max-width: 1440px) { ... }
       }
-  },
-  variants: {
-    extend: {},
-  },
+    },
+    variants: {
+      extend: {},
+    },
   }
 }

@@ -205,7 +205,7 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
               <div className='flex'>
                 <ColorButton
                   variant='contained'
-                  sx={{ mt: 2 }}
+                  sx={{ mt: 2, mr: 1 }}
                   size='large'
                   onClick={onCancelClick}
                 >
@@ -225,7 +225,7 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
             <div className='flex flex-col items-center'>
               <button
                 onClick={() => fileInput.current.click()}
-                className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32'
+                className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32 mb-4'
               >
                 input image
               </button>
