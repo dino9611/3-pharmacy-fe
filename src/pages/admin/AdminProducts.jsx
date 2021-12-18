@@ -10,7 +10,6 @@ import { TablePagination, TextField, Button, Modal, Box, Typography } from '@mui
 import axios from 'axios';
 import { API_URL } from '../../constants/api';
 import EmptyProducts from './assets/empty-products.svg'
-import AdminNavbar from '../../components/AdminNavbar';
 import { toRupiah } from '../../helpers/toRupiah';
 import { useDebounce } from 'use-debounce';
 import CreateModal from '../../components/CreateProductModal';
@@ -21,7 +20,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 500,
+    width: 350,
     bgcolor: 'background.paper',
     borderRadius: '15px',
     boxShadow: 24,
@@ -90,9 +89,9 @@ const AdminProducts = () => {
                             {cekIndex ? "" : produkIndex.productName}
                         </Typography>
                     </div>
-                    <div className="mb-4">
-                        <img src="https://image.shutterstock.com/z/stock-photo-pharmaceuticals-antibiotics-pills-medicine-colorful-antibacterials-pills-on-white-background-1061962874.jpg" alt="" />
-                    </div>
+                    {cekIndex ? "" : (
+                        <img className='mb-4 mx-auto' src={API_URL + produkIndex.imagePath} alt={produkIndex.productName} />
+                    )}
                     <div className="mb-4">
                         <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
                             Description :
@@ -212,7 +211,6 @@ const AdminProducts = () => {
                             />
                         </TableContainer>
                     </>
-
                 ) : (
                     <>
                         <div className="text-center mt-24 text-green-dark">

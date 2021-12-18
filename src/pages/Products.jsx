@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import {
     Card, CardActions, CardContent, CardMedia, Button, Typography,
     CircularProgress, Pagination, InputLabel, MenuItem, FormControl,
-    Select, Box, Modal
+    Select, Box, Modal, Snackbar, IconButton
 } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../constants/api';
@@ -13,8 +13,9 @@ import { toRupiah } from '../helpers/toRupiah';
 import Footer from '../components/Footer';
 import EmptyProducts from './Asset/empty-products.svg'
 import { useDebounce } from 'use-debounce';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import CloseIcon from '@mui/icons-material/Close';
 
 // Modal style
 const style = {
@@ -32,6 +33,7 @@ const style = {
 const Products = () => {
     // global state
     const authState = useSelector(state => state.auth)
+    const dispatch = useDispatch()
 
     // Get semua produk
     const [products, setProducts] = useState([])
@@ -53,7 +55,7 @@ const Products = () => {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={`https://image.shutterstock.com/z/stock-photo-colorful-pills-and-medicines-in-the-hand-672632047.jpg`}
+                        image={API_URL + val.imagePath}
                         alt={val.productName}
                     />
                     <CardContent>
@@ -68,7 +70,7 @@ const Products = () => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="success" onClick={addToCart}>Add to cart</Button>
+                        <Button size="small" color="success" onClick={() => addToCart(index)}>Add to cart</Button>
                         <Button size="small" color="success" onClick={() => { productDetailsHandler(index) }}>Details</Button>
                     </CardActions>
                 </Card >
@@ -76,8 +78,24 @@ const Products = () => {
         })
     }
 
+    const [snackbar, setSnackbar] = useState(false)
+    const openSnackbar = () => setSnackbar(true)
+    const closeSnackbar = () => setSnackbar(false)
+    const action = (
+        <React.Fragment>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={closeSnackbar}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    )
+
     // add to cart
-    const addToCart = () => {
+    const addToCart = async (index) => {
         if (!authState.isLogin) {
             Swal.fire({
                 icon: 'error',
@@ -87,6 +105,17 @@ const Products = () => {
                 timerProgressBar: true
             })
             return
+        }
+        try {
+            let res = await axios.post(`${API_URL}/transaction/addtocart/${authState.id}`, {
+                price: paginatedProducts[index].productPriceRp,
+                qty: 1,
+                product_id: paginatedProducts[index].id
+            })
+            dispatch({ type: "setcart", payload: res.data })
+            openSnackbar()
+        } catch (error) {
+            alert(error)
         }
     }
 
@@ -138,7 +167,6 @@ const Products = () => {
                 onClose={productDetailsHandler}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-
             >
                 <Box sx={style}>
                     <div className="mb-4">
@@ -225,6 +253,13 @@ const Products = () => {
         <div>
             <Header />
             {productDetails()}
+            <Snackbar
+                open={snackbar}
+                autoHideDuration={3000}
+                onClose={closeSnackbar}
+                message="Added to cart!"
+                action={action}
+            />
             <div className="mt-6">
                 <div className=" flex justify-center mb-4">
                     <input
