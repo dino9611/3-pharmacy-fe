@@ -105,7 +105,7 @@ export default function RawMaterialsTable() {
   // * pagination states
   const rows = useSelector((state) => state.rawMaterialReducers.rawMaterials);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(9);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
 
   // * modal states
   const [editModalIsOpen, seteditModalIsOpen] = React.useState(false);
@@ -141,7 +141,8 @@ export default function RawMaterialsTable() {
     setPage(0);
   };
 
-  const handleRowDoubleClick = (row) => {
+  const handleRowDoubleClick = (row) => {};
+  const onEditClick = (row, index) => {
     const { id, materialName, unitPerBottle, priceRpPerUnit, unit } = row;
     initInput.current = {
       materialName,
@@ -151,6 +152,7 @@ export default function RawMaterialsTable() {
       unit,
     };
     setinput({
+      index,
       id,
       materialName,
       bottleChange: 0,
@@ -159,9 +161,6 @@ export default function RawMaterialsTable() {
       unit,
     });
     seteditModalIsOpen(true);
-    // update raw_material based on id of the element with index i in rows array
-    // get id of raw_material in rows array and get the single
-    // replace element of index i in rows array with the updated raw_material
   };
 
   return (
@@ -179,99 +178,101 @@ export default function RawMaterialsTable() {
         open={modalIsOpen}
         setOpen={setmodalIsOpen}
       />
-      <TableContainer
-        // sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
-        sx={{ width: 4 / 5, top: 15, right: 10, position: 'absolute' }}
-        elevation={12}
-        component={Paper}
-      >
-        <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
-          <TableHead>
-            <TableRow>
-              <TableCell component='th' scope='row'>
-                raw material name
-              </TableCell>
-              <TableCell align='right'>inventory</TableCell>
-              <TableCell align='right'>unit per bottle</TableCell>
-              <TableCell align='right'>price per bottle</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              // * for frontend pagination
-              // (rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map
-              // * for backend pagination
-              rows.map((row) => (
+      <div className='flex flex-col w-4/5 absolute right-0'>
+        <div className='mb-3 pt-0 h-24'></div>
+        {/* <TableContainer sx={{ width: 4 / 5 }} elevation={12} component={Paper}> */}
+        <TableContainer elevation={12} component={Paper}>
+          <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#b4c6a6' }}>
+                <TableCell>raw material name</TableCell>
+                <TableCell>inventory</TableCell>
+                <TableCell>unit per bottle</TableCell>
+                <TableCell>price per bottle</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, i) => (
                 <TableRow
-                  className=' hover:bg-gray-200 cursor-pointer'
+                  sx={{ height: 60 }}
+                  // className=' hover:bg-gray-200 cursor-pointer'
                   onDoubleClick={() => handleRowDoubleClick(row)}
                   key={row.id}
                 >
-                  <TableCell component='th' scope='row'>
-                    {row.materialName}
-                  </TableCell>
-                  {/* <TableCell style={{ width: 160 }} align='right'>
-                {row.inventory}
-              </TableCell> */}
-                  <TableCell align='right'>
+                  <TableCell>{row.materialName}</TableCell>
+                  <TableCell>
                     {`${Math.floor(
                       row.inventory / row.unitPerBottle
                     )} bottles ${(row.inventory % row.unitPerBottle).toFixed(
                       2
                     )} ${row.unit}`}
                   </TableCell>
-                  <TableCell align='right'>
+                  <TableCell>
                     {`${row.unitPerBottle} ${row.unit} per bottle`}
                   </TableCell>
-                  <TableCell align='right'>
+                  <TableCell>
                     {`Rp ${(
                       row.priceRpPerUnit * row.unitPerBottle
                     ).toLocaleString('en-US', { maximumFractionDigits: 2 })}`}
                   </TableCell>
+                  <TableCell onClick={() => onEditClick(row, i)}>
+                    <svg
+                      className='cursor-pointer'
+                      fill='none'
+                      stroke='currentColor'
+                      viewBox='0 0 24 24'
+                    >
+                      <path
+                        strokeWidth='2'
+                        d='M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z'
+                      ></path>
+                    </svg>
+                  </TableCell>
                 </TableRow>
-              ))
-            }
+              ))}
 
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+              {emptyRows > 0 && (
+                <TableRow sx={{ height: 60 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow sx={{ backgroundColor: '#b4c6a6' }}>
+                <TableCell>
+                  <button
+                    onClick={() => setmodalIsOpen(!modalIsOpen)}
+                    className='btn bg-third text-white hover:bg-primary-450 transition-colors'
+                  >
+                    Add New Raw Material
+                  </button>
+                </TableCell>
+                <TablePagination
+                  // rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                  rowsPerPageOptions={[10, 7]}
+                  colSpan={5}
+                  // * for frontend pagination
+                  // count={rows.length}
+                  // * for backend pagination (use number of rows from backend. Don't use 'SELECT COUNT(*)')
+                  count={100}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell>
-                <button
-                  onClick={() => setmodalIsOpen(!modalIsOpen)}
-                  className='btn bg-third text-white hover:bg-primary-450 transition-colors'
-                >
-                  Add New Raw Material
-                </button>
-              </TableCell>
-              <TablePagination
-                // rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                rowsPerPageOptions={[5, 9]}
-                colSpan={3}
-                // * for frontend pagination
-                // count={rows.length}
-                // * for backend pagination (use number of rows from backend. Don't use 'SELECT COUNT(*)')
-                count={100}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </div>
     </>
   );
 }

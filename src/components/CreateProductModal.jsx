@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
+import { toast } from 'react-toastify';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -111,12 +113,17 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
     e.preventDefault();
     setOpen(false);
 
-    const handleSuccess = () => {
-      setinput(initialInputVal);
-      setfile(null);
-    };
-    dispatch(addProduct(file, input, handleSuccess, handleSuccess));
-    // window.location.reload(false);
+    dispatch(
+      addProduct(file, input, {
+        handleSuccess: () => toast.success('success'),
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+        handleFinally: () => {
+          setinput(initialInputVal);
+          setfile(null);
+        },
+      })
+    );
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });
@@ -198,7 +205,7 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
               <div className='flex'>
                 <ColorButton
                   variant='contained'
-                  sx={{ mt: 2 }}
+                  sx={{ mt: 2, mr: 1 }}
                   size='large'
                   onClick={onCancelClick}
                 >
@@ -218,7 +225,7 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
             <div className='flex flex-col items-center'>
               <button
                 onClick={() => fileInput.current.click()}
-                className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32'
+                className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32 mb-4'
               >
                 input image
               </button>

@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
+import { toast } from 'react-toastify';
 // ? redux
 import { useDispatch } from 'react-redux';
 import { editRawMaterial } from '../redux/actions/rawMaterialActions';
@@ -74,7 +76,9 @@ const EditModal = ({
   };
   const onConfirmClick = (e) => {
     e.preventDefault();
+    setOpen(false);
     const {
+      index,
       id,
       materialName,
       bottleChange,
@@ -84,18 +88,25 @@ const EditModal = ({
     } = input;
     const init = initInput.current;
     dispatch(
-      editRawMaterial({
-        id,
-        materialName: init.materialName !== materialName && materialName,
-        bottleChange:
-          init.bottleChange !== bottleChange && parseInt(bottleChange),
-        unitPerBottle: init.unitPerBottle !== unitPerBottle && unitPerBottle,
-        priceRpPerUnit:
-          init.priceRpPerUnit !== priceRpPerUnit && priceRpPerUnit,
-        unit: init.unit !== unit && unit,
-      })
+      editRawMaterial(
+        {
+          index,
+          id,
+          materialName: init.materialName !== materialName && materialName,
+          bottleChange:
+            init.bottleChange !== bottleChange && parseInt(bottleChange),
+          unitPerBottle: init.unitPerBottle !== unitPerBottle && unitPerBottle,
+          priceRpPerUnit:
+            init.priceRpPerUnit !== priceRpPerUnit && priceRpPerUnit,
+          unit: init.unit !== unit && unit,
+        },
+        {
+          handleSuccess: () => toast.success('success'),
+          handleFail: (err) =>
+            toast.error(err.response.data.message || 'server error'),
+        }
+      )
     );
-    setOpen(false);
     setinput({
       materialName: '',
       bottleChange: '',
@@ -103,7 +114,6 @@ const EditModal = ({
       priceRpPerUnit: '',
       unit: '',
     });
-    // window.location.reload(false);
   };
   const inputHandler = (e) =>
     setinput({ ...input, [e.target.name]: e.target.value });

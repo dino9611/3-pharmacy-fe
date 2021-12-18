@@ -1,6 +1,3 @@
-// ? initialize extensions
-import './extensions';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';

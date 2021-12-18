@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
     IconButton, Typography, Menu, Avatar, Button, Tooltip,
     MenuItem, Badge, Box
@@ -13,8 +13,6 @@ import Register from './Register';
 import ForgetPass from './ForgetPassword';
 import { styled } from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import axios from 'axios';
-import { API_URL } from '../constants/api';
 
 const Header = () => {
     const authState = useSelector(state => state.auth)
