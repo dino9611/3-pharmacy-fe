@@ -45,6 +45,7 @@ const Cart = () => {
             }
         }
         getCart()
+        console.log(cartState);
     }, [])
 
     const deleteFromCart = async (index) => {
@@ -52,6 +53,24 @@ const Cart = () => {
             let res = await axios.delete(`${API_URL}/transaction/deletefromcart/${authState.id}/${cartState[index].product_id}`)
             dispatch({ type: "setcart", payload: res.data })
             openSnackbar()
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    const editQuantity = async (index, value) => {
+        let qty = 0
+        if (value === "tambah") {
+            qty = 1
+        } else if (value === "kurang") {
+            qty = -1
+        }
+        try {
+            let res = await axios.patch(`${API_URL}/transaction/editqty/${authState.id}`, {
+                qty,
+                product_id: cartState[index].product_id
+            })
+            dispatch({ type: "setcart", payload: res.data })
         } catch (error) {
             alert(error)
         }
@@ -65,9 +84,17 @@ const Cart = () => {
                     <p className='mr-8'>{val.productName}</p>
                     <p className='mr-8'>{toRupiah(val.productPriceRp)}</p>
                     <div className='mr-8'>
-                        <button className='bg-white hover:bg-peach-dark h-10 w-10'>+</button>
+                        {val.qty >= val.stock ? (
+                            <button disabled className='bg-white h-10 w-10 cursor-not-allowed'>+</button>
+                        ) : (
+                            <button className='bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "tambah")}>+</button>
+                        )}
                         <input type="text" className='h-10 w-14 focus:outline-none text-center' value={val.qty} />
-                        <button className='bg-white hover:bg-peach-dark h-10 w-10'>-</button>
+                        {val.qty <= 1 ? (
+                            <button disabled className='bg-white h-10 w-10 cursor-not-allowed'>-</button>
+                        ) : (
+                            <button className='bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "kurang")}>-</button>
+                        )}
                     </div>
                     <p>Total = {toRupiah(val.productPriceRp * val.qty)}</p>
                 </div>
@@ -104,7 +131,6 @@ const Cart = () => {
                     <p className='text-green-dark text-lg font-bold'>No product in the cart</p>
                 </div>
             )}
-
         </div>
     )
 }
