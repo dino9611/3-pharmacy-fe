@@ -46,7 +46,6 @@ const AdminProducts = () => {
     setAddModalOpen(!addModalOpen);
   };
 
-<<<<<<< HEAD
     // modal edit product
     const [editModalopen, setEditmodalopen] = useState(false)
     const [oldCat, setoldCat] = useState([])
@@ -90,19 +89,12 @@ const AdminProducts = () => {
     const handleChangeRowsPerPage = (e) => {
         setRowsPerPage(e.target.value)
     }
-=======
-  // state rows per page
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const handleChangeRowsPerPage = (e) => {
-    setRowsPerPage(e.target.value);
-  };
-
+    
   // state page
   const [page, setPage] = useState(0);
   const handleChangePage = (e, newPage) => {
     setPage(newPage);
   };
->>>>>>> develop-fe
 
   // paginated product list
   const [paginatedProducts, setPaginatedProducts] = useState([]);
@@ -200,7 +192,6 @@ const AdminProducts = () => {
     paginate();
   }, [rowsPerPage, page, debouncedSearch]);
 
-<<<<<<< HEAD
     const deleteHandler = async(index) => {
         console.log("ini nanti buat delete")
         const productIndex = paginatedProducts[index]
@@ -315,119 +306,6 @@ const AdminProducts = () => {
             </div>
         </div >
     )
-=======
-  return (
-    <div>
-      <CreateModal
-        title='Add Product'
-        open={addModalOpen}
-        handleClose={openAddModal}
-        setOpen={openAddModal}
-      />
-      {productDetails()}
-      <div className=' ml-60 py-6'>
-        <div className='mb-6 text-center'>
-          <Button
-            variant='contained'
-            style={{ marginRight: 10, backgroundColor: '#66806a' }}
-            onClick={openAddModal}
-          >
-            Add Product
-          </Button>
-          <TextField
-            size='small'
-            id='outlined-basic'
-            label='Search products'
-            onChange={searchHandler}
-            color='success'
-          />
-        </div>
-        {paginatedProducts.length ? (
-          <>
-            <TableContainer
-              component={Paper}
-              sx={{ width: '65vw' }}
-              className='mx-auto'
-            >
-              <Table aria-label='simple table'>
-                <TableHead>
-                  <TableRow sx={{ height: '13vh', backgroundColor: '#b4c6a6' }}>
-                    <TableCell sx={{ width: '33vw' }} align='left'>
-                      Product
-                    </TableCell>
-                    <TableCell sx={{ width: '33vw' }} align='left'>
-                      Price
-                    </TableCell>
-                    <TableCell sx={{ width: '33vw' }} align='left'>
-                      Stock
-                    </TableCell>
-                    <TableCell sx={{ width: '0vw' }} align='left'></TableCell>
-                    <TableCell sx={{ width: '0vw' }} align='left'></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paginatedProducts.map((row, index) => (
-                    <TableRow
-                      key={row.productName}
-                      sx={{
-                        '&:last-child td, &:last-child th': { border: 0 },
-                        height: '13vh',
-                      }}
-                      hover={true}
-                    >
-                      <TableCell component='th' scope='row' align='left'>
-                        {row.productName}
-                      </TableCell>
-                      <TableCell align='left'>
-                        {toRupiah(row.productPriceRp)}
-                      </TableCell>
-                      <TableCell align='left'>{row.stock}</TableCell>
-                      <TableCell align='left'>
-                        <Button
-                          sx={{ color: '#66806a' }}
-                          onClick={() => productDetailsHandler(index)}
-                          variant='text'
-                        >
-                          Details
-                        </Button>
-                      </TableCell>
-                      <TableCell align='left'>
-                        <Button sx={{ color: '#66806a' }} variant='text'>
-                          Edit
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <TablePagination
-                component='div'
-                count={products.length}
-                rowsPerPageOptions={[5, 10]}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                sx={{ backgroundColor: '#b4c6a6' }}
-              />
-            </TableContainer>
-          </>
-        ) : (
-          <>
-            <div className='text-center mt-24 text-green-dark'>
-              <img
-                src={EmptyProducts}
-                alt='hai'
-                className='w-1/3 mx-auto mb-6'
-              />
-              <p className='text-lg font-bold'>Product is not found</p>
-            </div >
-          </>
-        )}
-      </div >
-    </div >
-  );
->>>>>>> develop-fe
 }
 
 export default AdminProducts
