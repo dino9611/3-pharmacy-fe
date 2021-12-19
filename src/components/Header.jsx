@@ -1,13 +1,8 @@
 import React, { useState } from 'react'
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import {
+    IconButton, Typography, Menu, Avatar, Button, Tooltip,
+    MenuItem, Badge, Box
+} from '@mui/material';
 import { useSelector } from 'react-redux';
 import './styles/Header.css'
 import { Link } from 'react-router-dom';
@@ -17,9 +12,11 @@ import Login from './Login';
 import Register from './Register';
 import ForgetPass from './ForgetPassword';
 import { styled } from '@mui/material/styles';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const Header = () => {
     const authState = useSelector(state => state.auth)
+    const cartState = useSelector(state => state.cart)
     const dispatch = useDispatch()
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -78,6 +75,7 @@ const Header = () => {
     const toProfile = () => {
         navigate("/profile")
     }
+
     return (
         <div className="flex items-center bg-green-dark h-24 px-6">
             <Login open={openLogin} handleClose={handleCloseLogin} />
@@ -122,6 +120,17 @@ const Header = () => {
             </Box>
             {authState.isLogin ? (
                 <>
+                    <Link to="/cart">
+                        <IconButton
+                            size="large"
+                            aria-label="show 17 new notifications"
+                            sx={{ marginRight: 2 }}
+                        >
+                            <Badge badgeContent={cartState.length} color="error">
+                                <ShoppingCartIcon sx={{ color: "white", fontSize: "2rem" }} />
+                            </Badge>
+                        </IconButton>
+                    </Link>
                     <Typography sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }} className="text-light-light" >
                         {authState.username}
                     </Typography>

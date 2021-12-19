@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
@@ -14,10 +14,15 @@ import LandingPage from './pages/LandingPage';
 import Products from './pages/Products';
 import AdminHome from './pages/admin/AdminHome';
 import AdminMenu from './pages/admin/AdminMenu';
+import Cart from './pages/user/Cart';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
   // Redux
   const dispatch = useDispatch();
+
+  // loading
+  const [loading, setLoading] = useState(true)
 
   // Keep Log in
   useEffect(() => {
@@ -34,11 +39,23 @@ function App() {
         } catch (error) {
           alert('Sesi anda habis, silahkan Log in lagi');
           localStorage.removeItem('token');
+        } finally {
+          setLoading(false)
         }
       };
       keepLoggedIn();
+    } else {
+      setLoading(false)
     }
   }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className='text-center'>
+        <CircularProgress />
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -50,6 +67,7 @@ function App() {
         <Route path={'/profile'} element={<Userprofile />} />
         <Route path={'/products'} element={<Products />} />
         <Route path={'/adminhome'} element={<AdminHome />} />
+        <Route path={'/cart'} element={<Cart />} />
       </Routes>
       <ToastContainer />
     </div>

@@ -17,55 +17,112 @@ export const resetState = (propName) => {
   };
 };
 
+const DEBOUNCE_DELAY = 100;
+
 // ! CREATE
-const addRawMaterialDebounce = (async (dispatch, API_URL, input) => {
-  await axios.post(API_URL + '/raw_material', input);
-  // const { data } = await axios.post(API_URL + '/raw_material', input);
-  // console.log(data);
-}).debouncify(250);
-export const addRawMaterial = (input) => {
+let addRawMaterial_timeoutID;
+export const addRawMaterial = (input, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    addRawMaterialDebounce(dispatch, API_URL, input);
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(addRawMaterial_timeoutID);
+
+    addRawMaterial_timeoutID = setTimeout(async () => {
+      try {
+        await axios.post(API_URL + '/raw_material', input);
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
 
 // ! READ
-const getRawMaterialsDebounce = (async (dispatch, API_URL, page, limit) => {
-  const { data } = await axios.get(
-    API_URL + `/raw_material/?page=${page}&limit=${limit}`
-  );
-  dispatch(setState('rawMaterials', data.result));
-}).debouncify(250);
-export const getRawMaterials = (page, limit) => {
+let getRawMaterials_timeoutID;
+export const getRawMaterials = (page, limit, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    getRawMaterialsDebounce(dispatch, API_URL, page, limit);
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getRawMaterials_timeoutID);
+
+    getRawMaterials_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(
+          API_URL + `/raw_material/?page=${page}&limit=${limit}`
+        );
+        dispatch(setState('rawMaterials', data.result));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
 
-const getRawMaterialsRecordDebounce = (async (
-  dispatch,
-  API_URL,
-  page,
-  limit
-) => {
-  const { data } = await axios.get(
-    API_URL + `/raw_material/record/?page=${page}&limit=${limit}`
-  );
-  // console.log(data);
-  dispatch(setState('rawMaterialsRecord', data.result));
-}).debouncify(250);
-export const getRawMaterialsRecord = (page, limit) => {
+let getRawMaterial_timeoutID;
+export const getRawMaterial = (id, index, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    getRawMaterialsRecordDebounce(dispatch, API_URL, page, limit);
+    const rawMaterials = getState().rawMaterialReducers.rawMaterials;
+
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getRawMaterial_timeoutID);
+
+    getRawMaterial_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(API_URL + `/raw_material/${id}`);
+        rawMaterials[index] = data.result[0];
+        dispatch(setState('rawMaterials', [...rawMaterials])); // ! needs to be new array to trigger render
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
+  };
+};
+
+let getRawMaterialsRecord_timeoutID;
+export const getRawMaterialsRecord = (page, limit, handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getRawMaterialsRecord_timeoutID);
+
+    getRawMaterialsRecord_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(
+          API_URL + `/raw_material/record/?page=${page}&limit=${limit}`
+        );
+        dispatch(setState('rawMaterialsRecord', data.result));
+
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
 
 // ! UPDATE
-const editRawMaterialDebounce = (async (dispatch, API_URL, input) => {
-  await axios.patch(API_URL + `/raw_material/${input.id}`, input);
-}).debouncify(250);
-export const editRawMaterial = (input) => {
+let editRawMaterial_timeoutID;
+export const editRawMaterial = (input, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
-    editRawMaterialDebounce(dispatch, API_URL, input);
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(editRawMaterial_timeoutID);
+
+    editRawMaterial_timeoutID = setTimeout(async () => {
+      try {
+        const { index } = input;
+        delete input.index;
+        await axios.patch(API_URL + `/raw_material/${input.id}`, input);
+        dispatch(getRawMaterial(input.id, index));
+
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
   };
 };
