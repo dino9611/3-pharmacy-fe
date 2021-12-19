@@ -106,6 +106,9 @@ const AdminProducts = () => {
     setSearch(e.target.value);
   };
 
+  // data deskripsi
+  const [dataDeskripsi, setDataDeskripsi] = useState([])
+
   // modal detail produk
   const [indexProduk, setIndexProduk] = useState(-1);
   const [openModal, setOpenModal] = useState(false);
@@ -120,7 +123,8 @@ const AdminProducts = () => {
   };
   const productDetails = () => {
     const cekIndex = indexProduk < 0;
-    const produkIndex = paginatedProducts[indexProduk];
+    const descIndex = dataDeskripsi.findIndex(x => x.id == paginatedProducts[indexProduk]?.id)
+    const produkIndex = dataDeskripsi[descIndex]
     return (
       <Modal
         open={openModal}
@@ -135,7 +139,9 @@ const AdminProducts = () => {
             </Typography>
           </div>
           {cekIndex ? "" : (
-            <img className='mb-4 mx-auto' src={API_URL + produkIndex.imagePath} alt={produkIndex.productName} />
+            <div className='h-56 overflow-hidden mb-4 bg-grey-light'>
+              <img className='mx-auto max-h-full' src={API_URL + produkIndex.imagePath} alt={produkIndex.productName} />
+            </div>
           )}
           <div className="mb-4">
             <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
@@ -145,12 +151,20 @@ const AdminProducts = () => {
               {cekIndex ? "" : produkIndex.description}
             </Typography>
           </div>
-          <div>
+          <div className="mb-4">
             <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
               Category :
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {cekIndex ? "" : produkIndex.categoryName}
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+              Composition :
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {cekIndex ? "" : produkIndex.composition}
             </Typography>
           </div>
         </Box>
@@ -169,6 +183,17 @@ const AdminProducts = () => {
       }
     }
     getProducts()
+
+    // fetch description
+    const getDescription = async () => {
+      try {
+        let res = await axios.get(`${API_URL}/product/getdescription`)
+        setDataDeskripsi(res.data)
+      } catch (error) {
+        alert(error);
+      }
+    }
+    getDescription()
 
     // handle paginated list products
     setRowsPerPage(rowsPerPage);
