@@ -52,12 +52,9 @@ const Products = () => {
         return paginatedProducts.map((val, index) => {
             return (
                 <Card className="m-2">
-                    <CardMedia
-                        component="img"
-                        height="140"
-                        image={API_URL + val.imagePath}
-                        alt={val.productName}
-                    />
+                    <div className='h-60 overflow-hidden'>
+                        <img src={API_URL + val.imagePath} alt="" className='min-h-full' />
+                    </div>
                     <CardContent>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: "#66806a", marginBottom: 2 }}>
                             {val.productName}
@@ -138,6 +135,9 @@ const Products = () => {
     // data kategoriii
     const [dataKategori, setDataKategori] = useState([])
 
+    // data deskripsi
+    const [dataDeskripsi, setDataDeskripsi] = useState([])
+
     // untuk filter produk berdasarkan kategori
     const [kategori, setKategori] = useState(0);
     const handleChangeKategori = (event) => {
@@ -160,7 +160,8 @@ const Products = () => {
 
     const productDetails = () => {
         const cekIndex = indexProduk < 0
-        const produkIndex = paginatedProducts[indexProduk]
+        const descIndex = dataDeskripsi.findIndex(x => x.id == paginatedProducts[indexProduk]?.id)
+        const produkIndex = dataDeskripsi[descIndex]
         return (
             <Modal
                 open={open}
@@ -170,7 +171,7 @@ const Products = () => {
             >
                 <Box sx={style}>
                     <div className="mb-4">
-                        <Typography variant="h5" color="text.secondary">
+                        <Typography variant="h5" color="text.secondary" sx={{ fontWeight: 'bold' }}>
                             {cekIndex ? "" : produkIndex.productName}
                         </Typography>
                     </div>
@@ -182,12 +183,20 @@ const Products = () => {
                             {cekIndex ? "" : produkIndex.description}
                         </Typography>
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
                             Category :
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {cekIndex ? "" : produkIndex.categoryName}
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                            Composition :
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {cekIndex ? "" : produkIndex.composition}
                         </Typography>
                     </div>
                 </Box>
@@ -222,6 +231,17 @@ const Products = () => {
             }
         }
         getCategories()
+
+        // fetch description
+        const getDescription = async () => {
+            try {
+                let res = await axios.get(`${API_URL}/product/getdescription`)
+                setDataDeskripsi(res.data)
+            } catch (error) {
+                alert(error);
+            }
+        }
+        getDescription()
 
         // untuk offset pagingnya
         setPage(page)
