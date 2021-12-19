@@ -11,7 +11,6 @@ import Verified from './pages/user/verifyPage';
 import ChangePassword from './pages/user/Changepass';
 import Userprofile from './pages/user/UserProfile';
 import LandingPage from './pages/LandingPage';
-import AdminProducts from './pages/admin/AdminProducts';
 import Products from './pages/Products';
 import AdminHome from './pages/admin/AdminHome';
 import AdminMenu from './pages/admin/AdminMenu';

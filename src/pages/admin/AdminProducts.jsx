@@ -14,6 +14,8 @@ import AdminNavbar from '../../components/AdminNavbar';
 import { toRupiah } from '../../helpers/toRupiah';
 import { useDebounce } from 'use-debounce';
 import CreateModal from '../../components/CreateProductModal';
+import EditModal from '../../components/EditProductModal'
+import Swal from 'sweetalert2';
 
 // Modal style
 const style = {
@@ -38,11 +40,48 @@ const AdminProducts = () => {
         setAddModalOpen(!addModalOpen)
     }
 
+    // modal edit product
+    const [editModalopen, setEditmodalopen] = useState(false)
+    const [oldCat, setoldCat] = useState([])
+    const [rawMat, setrawMat] = useState([])
+    const [amountinUnit, setamountinUnit] = useState([])
+
+    const openEditmodal = () => {
+        setEditmodalopen(!editModalopen)
+    }
+    const editModalHandler = async (index) => {
+        if (index >=0){
+            setIndexProduk(index)
+            const produkIndex = paginatedProducts[index]
+            try {
+                // axios untuk mendapatkan arrayofobject dari category yang dimiliki oleh product
+                let result = await axios.get(`${API_URL}/product/editcategory/${produkIndex.id}`)
+                // hasil dari axios dimapping untuk mendapatkan array of product category Id
+                let arr = result.data[0].map((val) => {
+                    return val.product_category_id
+                })
+                setoldCat(arr)
+                // hasil dari result.data[1] adalah array yang nantinya akan dimapping untuk membatasi composition select
+                setrawMat(result.data[1])
+                // hasil dari axios dimapping untuk mendapatkan array of amountinUnit
+                let rawAmount = result.data[1].map((val) => {
+                    return val.amountInUnit
+                })
+                setamountinUnit(rawAmount)
+                // console.log(amountinUnit)
+            } catch (error) {
+                console.log(error)
+            }
+            openEditmodal()
+        }else {
+            setIndexProduk(-1)
+        }
+    }
+
     // state rows per page
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const handleChangeRowsPerPage = (e) => {
         setRowsPerPage(e.target.value)
-
     }
 
     // state page
@@ -147,9 +186,42 @@ const AdminProducts = () => {
 
     }, [rowsPerPage, page, debouncedSearch])
 
+    const deleteHandler = async(index) => {
+        console.log("ini nanti buat delete")
+        const productIndex = paginatedProducts[index]
+        console.log(productIndex.id)
+        try {
+            Swal.fire({
+                title: 'Do you want to save the changes?',
+                showDenyButton: true,
+                confirmButtonText: 'Delete!',
+                denyButtonText: `Cancel`,
+            }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${API_URL}/product/delete/${productIndex.id}`)
+                .then(() => {
+                    Swal.fire('Deleted!', 'Your Product is Deleted', 'success')
+                }).catch(() => {
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    })
+                })
+            } else {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+            })
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div>
             <CreateModal title='Add Product' open={addModalOpen} handleClose={openAddModal} setOpen={openAddModal} />
+            <EditModal amountDef={amountinUnit} compDef={rawMat} oldCat={oldCat} open={editModalopen} handleClose={openEditmodal} setOpen={openEditmodal} indexProduct={indexProduk} paginatedProducts={paginatedProducts} />
             {productDetails()}
             <div className=" ml-60 py-6">
                 <div className="mb-6 text-center">
@@ -176,6 +248,7 @@ const AdminProducts = () => {
                                         <TableCell sx={{ width: "33vw" }} align="left">Stock</TableCell>
                                         <TableCell sx={{ width: "0vw" }} align="left"></TableCell>
                                         <TableCell sx={{ width: "0vw" }} align="left"></TableCell>
+                                        <TableCell sx={{ width: "0vw" }} align="left"></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -194,7 +267,10 @@ const AdminProducts = () => {
                                                 <Button sx={{ color: "#66806a" }} onClick={() => productDetailsHandler(index)} variant="text">Details</Button>
                                             </TableCell>
                                             <TableCell align="left">
-                                                <Button sx={{ color: "#66806a" }} variant="text">Edit</Button>
+                                                <Button sx={{ color: "#66806a" }} variant="text" onClick={() => editModalHandler(index)} >Edit</Button>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <Button sx={{ color: "#66806a" }} onClick={() => deleteHandler(index)} variant="text">Delete</Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -6,15 +6,22 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 // ? redux
-import { useDispatch } from 'react-redux';
-import { editProduct } from '../redux/actions/productActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { editProduct, getProductCategories, resetState as resetStateProduct } from '../redux/actions/productActions';
+import {
+  getRawMaterials,
+  resetState as resetStateRawMaterial,
+} from '../redux/actions/rawMaterialActions';
+import CompositionSelect from './ProductCompSelect';
+import { API_URL } from '../constants/api';
+import MultipleEdit from './ProductCategoryEdit';
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 1000,
   bgcolor: 'background.paper',
   border: '1px solid #000',
   borderRadius: '15px',
@@ -51,16 +58,64 @@ const CssTextField = styled(TextField)({
 });
 
 const EditModal = ({
-  title,
-  initInput,
-  input,
-  setinput,
   open,
   setOpen,
   handleClose,
+  indexProduct,
+  paginatedProducts,
+  oldCat,
+  amountDef,
+  compDef
 }) => {
+  // const initInput = React.useRef(null);
+
+  // untuk dapetin data product mana yang mau diedit bedasarkan indexproduct
+  const produkIndex = paginatedProducts[indexProduct]
+
+  // untuk get compositions dan category
+  const categories = useSelector((state) => state.productReducers.categories);
+  // const compositions = useSelector(
+  //   (state) => state.rawMaterialReducers.rawMaterials
+  // );
+  
+
+
+
+  // Iniadalah initial value
+  const initialInputVal = React.useMemo(() => {
+    return {
+      productName: '',
+      stock: '',
+      description: '',
+      categories: [],
+      compositions: [],
+      compositionsAmount: [],
+    };
+  }, []);
+  
+
+  // untuk menyimpan data yang diedit untuk dikirim ke API
+  const [dataUpdate, setdataUpdate] = useState(initialInputVal)
+  // const [input, setinput] = useState(initialInputVal);
+  const inputHandler = (e) => {
+    setdataUpdate({ ...dataUpdate, [e.target.name]: e.target.value });
+  }
+
+
+  // untuk get data categories dan raw material
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProductCategories())
+    dispatch(getRawMaterials(1, 40));
+    return () => {
+      dispatch(resetStateProduct('categories'))
+      dispatch(resetStateRawMaterial('rawMaterials'));
+    }
+  },[dispatch])
+
+  // untuk set file gambar
   const [file, setfile] = React.useState(null);
+  const fileInput = React.useRef(null);
   const onFileChange = (e) => {
     if (e.target.files[0]) {
       setfile(e.target.files[0]);
@@ -71,26 +126,27 @@ const EditModal = ({
 
   const onCancelClick = (e) => {
     e.preventDefault();
+    setdataUpdate(initialInputVal);
     setOpen(false);
-    setinput({ stock: '' });
+    fileInput.current.files = null;
+    setfile(null);
   };
+
   const onConfirmClick = (e) => {
     e.preventDefault();
-    const { id, stock } = input;
-    const init = initInput.current;
-    dispatch(
-      editProduct(file, { id, stock: init.stock !== stock && parseInt(stock) })
-    );
-    setOpen(false);
-    setinput({ stock: '' });
-    // window.location.reload(false);
+    if(dataUpdate.compositions.length !== amountDef.length){
+        alert("Please Select All Compositions")
+        return
+    } 
+    
+    let inputData = {...dataUpdate, oldCategories : oldCat, id : produkIndex?.id  }
+    dispatch(editProduct(file, inputData))
+    setOpen(false)
   };
-  const inputHandler = (e) =>
-    setinput({ ...input, [e.target.name]: e.target.value });
 
   return (
     <div>
-      <input type='file' className='hidden' onChange={onFileChange} />
+      <input ref={fileInput} type='file' className='hidden' onChange={onFileChange} />
       <Modal
         open={open}
         onClose={handleClose}
@@ -105,38 +161,97 @@ const EditModal = ({
             fontWeight={'bold'}
             align={'center'}
           >
-            {title}
+            Edit Modal
           </Typography>
 
           {/*//! inputs */}
-          <CssTextField
-            name='stock'
-            value={input.stock}
-            onChange={inputHandler}
-            fullWidth
-            type='number'
-            label='stock'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <ColorButton
-            fullWidth
-            variant='contained'
-            sx={{ mt: 2 }}
-            size='large'
-            onClick={onCancelClick}
-          >
-            Cancel
-          </ColorButton>
-          <ColorButton
-            fullWidth
-            variant='contained'
-            sx={{ mt: 2 }}
-            size='large'
-            onClick={onConfirmClick}
-          >
-            Confirm
-          </ColorButton>
+          <div className='flex justify-evenly '>
+            <div className='flex flex-col items-center '>
+              <button
+                  onClick={() => fileInput.current.click()}
+                  className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32'
+                >
+                  Input Image
+              </button>
+                {file ? (
+                  <img
+                    className='object-contain h-64 w-96 bg-gray-200 rounded-lg mt-2'
+                    src={URL.createObjectURL(file)}
+                    alt={file}
+                  ></img>
+                ) : (
+                  <img
+                    className='object-contain h-64 w-96 bg-gray-200 rounded-lg mt-2'
+                    src={API_URL + produkIndex?.imagePath}
+                    alt={file}
+                  ></img>
+                )}
+             <ColorButton
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3.5 }}
+                size='large'
+                onClick={onCancelClick}
+              >
+                Cancel
+            </ColorButton>
+            </div>
+            <div className='flex flex-col'>
+              <div className='flex mr-1'>
+                <CssTextField
+                  name='productName'
+                  defaultValue={produkIndex?.productName}
+                  onChange={inputHandler}
+                  label='product name'
+                  id='custom-css-outlined-input'
+                  sx={{ mt: 1, width: 1 / 2, mr: 1 }}
+                />
+                <CssTextField
+                  name='stock'
+                  defaultValue={produkIndex?.stock}
+                  onChange={inputHandler}
+                  type='number'
+                  label='stock'
+                  id='custom-css-outlined-input'
+                  sx={{ mt: 1, width: 1 / 2 }}
+                />
+              </div>
+              <CssTextField
+                name='description'
+                defaultValue={produkIndex?.description}
+                onChange={inputHandler}
+                // type='text'
+                multiline
+                rows={4}
+                label='product description'
+                id='custom-css-outlined-input'
+                sx={{ mt: 1 }}
+              />
+              <div>
+                <MultipleEdit
+                    input={dataUpdate}
+                    setinput={setdataUpdate}
+                    options={categories}
+                    label={'Categories'}
+                    oldCat={oldCat}
+                  />
+                <CompositionSelect
+                  input={dataUpdate}
+                  setinput={setdataUpdate}
+                  options={compDef}
+                  label={'Compositions'}
+                />
+              </div>
+              <ColorButton
+                variant='contained'
+                sx={{ mt: 2 }}
+                size='large'
+                onClick={onConfirmClick}
+              >
+                Confirm
+              </ColorButton>
+            </div>
+          </div>
         </Box>
       </Modal>
     </div>

@@ -82,18 +82,30 @@ export const getProductCategories = () => {
 };
 
 // ! UPDATE
-const editProductDebounce = (async (dispatch, API_URL, file, input) => {
+const editProductDebounce = (async (dispatch, API_URL, file, inputData) => {
+
+  const {compositionsAmount} = inputData
+  inputData.compositions.forEach((el,i,arr) => {
+    arr[i] = [el, compositionsAmount[i]]
+  })
+  delete inputData.compositionsAmount;
+
   const formData = new FormData();
   formData.append('image', file);
-  formData.append('data', JSON.stringify(input));
-  await axios.patch(API_URL + '/product', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  formData.append('data', JSON.stringify(inputData));
+  try {
+    await axios.patch(API_URL + '/product', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.log(error.response.data.message);
+    alert(error.response.data.message)
+  }
 }).debouncify(250);
-export const editProduct = (file, input) => {
+export const editProduct = (file, inputData) => {
   return (dispatch, getState, API_URL) => {
-    editProductDebounce(dispatch, API_URL, file, input);
+    editProductDebounce(dispatch, API_URL, file, inputData);
   };
 };

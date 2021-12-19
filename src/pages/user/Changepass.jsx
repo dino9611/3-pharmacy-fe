@@ -175,7 +175,7 @@ const ChangePassword = () => {
                     }}
                   />
                   {/* <TypoNotif display={mistakePassword ? "block" : "none"} sx={{color:'black'}} sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />{passwordError}</TypoNotif> */}
-                  <TypoNotif display={mistakePassword ? "block" : "none"} sx={{color:'black'}} sx={{fontSize:12, mt:0.5, justifyContent:'center'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />
+                  <TypoNotif display={mistakePassword ? "block" : "none"} sx={{fontSize:12, mt:0.5, justifyContent:'center', color:'black'}} ><ErrorIcon sx={{fontSize:'medium', mr:0.5}} />
                     {errors[0]}
                   </TypoNotif>
                   <ColorButton onClick={changeClick} fullWidth variant="contained" sx={{mt:2}} size='large' >
