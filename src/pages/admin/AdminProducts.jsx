@@ -16,8 +16,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../../constants/api';
-import EmptyProducts from './assets/empty-products.svg';
-import AdminNavbar from '../../components/AdminNavbar';
+import EmptyProducts from './assets/empty-products.svg'
 import { toRupiah } from '../../helpers/toRupiah';
 import { useDebounce } from 'use-debounce';
 import CreateModal from '../../components/CreateProductModal';
@@ -28,7 +27,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 350,
   bgcolor: 'background.paper',
   borderRadius: '15px',
   boxShadow: 24,
@@ -90,59 +89,46 @@ const AdminProducts = () => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <div className='mb-4'>
-            <Typography variant='h5' color='text.secondary'>
-              {cekIndex ? '' : produkIndex.productName}
+          <div className="mb-4">
+            <Typography variant="h5" color="text.secondary">
+              {cekIndex ? "" : produkIndex.productName}
             </Typography>
           </div>
-          <div className='mb-4'>
-            <img
-              src='https://image.shutterstock.com/z/stock-photo-pharmaceuticals-antibiotics-pills-medicine-colorful-antibacterials-pills-on-white-background-1061962874.jpg'
-              alt=''
-            />
-          </div>
-          <div className='mb-4'>
-            <Typography
-              variant='body4'
-              color='text.secondary'
-              sx={{ fontWeight: 'bold' }}
-            >
+          {cekIndex ? "" : (
+            <img className='mb-4 mx-auto' src={API_URL + produkIndex.imagePath} alt={produkIndex.productName} />
+          )}
+          <div className="mb-4">
+            <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
               Description :
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              {cekIndex ? '' : produkIndex.description}
+            <Typography variant="body2" color="text.secondary">
+              {cekIndex ? "" : produkIndex.description}
             </Typography>
           </div>
           <div>
-            <Typography
-              variant='body4'
-              color='text.secondary'
-              sx={{ fontWeight: 'bold' }}
-            >
+            <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
               Category :
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              {cekIndex ? '' : produkIndex.categoryName}
+            <Typography variant="body2" color="text.secondary">
+              {cekIndex ? "" : produkIndex.categoryName}
             </Typography>
           </div>
         </Box>
       </Modal>
-    );
-  };
+    )
+  }
 
   useEffect(() => {
     // fetch data products
     const getProducts = async () => {
       try {
-        let res = await axios.get(
-          `${API_URL}/product/admingetproducts?search=${search}`
-        );
-        setProducts(res.data);
+        let res = await axios.get(`${API_URL}/product/admingetproducts?search=${search}`)
+        setProducts(res.data)
       } catch (error) {
-        alert(error);
+        alert(error)
       }
-    };
-    getProducts();
+    }
+    getProducts()
 
     // handle paginated list products
     setRowsPerPage(rowsPerPage);
@@ -271,12 +257,12 @@ const AdminProducts = () => {
                 className='w-1/3 mx-auto mb-6'
               />
               <p className='text-lg font-bold'>Product is not found</p>
-            </div>
+            </div >
           </>
         )}
-      </div>
-    </div>
+      </div >
+    </div >
   );
-};
+}
 
-export default AdminProducts;
+export default AdminProducts

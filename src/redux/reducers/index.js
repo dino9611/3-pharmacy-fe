@@ -5,9 +5,11 @@ import { authReducers } from './auth_reducers';
 import { rawMaterialReducers } from './rawMaterialReducers';
 import { productReducers } from './productReducers';
 import { revenueReducers } from './revenueReducers';
+import { cartReducers } from './cartReducers';
 
 const reducers = combineReducers({
   auth: authReducers,
+  cart: cartReducers,
   rawMaterialReducers,
   productReducers,
   revenueReducers,
