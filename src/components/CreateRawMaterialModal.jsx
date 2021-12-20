@@ -79,7 +79,8 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
     setOpen(false);
     dispatch(
       addRawMaterial(input, {
-        handleSuccess: () => toast.success('success'),
+        handleSuccess: () =>
+          toast.success('successfully created new raw material'),
         handleFail: (err) =>
           toast.error(err.response.data.message || 'server error'),
       })

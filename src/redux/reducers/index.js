@@ -1,7 +1,7 @@
 //? redux
 import { combineReducers } from 'redux';
 //? reducers
-import { authReducers } from './auth_reducers';
+import { authReducers } from './authReducers';
 import { rawMaterialReducers } from './rawMaterialReducers';
 import { productReducers } from './productReducers';
 import { revenueReducers } from './revenueReducers';

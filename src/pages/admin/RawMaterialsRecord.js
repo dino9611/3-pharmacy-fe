@@ -28,6 +28,8 @@ import {
   resetState,
 } from '../../redux/actions/rawMaterialActions';
 
+import { toast } from 'react-toastify';
+
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -107,7 +109,12 @@ export default function RawMaterialsTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(7);
 
   React.useEffect(() => {
-    dispatch(getRawMaterialsRecord(page + 1, rowsPerPage));
+    dispatch(
+      getRawMaterialsRecord(page + 1, rowsPerPage, {
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+      })
+    );
     return () => dispatch(resetState('rawMaterialsRecord'));
   }, [dispatch, page, rowsPerPage]);
 

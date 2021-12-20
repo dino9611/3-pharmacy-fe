@@ -10,6 +10,7 @@ import ManageRawMaterials from './ManageRawMaterials';
 import RawMaterialsRecord from './RawMaterialsRecord';
 import AdminProducts from './AdminProducts';
 import Revenue from './Revenue';
+import SalesReport from './SalesReport';
 
 export default function AdminMenu() {
   return (
@@ -22,6 +23,7 @@ export default function AdminMenu() {
         <Route path={'products'} element={<AdminProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
         <Route path={'revenue'} element={<Revenue />} />
+        <Route path={'sales_report'} element={<SalesReport />} />
       </Routes>
       {/* </div> */}
     </>

@@ -37,7 +37,12 @@ export const getRevenue = (params, handleResult = {}) => {
         yearMonthEnd = yearMonthEnd.toISOString();
         const { data } = await axios.get(
           API_URL +
-            `/stats/revenue?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`
+            `/stats/revenue?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch(setState('revenue', data));
         handleSuccess !== undefined && handleSuccess();
@@ -70,7 +75,12 @@ export const getPotentialRevenue = (params, handleResult = {}) => {
         // console.log(yearMonthEnd);
         const { data } = await axios.get(
           API_URL +
-            `/stats/potential_revenue?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`
+            `/stats/potential_revenue?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch(setState('potentialRevenue', data));
         handleSuccess !== undefined && handleSuccess();

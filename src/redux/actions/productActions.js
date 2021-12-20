@@ -40,6 +40,7 @@ export const addProduct = (file, input, handleResult = {}) => {
         await axios.post(API_URL + `/product`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         });
         handleSuccess !== undefined && handleSuccess();
@@ -62,7 +63,12 @@ export const getProducts = (page, limit, handleResult = {}) => {
     getProduct_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          API_URL + `/product/?page=${page}&limit=${limit}`
+          API_URL + `/product/?page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch(setState('products', data.result));
         handleSuccess !== undefined && handleSuccess();
@@ -83,7 +89,11 @@ export const getProductCategories = (handleResult = {}) => {
 
     getProductCategories_timeoutID = setTimeout(async () => {
       try {
-        const { data } = await axios.get(API_URL + '/product/getcategories');
+        const { data } = await axios.get(API_URL + '/product/getcategories', {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        });
         dispatch(setState('categories', data));
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
@@ -101,10 +111,10 @@ export const editProduct = (file, inputData, handleResult = {}) => {
     const { handleSuccess, handleFail, handleFinally } = handleResult;
     clearTimeout(editProduct_timeoutID);
 
-    const {compositionsAmount} = inputData
-      inputData.compositions.forEach((el,i,arr) => {
-        arr[i] = [el, compositionsAmount[i]]
-      })
+    const { compositionsAmount } = inputData;
+    inputData.compositions.forEach((el, i, arr) => {
+      arr[i] = [el, compositionsAmount[i]];
+    });
     delete inputData.compositionsAmount;
 
     editProduct_timeoutID = setTimeout(async () => {
@@ -115,6 +125,7 @@ export const editProduct = (file, inputData, handleResult = {}) => {
         await axios.patch(API_URL + '/product', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         });
         handleSuccess !== undefined && handleSuccess();

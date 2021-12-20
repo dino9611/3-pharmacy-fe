@@ -12,7 +12,6 @@ import ChangePassword from './pages/user/Changepass';
 import Userprofile from './pages/user/UserProfile';
 import LandingPage from './pages/LandingPage';
 import Products from './pages/Products';
-import AdminHome from './pages/admin/AdminHome';
 import AdminMenu from './pages/admin/AdminMenu';
 import Cart from './pages/user/Cart';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -22,7 +21,7 @@ function App() {
   const dispatch = useDispatch();
 
   // loading
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   // Keep Log in
   useEffect(() => {
@@ -40,12 +39,12 @@ function App() {
           alert('Sesi anda habis, silahkan Log in lagi');
           localStorage.removeItem('token');
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       };
       keepLoggedIn();
     } else {
-      setLoading(false)
+      setLoading(false);
     }
   }, [dispatch]);
 
@@ -54,7 +53,7 @@ function App() {
       <div className='text-center'>
         <CircularProgress />
       </div>
-    )
+    );
   }
 
   return (
@@ -66,7 +65,6 @@ function App() {
         <Route path={'/change'} element={<ChangePassword />} />
         <Route path={'/profile'} element={<Userprofile />} />
         <Route path={'/products'} element={<Products />} />
-        <Route path={'/adminhome'} element={<AdminHome />} />
         <Route path={'/cart'} element={<Cart />} />
       </Routes>
       <ToastContainer />

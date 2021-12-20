@@ -101,7 +101,8 @@ const EditModal = ({
           unit: init.unit !== unit && unit,
         },
         {
-          handleSuccess: () => toast.success('success'),
+          handleSuccess: () =>
+            toast.success('successfully edited raw material'),
           handleFail: (err) =>
             toast.error(err.response.data.message || 'server error'),
         }

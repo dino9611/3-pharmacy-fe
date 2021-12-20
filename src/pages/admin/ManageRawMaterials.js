@@ -31,6 +31,8 @@ import {
 import CreateModal from '../../components/CreateRawMaterialModal';
 import EditModal from '../../components/EditRawMaterialModal';
 
+import { toast } from 'react-toastify';
+
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -122,7 +124,12 @@ export default function RawMaterialsTable() {
   const initInput = React.useRef(null);
 
   React.useEffect(() => {
-    dispatch(getRawMaterials(page + 1, rowsPerPage));
+    dispatch(
+      getRawMaterials(page + 1, rowsPerPage, {
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+      })
+    );
     return () => dispatch(resetState('rawMaterials'));
   }, [dispatch, page, rowsPerPage]);
 
