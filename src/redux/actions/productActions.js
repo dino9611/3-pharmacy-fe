@@ -96,15 +96,21 @@ export const getProductCategories = (handleResult = {}) => {
 
 // ! UPDATE
 let editProduct_timeoutID;
-export const editProduct = (file, input, handleResult = {}) => {
+export const editProduct = (file, inputData, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
     const { handleSuccess, handleFail, handleFinally } = handleResult;
     clearTimeout(editProduct_timeoutID);
 
+    const {compositionsAmount} = inputData
+      inputData.compositions.forEach((el,i,arr) => {
+        arr[i] = [el, compositionsAmount[i]]
+      })
+    delete inputData.compositionsAmount;
+
     editProduct_timeoutID = setTimeout(async () => {
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('data', JSON.stringify(input));
+      formData.append('data', JSON.stringify(inputData));
       try {
         await axios.patch(API_URL + '/product', formData, {
           headers: {

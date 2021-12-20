@@ -17,8 +17,16 @@ const MenuProps = {
   },
 };
 
+// function getStyles(name, categories, theme) {
+//   return {
+//     fontWeight:
+//       categories.indexOf(name) === -1 || true
+//         ? theme.typography.fontWeightRegular
+//         : theme.typography.fontWeightMedium,
+//   };
+// }
 
-export default function MultipleSelect({ input, setinput, label, options }) {
+export default function MultipleEdit({ input, setinput, label, options, oldCat }) {
   const theme = useTheme();
 
   const handleChange = (event) => {
@@ -39,7 +47,7 @@ export default function MultipleSelect({ input, setinput, label, options }) {
           labelId='demo-multiple-name-label'
           id='demo-multiple-name'
           multiple
-          value={input.categories}
+          defaultValue={oldCat}
           onChange={handleChange}
           input={<OutlinedInput label={label} />}
           MenuProps={MenuProps}
@@ -48,6 +56,7 @@ export default function MultipleSelect({ input, setinput, label, options }) {
             <MenuItem
               key={el.id}
               value={el.id}
+            //   style={getStyles(el.id, input.categories, theme)}
             >
               {el.categoryName}
             </MenuItem>
