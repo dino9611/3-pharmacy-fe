@@ -152,6 +152,7 @@ export default function RawMaterialsTable() {
                 <TableCell align='right'>inventory change</TableCell>
                 <TableCell align='right'>unit per bottle</TableCell>
                 <TableCell align='right'>datetime</TableCell>
+                <TableCell align='right'>admin id</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -174,7 +175,12 @@ export default function RawMaterialsTable() {
                   <TableCell align='right'>
                     {`${row.unitPerBottle} ${row.unit} per bottle`}
                   </TableCell>
-                  <TableCell align='right'>{row.datetime}</TableCell>
+                  <TableCell align='right'>
+                    {row.datetime.slice(0, 19).replace('T', ' ')}
+                  </TableCell>
+                  <TableCell align='right'>
+                    {row.admin_id || 'automatic'}
+                  </TableCell>
                 </TableRow>
               ))}
 
