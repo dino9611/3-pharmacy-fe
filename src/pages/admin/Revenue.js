@@ -4,15 +4,14 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  // PointElement,
-  // LineElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
   BarElement,
 } from 'chart.js';
-// import { Line } from 'react-chartjs-2';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 // ? mui
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -33,8 +32,8 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  // PointElement,
-  // LineElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
@@ -113,8 +112,12 @@ export default function Revenue() {
         />
       </div>
       {/* <div>select year</div> */}
-      {/* <Line options={options} data={data} /> */}
-      <Bar options={options} data={data} />
+      <Bar options={options1} data={data} style={{ padding: '0 10px' }} />
+      <Line
+        options={options2}
+        data={data}
+        style={{ margin: '50px 0', padding: '0 10px' }}
+      />
     </div>
   );
 }
@@ -135,7 +138,7 @@ const intToMonth = (n) =>
     'Dec',
   ][n - 1];
 
-const options = {
+const options1 = {
   responsive: true,
   plugins: {
     legend: {
@@ -143,7 +146,28 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Revenue and Profit',
+      // text: 'Monthly Revenue and Profit',
+      text: 'Monthly Revenue',
+    },
+  },
+  scales: {
+    y: {
+      ticks: {
+        callback: (value) => 'Rp ' + value.toLocaleString(),
+      },
+    },
+  },
+};
+const options2 = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      // text: 'Yearly Revenue and Profit',
+      text: 'Yearly Revenue',
     },
   },
   scales: {

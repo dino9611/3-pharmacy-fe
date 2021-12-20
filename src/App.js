@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from './constants/api';
 import './App.css';
@@ -19,6 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 function App() {
   // Redux
   const dispatch = useDispatch();
+  const authReducer = useSelector((state) => state.auth);
 
   // loading
   const [loading, setLoading] = useState(true);
@@ -60,12 +61,16 @@ function App() {
     <div>
       <Routes>
         <Route path={'/'} element={<LandingPage />} />
-        <Route path={'/admin/*'} element={<AdminMenu />} />
+        {authReducer.role === 'admin' && (
+          <Route path={'/admin/*'} element={<AdminMenu />} />
+        )}
+        : null
         <Route path={'/verified'} element={<Verified />} />
         <Route path={'/change'} element={<ChangePassword />} />
         <Route path={'/profile'} element={<Userprofile />} />
         <Route path={'/products'} element={<Products />} />
         <Route path={'/cart'} element={<Cart />} />
+        <Route path={'/*'} element={<NotFound />} />
       </Routes>
       <ToastContainer />
     </div>
@@ -73,3 +78,7 @@ function App() {
 }
 
 export default App;
+
+function NotFound() {
+  return <h1>Not Found</h1>;
+}

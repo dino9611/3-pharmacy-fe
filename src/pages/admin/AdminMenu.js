@@ -1,6 +1,6 @@
 import React from 'react';
 // ? react-router-dom
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 // ? pages
 import AdminSidebar from '../../components/AdminSidebar';
 
@@ -18,8 +18,11 @@ export default function AdminMenu() {
       {/* <div className='flex justify-end'> */}
       <AdminSidebar />
       <Routes>
+        <Route
+          path='/'
+          element={<Navigate replace to='/admin/sales_report' />}
+        />
         <Route path={'raw_materials'} element={<ManageRawMaterials />} />
-        {/* <Route path={'products'} element={<ManageProducts />} /> */}
         <Route path={'products'} element={<AdminProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
         <Route path={'revenue'} element={<Revenue />} />

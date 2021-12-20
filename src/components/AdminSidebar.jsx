@@ -2,10 +2,18 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 // ? css
 import './styles/AdminSidebar.css';
+// ? redux
+import { useDispatch } from 'react-redux';
 
 export default function AdminSideBar(props) {
   const location = useLocation();
   const [collapseShow, setCollapseShow] = React.useState('hidden');
+  const dispatch = useDispatch();
+
+  const onLogout = () => {
+    dispatch({ type: 'logout' });
+    localStorage.removeItem('token');
+  };
   return (
     <>
       {/* <nav className='bg-primary-450 md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6'> */}
@@ -150,11 +158,14 @@ export default function AdminSideBar(props) {
                 location={location}
               />
 
-              <div>
-                <button className='bg-peach-dark hover:bg-peach-light w-3/4 rounded-lg py-2 mt-12'>
+              <Link to={'/'}>
+                <button
+                  onClick={onLogout}
+                  className='bg-peach-dark hover:bg-peach-light w-3/4 rounded-lg py-2 mt-12 ml-4 font-bold'
+                >
                   Log out
                 </button>
-              </div>
+              </Link>
             </ul>
           </div>
         </div>
