@@ -6,9 +6,12 @@ const initialState = {
   profit: [],
   yearlyRevenue: [],
   yearlyPotentialRevenue: [],
+  yearlyProfit: [],
+  productSales: [],
+  prescriptionSales: [],
 };
 
-export const revenueReducers = (state = initialState, action) => {
+export const statsReducers = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.revenue.SET_STATE:
       return { ...state, [action.propName]: action.payload };

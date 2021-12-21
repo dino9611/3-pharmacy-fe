@@ -4,15 +4,14 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  // PointElement,
-  // LineElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
   BarElement,
 } from 'chart.js';
-// import { Line } from 'react-chartjs-2';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 // ? mui
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -24,8 +23,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getRevenue,
   getPotentialRevenue,
+  getYearlyPotentialRevenue,
+  getYearlyRevenue,
   resetState,
-} from '../../redux/actions/revenueActions';
+} from '../../redux/actions/statsActions';
 
 import { toast } from 'react-toastify';
 
@@ -33,8 +34,8 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  // PointElement,
-  // LineElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
@@ -49,10 +50,7 @@ const currYear = new Date().getFullYear();
 
 export default function Revenue() {
   const dispatch = useDispatch();
-  const revenue = useSelector((state) => state.revenueReducers.revenue);
-  const potentialRevenue = useSelector(
-    (state) => state.revenueReducers.potentialRevenue
-  );
+  const statsReducers = useSelector((state) => state.statsReducers);
   // const profit = useSelector((state) => state.revenueReducers.profit);
 
   const [yearMonthStart, setyearMonthStart] = React.useState(
@@ -67,14 +65,20 @@ export default function Revenue() {
     dispatch(
       getPotentialRevenue({ yearMonthStart, yearMonthEnd }, handleResult)
     );
+    dispatch(getYearlyRevenue(handleResult));
+    dispatch(getYearlyPotentialRevenue(handleResult));
     return () => {
       dispatch(resetState('revenue'));
       dispatch(resetState('potentialRevenue'));
+      dispatch(resetState('yearlyRevenue'));
+      dispatch(resetState('yearlyPotentialRevenue'));
     };
   }, [dispatch, yearMonthStart, yearMonthEnd]);
 
-  const data = {
-    labels: revenue.map((el) => `${el.year}-${intToMonth(el.month)}`),
+  const data1 = {
+    labels: statsReducers.revenue.map(
+      (el) => `${el.year}-${intToMonth(el.month)}`
+    ),
     datasets: [
       // {
       //   label: 'Profit',
@@ -84,14 +88,34 @@ export default function Revenue() {
       // },
       {
         label: 'Revenue',
-        // data: labels.map(() => Math.ceil(Math.random() * 1000)),
-        data: revenue.map((el) => el.totalRevenueRp),
+        data: statsReducers.revenue.map((el) => el.totalRevenueRp),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
         label: 'Potential Revenue',
-        data: potentialRevenue.map((el) => el.totalPotentialRevenueRp),
+        data: statsReducers.potentialRevenue.map(
+          (el) => el.totalPotentialRevenueRp
+        ),
+        borderColor: 'rgb(99, 255, 132)',
+        backgroundColor: 'rgba(99, 255, 132, 0.5)',
+      },
+    ],
+  };
+  const data2 = {
+    labels: statsReducers.yearlyRevenue.map((el) => el.year),
+    datasets: [
+      {
+        label: 'Revenue',
+        data: statsReducers.yearlyRevenue.map((el) => el.totalRevenueRp),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Potential Revenue',
+        data: statsReducers.yearlyPotentialRevenue.map(
+          (el) => el.totalPotentialRevenueRp
+        ),
         borderColor: 'rgb(99, 255, 132)',
         backgroundColor: 'rgba(99, 255, 132, 0.5)',
       },
@@ -113,8 +137,12 @@ export default function Revenue() {
         />
       </div>
       {/* <div>select year</div> */}
-      {/* <Line options={options} data={data} /> */}
-      <Bar options={options} data={data} />
+      <Bar options={options1} data={data1} style={{ padding: '0 10px' }} />
+      <Line
+        options={options2}
+        data={data2}
+        style={{ margin: '50px 0', padding: '0 10px' }}
+      />
     </div>
   );
 }
@@ -135,7 +163,7 @@ const intToMonth = (n) =>
     'Dec',
   ][n - 1];
 
-const options = {
+const options1 = {
   responsive: true,
   plugins: {
     legend: {
@@ -143,7 +171,28 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Revenue and Profit',
+      // text: 'Monthly Revenue and Profit',
+      text: 'Monthly Revenue',
+    },
+  },
+  scales: {
+    y: {
+      ticks: {
+        callback: (value) => 'Rp ' + value.toLocaleString(),
+      },
+    },
+  },
+};
+const options2 = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      // text: 'Yearly Revenue and Profit',
+      text: 'Yearly Revenue',
     },
   },
   scales: {

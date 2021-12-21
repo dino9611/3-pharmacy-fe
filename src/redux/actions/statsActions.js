@@ -20,6 +20,7 @@ export const resetState = (propName) => {
 const DEBOUNCE_DELAY = 100;
 
 // ! READ
+// ? revenue
 let getRevenue_timeoutID;
 export const getRevenue = (params, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
@@ -139,3 +140,5 @@ export const getYearlyPotentialRevenue = (handleResult = {}) => {
     }, DEBOUNCE_DELAY);
   };
 };
+
+// ? sales report

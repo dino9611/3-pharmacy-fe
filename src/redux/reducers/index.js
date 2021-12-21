@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import { authReducers } from './authReducers';
 import { rawMaterialReducers } from './rawMaterialReducers';
 import { productReducers } from './productReducers';
-import { revenueReducers } from './revenueReducers';
+import { statsReducers } from './statsReducers';
 import { cartReducers } from './cartReducers';
 
 const reducers = combineReducers({
@@ -12,7 +12,7 @@ const reducers = combineReducers({
   cart: cartReducers,
   rawMaterialReducers,
   productReducers,
-  revenueReducers,
+  statsReducers,
 });
 
 export default reducers;

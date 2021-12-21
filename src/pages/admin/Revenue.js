@@ -26,7 +26,7 @@ import {
   getYearlyPotentialRevenue,
   getYearlyRevenue,
   resetState,
-} from '../../redux/actions/revenueActions';
+} from '../../redux/actions/statsActions';
 
 import { toast } from 'react-toastify';
 
@@ -50,7 +50,7 @@ const currYear = new Date().getFullYear();
 
 export default function Revenue() {
   const dispatch = useDispatch();
-  const revenueReducers = useSelector((state) => state.revenueReducers);
+  const statsReducers = useSelector((state) => state.statsReducers);
   // const profit = useSelector((state) => state.revenueReducers.profit);
 
   const [yearMonthStart, setyearMonthStart] = React.useState(
@@ -76,7 +76,7 @@ export default function Revenue() {
   }, [dispatch, yearMonthStart, yearMonthEnd]);
 
   const data1 = {
-    labels: revenueReducers.revenue.map(
+    labels: statsReducers.revenue.map(
       (el) => `${el.year}-${intToMonth(el.month)}`
     ),
     datasets: [
@@ -88,13 +88,13 @@ export default function Revenue() {
       // },
       {
         label: 'Revenue',
-        data: revenueReducers.revenue.map((el) => el.totalRevenueRp),
+        data: statsReducers.revenue.map((el) => el.totalRevenueRp),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
         label: 'Potential Revenue',
-        data: revenueReducers.potentialRevenue.map(
+        data: statsReducers.potentialRevenue.map(
           (el) => el.totalPotentialRevenueRp
         ),
         borderColor: 'rgb(99, 255, 132)',
@@ -103,17 +103,17 @@ export default function Revenue() {
     ],
   };
   const data2 = {
-    labels: revenueReducers.yearlyRevenue.map((el) => el.year),
+    labels: statsReducers.yearlyRevenue.map((el) => el.year),
     datasets: [
       {
         label: 'Revenue',
-        data: revenueReducers.yearlyRevenue.map((el) => el.totalRevenueRp),
+        data: statsReducers.yearlyRevenue.map((el) => el.totalRevenueRp),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
         label: 'Potential Revenue',
-        data: revenueReducers.yearlyPotentialRevenue.map(
+        data: statsReducers.yearlyPotentialRevenue.map(
           (el) => el.totalPotentialRevenueRp
         ),
         borderColor: 'rgb(99, 255, 132)',
