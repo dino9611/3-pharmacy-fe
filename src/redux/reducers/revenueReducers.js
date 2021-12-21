@@ -4,6 +4,8 @@ const initialState = {
   revenue: [],
   potentialRevenue: [],
   profit: [],
+  yearlyRevenue: [],
+  yearlyPotentialRevenue: [],
 };
 
 export const revenueReducers = (state = initialState, action) => {

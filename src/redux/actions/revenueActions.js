@@ -91,3 +91,51 @@ export const getPotentialRevenue = (params, handleResult = {}) => {
     }, DEBOUNCE_DELAY);
   };
 };
+
+let getYearlyRevenue_timeoutID;
+export const getYearlyRevenue = (handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getYearlyRevenue_timeoutID);
+
+    getYearlyRevenue_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(API_URL + '/stats/revenue/yearly', {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        });
+        dispatch(setState('yearlyRevenue', data));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
+  };
+};
+let getYearlyPotentialRevenue_timeoutID;
+export const getYearlyPotentialRevenue = (handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getYearlyPotentialRevenue_timeoutID);
+
+    getYearlyPotentialRevenue_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(
+          API_URL + '/stats/potential_revenue/yearly',
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        );
+        dispatch(setState('yearlyPotentialRevenue', data));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
+  };
+};

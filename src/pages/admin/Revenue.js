@@ -23,6 +23,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getRevenue,
   getPotentialRevenue,
+  getYearlyPotentialRevenue,
+  getYearlyRevenue,
   resetState,
 } from '../../redux/actions/revenueActions';
 
@@ -48,10 +50,7 @@ const currYear = new Date().getFullYear();
 
 export default function Revenue() {
   const dispatch = useDispatch();
-  const revenue = useSelector((state) => state.revenueReducers.revenue);
-  const potentialRevenue = useSelector(
-    (state) => state.revenueReducers.potentialRevenue
-  );
+  const revenueReducers = useSelector((state) => state.revenueReducers);
   // const profit = useSelector((state) => state.revenueReducers.profit);
 
   const [yearMonthStart, setyearMonthStart] = React.useState(
@@ -66,14 +65,20 @@ export default function Revenue() {
     dispatch(
       getPotentialRevenue({ yearMonthStart, yearMonthEnd }, handleResult)
     );
+    dispatch(getYearlyRevenue(handleResult));
+    dispatch(getYearlyPotentialRevenue(handleResult));
     return () => {
       dispatch(resetState('revenue'));
       dispatch(resetState('potentialRevenue'));
+      dispatch(resetState('yearlyRevenue'));
+      dispatch(resetState('yearlyPotentialRevenue'));
     };
   }, [dispatch, yearMonthStart, yearMonthEnd]);
 
-  const data = {
-    labels: revenue.map((el) => `${el.year}-${intToMonth(el.month)}`),
+  const data1 = {
+    labels: revenueReducers.revenue.map(
+      (el) => `${el.year}-${intToMonth(el.month)}`
+    ),
     datasets: [
       // {
       //   label: 'Profit',
@@ -83,14 +88,34 @@ export default function Revenue() {
       // },
       {
         label: 'Revenue',
-        // data: labels.map(() => Math.ceil(Math.random() * 1000)),
-        data: revenue.map((el) => el.totalRevenueRp),
+        data: revenueReducers.revenue.map((el) => el.totalRevenueRp),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
         label: 'Potential Revenue',
-        data: potentialRevenue.map((el) => el.totalPotentialRevenueRp),
+        data: revenueReducers.potentialRevenue.map(
+          (el) => el.totalPotentialRevenueRp
+        ),
+        borderColor: 'rgb(99, 255, 132)',
+        backgroundColor: 'rgba(99, 255, 132, 0.5)',
+      },
+    ],
+  };
+  const data2 = {
+    labels: revenueReducers.yearlyRevenue.map((el) => el.year),
+    datasets: [
+      {
+        label: 'Revenue',
+        data: revenueReducers.yearlyRevenue.map((el) => el.totalRevenueRp),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Potential Revenue',
+        data: revenueReducers.yearlyPotentialRevenue.map(
+          (el) => el.totalPotentialRevenueRp
+        ),
         borderColor: 'rgb(99, 255, 132)',
         backgroundColor: 'rgba(99, 255, 132, 0.5)',
       },
@@ -112,10 +137,10 @@ export default function Revenue() {
         />
       </div>
       {/* <div>select year</div> */}
-      <Bar options={options1} data={data} style={{ padding: '0 10px' }} />
+      <Bar options={options1} data={data1} style={{ padding: '0 10px' }} />
       <Line
         options={options2}
-        data={data}
+        data={data2}
         style={{ margin: '50px 0', padding: '0 10px' }}
       />
     </div>
