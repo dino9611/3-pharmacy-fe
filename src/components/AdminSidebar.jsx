@@ -102,6 +102,11 @@ export default function AdminSideBar(props) {
                 pathname={'/admin/prescriptions'}
                 location={location}
               />
+              <SidebarLink
+                name={'Order'}
+                pathname={'/admin/order'}
+                location={location}
+              />
             </ul>
             {/* Divider */}
             <hr className='my-4 md:min-w-full' />

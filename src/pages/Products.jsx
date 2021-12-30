@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import {
-    Card, CardActions, CardContent, CardMedia, Button, Typography,
+    Card, CardActions, CardContent, Button, Typography,
     CircularProgress, Pagination, InputLabel, MenuItem, FormControl,
     Select, Box, Modal, Snackbar, IconButton
 } from '@mui/material';
@@ -16,6 +16,7 @@ import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import CloseIcon from '@mui/icons-material/Close';
+import { capitalize } from '../helpers/capitalize';
 
 // Modal style
 const style = {
@@ -51,24 +52,40 @@ const Products = () => {
     const renderProducts = () => {
         return paginatedProducts.map((val, index) => {
             return (
-                <Card className="m-2">
+                <Card key={index + 1} className="m-2">
                     <div className='h-60 overflow-hidden'>
                         <img src={API_URL + val.imagePath} alt="" className='min-h-full' />
                     </div>
                     <CardContent>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: "#66806a", marginBottom: 2 }}>
-                            {val.productName}
-                        </Typography>
-                        <Typography variant="body3" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p
+                            className='poppins text-green-dark font-bold text-lg mb-4'
+                        >
+                            {capitalize(val.productName)}
+                        </p>
+                        <p
+                            className='poppins text-gray-600 font-bold text-sm mb-2'
+                        >
                             {toRupiah(val.productPriceRp)}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </p>
+                        <p
+                            className='poppins text-gray-400 text-sm'
+                        >
                             Stock {val.stock}
-                        </Typography>
+                        </p>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="success" onClick={() => addToCart(index)}>Add to cart</Button>
-                        <Button size="small" color="success" onClick={() => { productDetailsHandler(index) }}>Details</Button>
+                        <button
+                            className='poppins text-green-dark text-sm font-bold hover:bg-green-light py-1 px-2 rounded'
+                            onClick={() => addToCart(index)}
+                        >
+                            Add to Cart
+                        </button>
+                        <button
+                            className='poppins text-green-dark text-sm font-bold hover:bg-green-light py-1 px-2 rounded'
+                            onClick={() => productDetailsHandler(val.id)}
+                        >
+                            Details
+                        </button>
                     </CardActions>
                 </Card >
             )
@@ -112,7 +129,7 @@ const Products = () => {
             dispatch({ type: "setcart", payload: res.data })
             openSnackbar()
         } catch (error) {
-            alert(error)
+            alert(error.response.data.message)
         }
     }
 
@@ -144,24 +161,23 @@ const Products = () => {
         setKategori(event.target.value);
     };
 
-    // Modal detail produk
-    const [indexProduk, setIndexProduk] = useState(-1)
+    // status modal
     const [open, setOpen] = useState(false)
 
-    const productDetailsHandler = (index) => {
-        if (index >= 0) {
-            setIndexProduk(index)
+    // modal handler
+    const productDetailsHandler = async (id) => {
+        try {
+            let res = await axios.get(`${API_URL}/product/getdescription/${id}`)
+            setDataDeskripsi(res.data)
             setOpen(!open)
-        } else {
-            setIndexProduk(-1)
-            setOpen(!open)
+        } catch (error) {
+            alert(error)
         }
     }
 
+    // detail produk
     const productDetails = () => {
-        const cekIndex = indexProduk < 0
-        const descIndex = dataDeskripsi.findIndex(x => x.id == paginatedProducts[indexProduk]?.id)
-        const produkIndex = dataDeskripsi[descIndex]
+        const noExist = dataDeskripsi.length === 0
         return (
             <Modal
                 open={open}
@@ -172,7 +188,7 @@ const Products = () => {
                 <Box sx={style}>
                     <div className="mb-4">
                         <Typography variant="h5" color="text.secondary" sx={{ fontWeight: 'bold' }}>
-                            {cekIndex ? "" : produkIndex.productName}
+                            {noExist ? "" : capitalize(dataDeskripsi[0]?.productName)}
                         </Typography>
                     </div>
                     <div className="mb-4">
@@ -180,7 +196,7 @@ const Products = () => {
                             Description :
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {cekIndex ? "" : produkIndex.description}
+                            {dataDeskripsi[0]?.description}
                         </Typography>
                     </div>
                     <div className="mb-4">
@@ -188,7 +204,7 @@ const Products = () => {
                             Category :
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {cekIndex ? "" : produkIndex.categoryName}
+                            {noExist ? "" : capitalize(dataDeskripsi[0]?.categoryName)}
                         </Typography>
                     </div>
                     <div>
@@ -196,7 +212,7 @@ const Products = () => {
                             Composition :
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {cekIndex ? "" : produkIndex.composition}
+                            {noExist ? "" : capitalize(dataDeskripsi[0]?.composition)}
                         </Typography>
                     </div>
                 </Box>
@@ -231,17 +247,6 @@ const Products = () => {
             }
         }
         getCategories()
-
-        // fetch description
-        const getDescription = async () => {
-            try {
-                let res = await axios.get(`${API_URL}/product/getdescription`)
-                setDataDeskripsi(res.data)
-            } catch (error) {
-                alert(error);
-            }
-        }
-        getDescription()
 
         // untuk offset pagingnya
         setPage(page)
@@ -280,15 +285,15 @@ const Products = () => {
                 message="Added to cart!"
                 action={action}
             />
-            <div className="mt-6">
+            <div className="pt-6">
                 <div className=" flex justify-center mb-4">
                     <input
-                        className="focus:outline-none bg-grey-light p-2 rounded-xl mr-2"
+                        className="poppins text-sm border border-gray-300 border-solid focus:outline-none focus:border-green-700  px-4 rounded-md mr-2"
                         type="text"
                         placeholder="Search medicine"
                         onChange={searchHandler}
                     />
-                    <FormControl sx={{ minWidth: 120, marginRight: 1 }}>
+                    <FormControl sx={{ minWidth: 250, marginRight: 1 }}>
                         <InputLabel id="demo-simple-select-label" color="success">Sort</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -298,12 +303,12 @@ const Products = () => {
                             onChange={handleChangeFilter}
                             color="success"
                         >
-                            <MenuItem value="default">Default</MenuItem>
-                            <MenuItem value="lowest">Lowest to Highest</MenuItem>
-                            <MenuItem value="highest">Highest to Lowest</MenuItem>
+                            <MenuItem value="default">Sort by the latest</MenuItem>
+                            <MenuItem value="lowest">Price: Lowest to Highest</MenuItem>
+                            <MenuItem value="highest">Price: Highest to Lowest</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl sx={{ minWidth: 120 }}>
+                    <FormControl sx={{ minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label" color="success">Category</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -313,9 +318,9 @@ const Products = () => {
                             onChange={handleChangeKategori}
                             color="success"
                         >
-                            <MenuItem value={0}>Default</MenuItem>
+                            <MenuItem value={0}>All Categories</MenuItem>
                             {dataKategori.map((val, index) => (
-                                <MenuItem value={val.id}>{val.categoryName}</MenuItem>
+                                <MenuItem key={index + 1} value={val.id}>{val.categoryName}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>

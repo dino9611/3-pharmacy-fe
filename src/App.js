@@ -16,6 +16,10 @@ import AdminHome from './pages/admin/AdminHome';
 import AdminMenu from './pages/admin/AdminMenu';
 import Cart from './pages/user/Cart';
 import CircularProgress from '@mui/material/CircularProgress';
+import CheckOut from './pages/user/CheckOut';
+import Swal from 'sweetalert2';
+import UploadPayment from './pages/user/UploadPayment';
+import ProductTransactionHistory from './pages/user/ProductTransactionHistory';
 
 function App() {
   // Redux
@@ -37,7 +41,13 @@ function App() {
           });
           dispatch({ type: 'login', payload: res.data[0] });
         } catch (error) {
-          alert('Sesi anda habis, silahkan Log in lagi');
+          Swal.fire({
+            icon: 'info',
+            title: 'Oops...',
+            text: 'Your session is over, please re-login!',
+            timer: 1500,
+            timerProgressBar: true
+          })
           localStorage.removeItem('token');
         } finally {
           setLoading(false)
@@ -68,6 +78,9 @@ function App() {
         <Route path={'/products'} element={<Products />} />
         <Route path={'/adminhome'} element={<AdminHome />} />
         <Route path={'/cart'} element={<Cart />} />
+        <Route path={'/checkout'} element={<CheckOut />} />
+        <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
+        <Route path={'/history'} element={<ProductTransactionHistory />} />
       </Routes>
       <ToastContainer />
     </div>
