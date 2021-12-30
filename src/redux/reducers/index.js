@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import { authReducers } from './auth_reducers';
 import { rawMaterialReducers } from './rawMaterialReducers';
 import { productReducers } from './productReducers';
+import { revenueReducers } from './revenueReducers';
 import { cartReducers } from './cartReducers';
 import { orderReducers } from './orderReducers';
 
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   order: orderReducers,
   rawMaterialReducers,
   productReducers,
+  revenueReducers,
 });
 
 export default reducers;
