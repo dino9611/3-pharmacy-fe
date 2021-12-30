@@ -9,6 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import EmptyCart from './assets/empty-cart.svg'
+import { capitalize } from '../../helpers/capitalize'
 
 const Cart = () => {
     // global states
@@ -78,10 +79,10 @@ const Cart = () => {
 
     const renderCart = () => {
         return cartState.map((val, index) => (
-            <div className='bg-green-light h-44 my-5 rounded-lg flex overflow-hidden' key={index + 1}>
+            <div className='bg-white shadow-md h-44 my-5 rounded-lg flex overflow-hidden' key={index + 1}>
                 <div className='w-11/12 p-4 phone:p-4 flex items-center'>
                     <img src={API_URL + val.imagePath} alt={val.productName} className='h-full w-40 rounded-lg mr-8' />
-                    <p className='mr-8'>{val.productName}</p>
+                    <p className='mr-8'>{capitalize(val.productName)}</p>
                     <p className='mr-8'>{toRupiah(val.productPriceRp)}</p>
                     <div className='mr-8'>
                         {val.qty >= val.stock ? (
@@ -126,7 +127,7 @@ const Cart = () => {
                     <CartFooter />
                 </>
             ) : (
-                <div className='text-center mt-28'>
+                <div className='text-center pt-28'>
                     <img src={EmptyCart} alt="empty-cart" className='w-72 mb-4 mx-auto' />
                     <p className='text-green-dark text-lg font-bold'>No product in the cart</p>
                 </div>

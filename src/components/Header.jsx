@@ -13,6 +13,8 @@ import Register from './Register';
 import ForgetPass from './ForgetPassword';
 import { styled } from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import HistoryIcon from '@mui/icons-material/History';
+import { API_URL } from '../constants/api';
 
 const Header = () => {
     const authState = useSelector(state => state.auth)
@@ -22,9 +24,6 @@ const Header = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -110,34 +109,45 @@ const Header = () => {
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 <Link to="/products">
-                    <Button
-                        onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                    <button
+                        className='poppins text-white py-1 px-3 rounded hover:bg-green-light hover:shadow-md'
                     >
                         Products
-                    </Button>
+                    </button>
                 </Link>
             </Box>
             {authState.isLogin ? (
                 <>
-                    <Link to="/cart">
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            sx={{ marginRight: 2 }}
-                        >
-                            <Badge badgeContent={cartState.length} color="error">
-                                <ShoppingCartIcon sx={{ color: "white", fontSize: "2rem" }} />
-                            </Badge>
-                        </IconButton>
+                    <Link to="/history">
+                        <Tooltip title="History">
+                            <IconButton
+                                size="large"
+                                aria-label="show 17 new notifications"
+                            >
+                                <Badge badgeContent={0} color="error">
+                                    <HistoryIcon sx={{ color: "white", fontSize: "2rem" }} />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
                     </Link>
-                    <Typography sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }} className="text-light-light" >
-                        {authState.username}
-                    </Typography>
+                    <Link to="/cart">
+                        <Tooltip title="Open cart">
+                            <IconButton
+                                size="large"
+                                aria-label="show 17 new notifications"
+                                sx={{ marginRight: 2 }}
+                            >
+                                <Badge badgeContent={cartState.length} color="error">
+                                    <ShoppingCartIcon sx={{ color: "white", fontSize: "2rem" }} />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
+                    </Link>
+                    <p className="poppins text-light-light cursor-pointer mr-2">{authState.username}</p>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt={authState.username.toUpperCase()} src={API_URL + authState.avatar} />
                             </IconButton>
                         </Tooltip>
                         <Menu
