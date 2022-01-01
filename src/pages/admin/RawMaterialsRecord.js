@@ -147,12 +147,18 @@ export default function RawMaterialsTable() {
 
   return (
     <>
-      <div className='w-4/5 absolute right-0'>
+      <div className='w-4/5 absolute right-0 bg-gray-100'>
         <div className='mb-3 pt-0 h-24'></div>
         <TableContainer elevation={12} component={Paper}>
           <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#b4c6a6' }}>
+              <TableRow
+                sx={{
+                  backgroundColor: '#b4c6a6',
+                  fontWeight: 700,
+                  color: '#000',
+                }}
+              >
                 <TableCell component='th' scope='row'>
                   raw material name
                 </TableCell>
@@ -165,7 +171,7 @@ export default function RawMaterialsTable() {
             <TableBody>
               {rows.map((row, i) => (
                 <TableRow
-                  sx={{ height: 60 }}
+                  sx={{ height: 60, backgroundColor: '#F3F4F6' }}
                   onDoubleClick={() => handleRowDoubleClick(row)}
                   key={i}
                 >

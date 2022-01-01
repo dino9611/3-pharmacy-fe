@@ -10,7 +10,7 @@ import ManageRawMaterials from './ManageRawMaterials';
 import RawMaterialsRecord from './RawMaterialsRecord';
 import AdminProducts from './AdminProducts';
 import Revenue from './Revenue';
-import SalesReport from './SalesReport';
+import Dashboard from './Dashboard';
 
 export default function AdminMenu() {
   return (
@@ -18,15 +18,12 @@ export default function AdminMenu() {
       {/* <div className='flex justify-end'> */}
       <AdminSidebar />
       <Routes>
-        <Route
-          path='/'
-          element={<Navigate replace to='/admin/sales_report' />}
-        />
+        <Route path='/' element={<Navigate replace to='/admin/dashboard' />} />
         <Route path={'raw_materials'} element={<ManageRawMaterials />} />
         <Route path={'products'} element={<AdminProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
         <Route path={'revenue'} element={<Revenue />} />
-        <Route path={'sales_report'} element={<SalesReport />} />
+        <Route path={'dashboard'} element={<Dashboard />} />
       </Routes>
       {/* </div> */}
     </>

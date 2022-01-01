@@ -175,17 +175,17 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {authState.role === 'admin' ? (
+                <MenuItem onClick={() => navigate('/admin')}>
+                  <Typography textAlign='center'>Admin</Typography>
+                </MenuItem>
+              ) : null}
               <MenuItem onClick={toProfile}>
                 <Typography textAlign='center'>My profile</Typography>
               </MenuItem>
               <MenuItem onClick={onLogout}>
                 <Typography textAlign='center'>Log out</Typography>
               </MenuItem>
-              {authState.role === 'admin' ? (
-                <MenuItem onClick={() => navigate('/admin')}>
-                  <Typography textAlign='center'>Admin</Typography>
-                </MenuItem>
-              ) : null}
             </Menu>
           </Box>
         </>

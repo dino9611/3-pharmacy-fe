@@ -3,15 +3,16 @@ import React from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
+  BarElement,
   LinearScale,
   PointElement,
   LineElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
-  BarElement,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Line, Pie, Bar } from 'react-chartjs-2';
 // ? mui
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -25,16 +26,18 @@ import {
   getRevenue,
   getPotentialRevenue,
   getRecentRevenue,
+  getRecentNewUsers,
 } from '../../redux/actions/statsActions';
 
 import { toast } from 'react-toastify';
 
 ChartJS.register(
   CategoryScale,
-  LinearScale,
   BarElement,
+  LinearScale,
   PointElement,
   LineElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -66,10 +69,12 @@ export default function Revenue() {
       getPotentialRevenue({ yearMonthStart, yearMonthEnd }, handleResult)
     );
     dispatch(getRecentRevenue(handleResult));
+    dispatch(getRecentNewUsers(handleResult));
     return () => {
       dispatch(resetState('revenue'));
       dispatch(resetState('potentialRevenue'));
       dispatch(resetState('recentRevenue'));
+      dispatch(resetState('recentNewUsers'));
     };
   }, [dispatch, yearMonthStart, yearMonthEnd]);
 
@@ -99,10 +104,36 @@ export default function Revenue() {
     ],
   };
 
+  const data2 = {
+    labels: ['waiting payment', 'rejected', 'success', 'expired'],
+    datasets: [
+      {
+        // label: '# of Votes',
+        data: [12, 19, 3, 5],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          // 'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          // 'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          // 'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          // 'rgba(255, 159, 64, 1)',
+        ],
+      },
+    ],
+  };
+
   return (
-    <div className='absolute right-0 md:w-4/5 w-full font-poppins bg-secondary1'>
+    <div className='absolute right-0 lg:w-4/5 w-full font-poppins bg-secondary1'>
       {/* outmost div */}
-      <div className='m-5 flex justify-between flex-wrap content-between'>
+      <div className='w-auto m-5 flex justify-between flex-wrap content-between'>
         <SingleStats
           label='Revenue'
           change={statsReducers.recentRevenue}
@@ -131,7 +162,7 @@ export default function Revenue() {
         />
         <SingleStats
           label='New Users'
-          change={-110}
+          change={statsReducers.recentNewUsers}
           iconColor='#DD0F59'
           svgPath={
             <path
@@ -140,59 +171,27 @@ export default function Revenue() {
             />
           }
         />
-        {/* <SingleStats
-          label='Potential Revenue'
-          change={120}
-          iconColor='#0A6FE6'
+
+        <SingleStats
+          label='Sales'
+          change={-110}
+          iconColor='#7D249F'
           svgPath={
             <path
               strokeLinecap='round'
               strokeLinejoin='round'
               strokeWidth={2}
-              d='M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
+              d='M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z'
             />
-          }
-        />
-        <SingleStats
-          label='New Users'
-          change={-110}
-          iconColor='#DD0F59'
-          svgPath={
-            <path
-              strokeWidth='2'
-              d='M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'
-            />
-          }
-        /> */}
-        <SingleStats
-          label='Bla Bla Bla'
-          change={-110}
-          iconColor='#7D249F'
-          svgPath={
-            <>
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z'
-              />
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z'
-              />
-            </>
           }
         />
       </div>
 
-      <div className='bg-white shadow-xl m-5 rounded-lg px-5 py-5'>
-        <p className='font-semibold text-base pt-2 rounded-lg'>
-          Monthly Revenue and Profit
+      <div className='bg-white rounded-lg m-5 flex justify-around pl-4'>
+        <p className='font-semibold text-base rounded-lg self-center'>
+          Year-Month Filter
         </p>
-        <Line options={options1} data={data1} />
-        <div className='flex justify-start'>
+        <div className='flex'>
           <ViewsDatePicker
             value={yearMonthStart}
             setvalue={setyearMonthStart}
@@ -205,6 +204,54 @@ export default function Revenue() {
           />
         </div>
       </div>
+
+      <div className='grid grid-cols-4 gap-3 m-5 grid-rows-2'>
+        <div className='bg-white shadow-xl rounded-lg p-5 lg:col-span-3 col-span-4'>
+          <p className='font-semibold text-base rounded-lg'>
+            Monthly Revenue and Profit
+          </p>
+          <Line options={options1} data={data1} />
+        </div>
+
+        <div className='flex flex-col justify-between bg-white rounded-lg p-2 lg:row-span-2 row-span-2 lg:col-span-1 col-span-2 lg:order-none order-last'>
+          <div className=''>
+            <p className='font-semibold text-base pt-2 rounded-lg'>
+              Transactions
+            </p>
+            <Pie data={data2} />
+          </div>
+
+          <div className=''>
+            <p className='font-semibold text-base pt-2 rounded-lg'>
+              Transactions
+            </p>
+            <Pie data={data2} />
+          </div>
+
+          <div className=''>
+            <p className='font-semibold text-base pt-2 rounded-lg'>
+              Transactions
+            </p>
+            <Pie data={data2} />
+          </div>
+        </div>
+
+        <div className='bg-white shadow-xl rounded-lg p-5 lg:col-span-3 col-span-4'>
+          <p className='font-semibold text-base rounded-lg'>
+            Sales by Product Categories
+          </p>
+          <Bar options={options1} data={data1} />
+        </div>
+
+        <div className='flex lg:flex-row flex-col justify-around bg-white rounded-lg p-2 row-span-2 lg:col-span-4 col-span-2'>
+          <div className='bg-pink-400'>a</div>
+
+          <div className='bg-blue-400 bg'>b</div>
+
+          <div className='bg-indigo-400'>c</div>
+        </div>
+      </div>
+
       {/* outmost div */}
     </div>
   );
@@ -272,7 +319,7 @@ function ViewsDatePicker({ value, setvalue, label }) {
 const SingleStats = ({ label, change, svgPath, iconColor }) => {
   return (
     <>
-      <div className='mt-1 h-28 w-60 bg-white hover:bg-blue-100 cursor-pointer p-3 rounded-lg shadow-xl grid grid-cols-7'>
+      <div className='mt-1 h-28 w-60 bg-white p-3 rounded-lg shadow-xl grid grid-cols-7'>
         <svg
           style={{ backgroundColor: iconColor }}
           className='w-11 h-11 text-white rounded-md p-2 col-span-2'

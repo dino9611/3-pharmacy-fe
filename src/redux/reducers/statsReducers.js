@@ -3,12 +3,14 @@ import { actionTypes } from '../action-types';
 const initialState = {
   revenue: [],
   potentialRevenue: [],
-  profit: [],
-  yearlyRevenue: [],
-  yearlyPotentialRevenue: [],
-  yearlyProfit: [],
-  productSales: [],
-  prescriptionSales: [],
+  //
+  recentRevenue: null,
+  recentNewUsers: null,
+  //
+  // productSales: [],
+  // prescriptionSales: [],
+  cartedItem: [],
+  salesSuccessRate: [],
 };
 
 export const statsReducers = (state = initialState, action) => {
