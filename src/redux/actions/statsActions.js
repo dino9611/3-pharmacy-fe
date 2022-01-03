@@ -93,6 +93,41 @@ export const getPotentialRevenue = (params, handleResult = {}) => {
   };
 };
 
+let getSalesByCategory_timeoutID;
+export const getSalesByCategory = (params, handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getSalesByCategory_timeoutID);
+
+    getSalesByCategory_timeoutID = setTimeout(async () => {
+      let { yearMonthStart, yearMonthEnd } = params;
+      try {
+        // add one day
+        yearMonthStart.setDate(yearMonthStart.getDate() + 1);
+        yearMonthEnd.setDate(yearMonthEnd.getDate() + 1);
+        // turn date to ISO string
+        yearMonthStart = yearMonthStart.toISOString();
+        yearMonthEnd = yearMonthEnd.toISOString();
+        const { data } = await axios.get(
+          API_URL +
+            `/stats/sales_by_category?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        );
+        dispatch(setState('salesByCategory', data));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
+  };
+};
+
+// ? get recent
 let getRecentRevenue_timeoutID;
 export const getRecentRevenue = (handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
@@ -119,62 +154,23 @@ export const getRecentRevenue = (handleResult = {}) => {
   };
 };
 
-// ? sales report
-let getCartedItem_timeoutID;
-export const getCartedItem = (handleResult = {}) => {
+let getRecentPotentialRevenue_timeoutID;
+export const getRecentPotentialRevenue = (handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
     const { handleSuccess, handleFail, handleFinally } = handleResult;
-    clearTimeout(getCartedItem_timeoutID);
+    clearTimeout(getRecentPotentialRevenue_timeoutID);
 
-    getCartedItem_timeoutID = setTimeout(async () => {
-      try {
-        const { data } = await axios.get(API_URL + '/stats/carted_item', {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        });
-        dispatch(setState('cartedItem', data));
-        handleSuccess !== undefined && handleSuccess();
-      } catch (error) {
-        handleFail !== undefined && handleFail(error);
-      }
-      handleFinally !== undefined && handleFinally();
-    }, DEBOUNCE_DELAY);
-  };
-};
-
-let getSalesSuccessRate_timeoutID;
-export const getSalesSuccessRate = (handleResult = {}) => {
-  return (dispatch, getState, API_URL) => {
-    const { handleSuccess, handleFail, handleFinally } = handleResult;
-    clearTimeout(getSalesSuccessRate_timeoutID);
-
-    getSalesSuccessRate_timeoutID = setTimeout(async () => {
+    getRecentPotentialRevenue_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          API_URL + '/stats/sales_success_rate',
+          API_URL + '/stats/revenue?time=recent&type=potential',
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
           }
         );
-        let data2 = [];
-        let success;
-        let fail;
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].status === 'paymentRej') {
-            fail = data[i].count;
-          } else {
-            success = data[i].count;
-          }
-          if (success && fail) {
-            data2.push({ successRate: success / fail, date: data[i].date });
-            success = null;
-            fail = null;
-          }
-        }
-        dispatch(setState('salesSuccessRate', data2));
+        dispatch(setState('recentPotentialRevenue', data));
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
         handleFail !== undefined && handleFail(error);
@@ -192,12 +188,38 @@ export const getRecentNewUsers = (handleResult = {}) => {
 
     getRecentNewUsers_timeoutID = setTimeout(async () => {
       try {
-        const { data } = await axios.get(API_URL + '/stats/new_users', {
+        const { data } = await axios.get(API_URL + '/stats/recent_new_users', {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         });
         dispatch(setState('recentNewUsers', data));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      }
+      handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
+  };
+};
+
+let getRecentCartedItems_timeoutID;
+export const getRecentCartedItems = (handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getRecentCartedItems_timeoutID);
+
+    getRecentCartedItems_timeoutID = setTimeout(async () => {
+      try {
+        const { data } = await axios.get(
+          API_URL + '/stats/recent_carted_items',
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        );
+        dispatch(setState('recentCartedItems', data));
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
         handleFail !== undefined && handleFail(error);

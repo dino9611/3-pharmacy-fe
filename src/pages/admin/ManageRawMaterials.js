@@ -44,16 +44,16 @@ export default function RawMaterialsTable() {
     <>
       <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
         <div className='flex flex-col h-full justify-between'>
-          <div class='flex m-3'>
-            <div class='flex border-2 rounded'>
+          <div className='flex m-3'>
+            <div className='flex border-2 rounded'>
               <input
                 type='text'
-                class='px-4 py-2 w-80'
+                className='px-4 py-2 w-80'
                 placeholder='Search Raw Materials...'
               />
-              <button class='flex items-center justify-center px-4 border-l bg-white'>
+              <button className='flex items-center justify-center px-4 border-l bg-white'>
                 <svg
-                  class='w-6 h-6 text-gray-600'
+                  className='w-6 h-6 text-gray-600'
                   fill='currentColor'
                   viewBox='0 0 24 24'
                 >

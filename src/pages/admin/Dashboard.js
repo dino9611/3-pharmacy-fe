@@ -25,8 +25,11 @@ import {
   resetState,
   getRevenue,
   getPotentialRevenue,
+  getSalesByCategory,
   getRecentRevenue,
   getRecentNewUsers,
+  getRecentPotentialRevenue,
+  getRecentCartedItems,
 } from '../../redux/actions/statsActions';
 
 import { toast } from 'react-toastify';
@@ -60,7 +63,8 @@ export default function Revenue() {
     new Date(currYear - 1, 0, 1)
   );
   const [yearMonthEnd, setyearMonthEnd] = React.useState(
-    new Date(currYear, 11, 1)
+    // new Date(currYear, 11, 1)
+    new Date()
   );
 
   React.useEffect(() => {
@@ -68,15 +72,27 @@ export default function Revenue() {
     dispatch(
       getPotentialRevenue({ yearMonthStart, yearMonthEnd }, handleResult)
     );
-    dispatch(getRecentRevenue(handleResult));
-    dispatch(getRecentNewUsers(handleResult));
+    dispatch(
+      getSalesByCategory({ yearMonthStart, yearMonthEnd }, handleResult)
+    );
     return () => {
       dispatch(resetState('revenue'));
       dispatch(resetState('potentialRevenue'));
-      dispatch(resetState('recentRevenue'));
-      dispatch(resetState('recentNewUsers'));
+      dispatch(resetState('salesByCategory'));
     };
   }, [dispatch, yearMonthStart, yearMonthEnd]);
+  React.useEffect(() => {
+    dispatch(getRecentRevenue(handleResult));
+    dispatch(getRecentPotentialRevenue(handleResult));
+    dispatch(getRecentNewUsers(handleResult));
+    dispatch(getRecentCartedItems(handleResult));
+    return () => {
+      dispatch(resetState('recentRevenue'));
+      dispatch(resetState('recentPotentialRevenue'));
+      dispatch(resetState('recentNewUsers'));
+      dispatch(resetState('recentCartedItems'));
+    };
+  }, [dispatch]);
 
   const data1 = {
     labels: statsReducers.revenue.map(
@@ -130,6 +146,20 @@ export default function Revenue() {
     ],
   };
 
+  const data3 = {
+    labels: statsReducers.salesByCategory.map((el) => el.categoryName),
+    datasets: [
+      {
+        label: 'Sales',
+        data: statsReducers.revenue.map((el) => el.cost + el.profit),
+        borderColor: 'rgb(100, 44, 152)',
+        backgroundColor: 'rgb(100, 44, 152, 0.5)',
+        // borderColor: 'rgb(255, 99, 132)',
+        // backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+    ],
+  };
+
   return (
     <div className='absolute right-0 lg:w-4/5 w-full font-poppins bg-secondary1'>
       {/* outmost div */}
@@ -149,7 +179,7 @@ export default function Revenue() {
         />
         <SingleStats
           label='Potential Revenue'
-          change={120}
+          change={statsReducers.recentPotentialRevenue}
           iconColor='#0A6FE6'
           svgPath={
             <path
@@ -173,8 +203,8 @@ export default function Revenue() {
         />
 
         <SingleStats
-          label='Sales'
-          change={-110}
+          label='Carted Items'
+          change={statsReducers.recentCartedItems}
           iconColor='#7D249F'
           svgPath={
             <path
@@ -189,7 +219,7 @@ export default function Revenue() {
 
       <div className='bg-white rounded-lg m-5 flex justify-around pl-4'>
         <p className='font-semibold text-base rounded-lg self-center'>
-          Year-Month Filter
+          Filter by Year-Month
         </p>
         <div className='flex'>
           <ViewsDatePicker
@@ -211,26 +241,40 @@ export default function Revenue() {
             Monthly Revenue and Profit
           </p>
           <Line options={options1} data={data1} />
+          {/* <div className='relative h-96'>
+            <canvas id='line-chart'></canvas>
+          </div> */}
         </div>
 
-        <div className='flex flex-col justify-between bg-white rounded-lg p-2 lg:row-span-2 row-span-2 lg:col-span-1 col-span-2 lg:order-none order-last'>
-          <div className=''>
-            <p className='font-semibold text-base pt-2 rounded-lg'>
-              Transactions
-            </p>
+        <div className='flex lg:flex-col flex-row flex-wrap justify-between bg-white rounded-lg p-2 lg:row-span-2 row-span-2 lg:col-span-1 col-span-4 lg:order-none order-last'>
+          <div className='lg:w-full w-1/2'>
+            <p className='font-semibold text-base rounded-lg'>Transactions</p>
             <Pie data={data2} />
           </div>
 
-          <div className=''>
-            <p className='font-semibold text-base pt-2 rounded-lg'>
-              Transactions
-            </p>
-            <Pie data={data2} />
+          <div className='lg:w-full w-1/2'>
+            <p className='font-semibold text-base rounded-lg'>Sales</p>
+            <Pie
+              data={{
+                labels: ['prescriptions', 'products'],
+                datasets: [
+                  {
+                    data: [12, 19],
+                    backgroundColor: [
+                      'rgba(255, 30, 30, 0.5)',
+                      'rgba(30, 255, 30, 0.5)',
+                      // 'rgba(54, 162, 235, 0.2)',
+                    ],
+                    borderColor: ['rgba(255, 0, 0, 1)', 'rgba(0, 255, 0, 1)'],
+                  },
+                ],
+              }}
+            />
           </div>
 
-          <div className=''>
+          <div className='lg:w-full w-1/2'>
             <p className='font-semibold text-base pt-2 rounded-lg'>
-              Transactions
+              Carted Items
             </p>
             <Pie data={data2} />
           </div>
@@ -238,18 +282,18 @@ export default function Revenue() {
 
         <div className='bg-white shadow-xl rounded-lg p-5 lg:col-span-3 col-span-4'>
           <p className='font-semibold text-base rounded-lg'>
-            Sales by Product Categories
+            Product Sales by Categories
           </p>
-          <Bar options={options1} data={data1} />
+          <Bar options={options1} data={data3} />
         </div>
 
-        <div className='flex lg:flex-row flex-col justify-around bg-white rounded-lg p-2 row-span-2 lg:col-span-4 col-span-2'>
+        {/* <div className='flex lg:flex-row flex-col justify-around bg-white rounded-lg p-2 row-span-2 lg:col-span-4 col-span-2'>
           <div className='bg-pink-400'>a</div>
 
           <div className='bg-blue-400 bg'>b</div>
 
           <div className='bg-indigo-400'>c</div>
-        </div>
+        </div> */}
       </div>
 
       {/* outmost div */}
@@ -275,15 +319,6 @@ const intToMonth = (n) =>
 
 const options1 = {
   responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      // text: 'Monthly Revenue',
-    },
-  },
   scales: {
     y: {
       ticks: {
