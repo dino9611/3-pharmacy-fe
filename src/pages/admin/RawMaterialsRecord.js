@@ -1,113 +1,29 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableFooter,
-  TablePagination,
-  TableRow,
-  // TextField,
-} from '@mui/material';
-import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import {
-  FirstPage,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-  LastPage,
-} from '@mui/icons-material';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getRawMaterialsRecord,
   resetState,
 } from '../../redux/actions/rawMaterialActions';
+// ? components
+import AdminTable from '../../components/Tables/AdminTable';
+// ? forms
+import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
+import * as yup from 'yup';
 
 import { toast } from 'react-toastify';
 
-function TablePaginationActions(props) {
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
-
-  const handleFirstPageButtonClick = (event) => {
-    onPageChange(event, 0);
-  };
-
-  const handleBackButtonClick = (event) => {
-    onPageChange(event, page - 1);
-  };
-
-  const handleNextButtonClick = (event) => {
-    onPageChange(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label='first page'
-      >
-        {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label='previous page'
-      >
-        {theme.direction === 'rtl' ? (
-          <KeyboardArrowRight />
-        ) : (
-          <KeyboardArrowLeft />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label='next page'
-      >
-        {theme.direction === 'rtl' ? (
-          <KeyboardArrowLeft />
-        ) : (
-          <KeyboardArrowRight />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label='last page'
-      >
-        {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
-      </IconButton>
-    </Box>
-  );
-}
-
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-export default function RawMaterialsTable() {
+export default function RawMaterialsRecordTable() {
   const dispatch = useDispatch();
   // * pagination states
   const rows = useSelector(
     (state) => state.rawMaterialReducers.rawMaterialsRecord
   );
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(7);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const rowsPerPage = 8;
 
+  // * modal states
   React.useEffect(() => {
     dispatch(
       getRawMaterialsRecord(page + 1, rowsPerPage, {
@@ -115,121 +31,213 @@ export default function RawMaterialsTable() {
           toast.error(err.response.data.message || 'server error'),
       })
     );
-    return () => dispatch(resetState('rawMaterialsRecord'));
+    return () => dispatch(resetState('rawMaterials'));
   }, [dispatch, page, rowsPerPage]);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  // * for frontend pagination
-  // const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  // * for backend pagination
   const emptyRows = rowsPerPage - rows.length;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleRowDoubleClick = (row) => {
-    // const {
-    //   raw_material_id,
-    //   materialName,
-    //   inventoryChange,
-    //   unitPerBottle,
-    //   unit,
-    //   datetime,
-    //   admin_id,
-    // } = row;
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
 
   return (
     <>
-      <div className='w-4/5 absolute right-0 bg-gray-100'>
-        <div className='mb-3 pt-0 h-24'></div>
-        <TableContainer elevation={12} component={Paper}>
-          <Table sx={{ minWidth: 500 }} aria-label='custom pagination table'>
-            <TableHead>
-              <TableRow
-                sx={{
-                  backgroundColor: '#b4c6a6',
-                  fontWeight: 700,
-                  color: '#000',
-                }}
-              >
-                <TableCell component='th' scope='row'>
-                  raw material name
-                </TableCell>
-                <TableCell align='right'>inventory change</TableCell>
-                <TableCell align='right'>unit per bottle</TableCell>
-                <TableCell align='right'>datetime</TableCell>
-                <TableCell align='right'>admin id</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row, i) => (
-                <TableRow
-                  sx={{ height: 60, backgroundColor: '#F3F4F6' }}
-                  onDoubleClick={() => handleRowDoubleClick(row)}
-                  key={i}
+      <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
+        <div className='flex flex-col h-full justify-between'>
+          <div className='flex m-3'>
+            <div className='flex border-2 rounded'>
+              <input
+                type='text'
+                className='px-4 py-2 w-80'
+                placeholder='Search Raw Materials...'
+              />
+              <button className='flex items-center justify-center px-4 border-l bg-white'>
+                <svg
+                  className='w-6 h-6 text-gray-600'
+                  fill='currentColor'
+                  viewBox='0 0 24 24'
                 >
-                  <TableCell component='th' scope='row'>
-                    {row.materialName}
-                  </TableCell>
-                  <TableCell align='right'>
-                    {`${Math.floor(
-                      row.inventoryChange / row.unitPerBottle
-                    )} bottles ${(
-                      row.inventoryChange % row.unitPerBottle
-                    ).toFixed(2)} ${row.unit}`}
-                  </TableCell>
-                  <TableCell align='right'>
-                    {`${row.unitPerBottle} ${row.unit} per bottle`}
-                  </TableCell>
-                  <TableCell align='right'>
-                    {row.datetime.slice(0, 19).replace('T', ' ')}
-                  </TableCell>
-                  <TableCell align='right'>
-                    {row.admin_id || 'automatic'}
-                  </TableCell>
-                </TableRow>
-              ))}
+                  <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-              {emptyRows > 0 && (
-                <TableRow sx={{ height: 60 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow sx={{ backgroundColor: '#b4c6a6' }}>
-                <TablePagination
-                  // rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                  rowsPerPageOptions={[10, 7]}
-                  colSpan={5}
-                  // * for frontend pagination
-                  // count={rows.length}
-                  // * for backend pagination (use number of rows from backend. Don't use 'SELECT COUNT(*)')
-                  count={100}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
+          <AdminTable
+            name='Raw Materials Record'
+            page={page}
+            maxPage={5}
+            cols={[
+              {
+                label: 'Raw Material Name',
+                className: 'font-semibold',
+                format: (row) => row.materialName,
+              },
+              {
+                label: 'Inventory',
+                className: '',
+                format: (row) =>
+                  `${Math.floor(
+                    row.inventoryChange / row.unitPerBottle
+                  )} bottles ${(
+                    row.inventoryChange % row.unitPerBottle
+                  ).toFixed(2)} ${row.unit}`,
+              },
+              {
+                label: 'Unit Per Bottle',
+                className: '',
+                format: (row) => `${row.unitPerBottle} ${row.unit} per bottle`,
+              },
+              {
+                label: 'Datetime',
+                className: '',
+                format: (row) => row.datetime.slice(0, 19).replace('T', ' '),
+              },
+              { label: '' },
+            ]}
+            rows={rows}
+            emptyRows={emptyRows}
+            actions={{
+              setPage,
+            }}
+            DetailsModal={DetailsModal}
+          />
+        </div>
       </div>
     </>
   );
 }
+
+const DetailsModal = (toggleModal) => (
+  <div className='z-50 bg-white w-auto h-auto rounded-lg flex justify-center items-center p-5'>
+    <Formik
+      initialValues={{
+        username: '',
+        arrOfObj: [{ id: 2, amountInUnit: 2.1 }],
+        objOfObj: {},
+      }}
+      onSubmit={(values) => console.log(values)}
+      validationSchema={yup.object({
+        username: yup.string().required('username required!'),
+        description: yup.string().required('description required!'),
+        arrOfObj: yup.array().of(
+          yup.object({
+            // amountInUnit: yup.number().moreThan(0),
+            amountInUnit: yup.string().max(2),
+          })
+        ),
+      })}
+    >
+      <Form className='flex flex-col items-center font-poppins'>
+        <h1 className=' text-2xl font-bold self-start mb-10'>
+          <span className='bg-blue-200'>Cr</span>
+          eate
+        </h1>
+        <label
+          className='block text-gray-700 text-sm font-bold mb-2 self-start'
+          htmlFor='username'
+        >
+          Username
+        </label>
+        <Field
+          className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+          id='username'
+          name='username'
+          type='text'
+          placeholder='Chem1'
+        />
+        <p className='text-red-500 text-sm h-6 self-start'>
+          <ErrorMessage name='username' />
+        </p>
+        <label
+          className='block text-gray-700 text-sm font-bold mb-2 self-start'
+          htmlFor='description'
+        >
+          Description
+        </label>
+        <Field
+          className='resize-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
+          as='textarea'
+          id='description'
+          name='description'
+        />
+        <p className='text-red-500 text-sm h-6 self-start'>
+          <ErrorMessage name='description' />
+        </p>
+
+        <label className='block text-gray-700 text-sm font-bold mb-2 self-start'>
+          Array of Object
+        </label>
+        <FieldArray name='arrOfObj'>
+          {(props) => {
+            const { push, remove, form } = props;
+            const { values } = form;
+            const { arrOfObj } = values;
+            return (
+              <div className='w-full'>
+                <button type='button' onClick={() => push('')}>
+                  <svg
+                    className='w-6 h-6'
+                    data-darkreader-inline-fill=''
+                    fill='currentColor'
+                    viewBox='0 0 20 20'
+                  >
+                    <path
+                      fillRule='evenodd'
+                      d='M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                </button>
+                {arrOfObj.map((obj, i) => (
+                  <div key={i} className='flex'>
+                    <Field
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      name={`arrOfObj[${i}].amountInUnit`}
+                    />
+                    <ErrorMessage
+                      className='text-red-500 text-sm self-start'
+                      component='p'
+                      name={`arrOfObj[${i}].amountInUnit`}
+                    />
+                    <button
+                      disabled={arrOfObj.length <= 1}
+                      type='button'
+                      onClick={() => remove(i)}
+                    >
+                      <svg
+                        className='w-6 h-6'
+                        data-darkreader-inline-fill=''
+                        fill='currentColor'
+                        viewBox='0 0 20 20'
+                      >
+                        <path
+                          fillRule='evenodd'
+                          d='M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            );
+          }}
+        </FieldArray>
+
+        <div className='flex justify-between w-96'>
+          <button
+            type='button'
+            onClick={toggleModal}
+            className='btn btn-red uppercase w-full mx-1'
+          >
+            cancel
+          </button>
+          <button type='submit' className='btn btn-green uppercase w-full mx-1'>
+            edit
+          </button>
+        </div>
+      </Form>
+    </Formik>
+  </div>
+);

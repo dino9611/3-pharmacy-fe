@@ -9,7 +9,6 @@ import ManageRawMaterials from './ManageRawMaterials';
 
 import RawMaterialsRecord from './RawMaterialsRecord';
 import AdminProducts from './AdminProducts';
-import Revenue from './Revenue';
 import Dashboard from './Dashboard';
 
 export default function AdminMenu() {
@@ -22,7 +21,6 @@ export default function AdminMenu() {
         <Route path={'raw_materials'} element={<ManageRawMaterials />} />
         <Route path={'products'} element={<AdminProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
-        <Route path={'revenue'} element={<Revenue />} />
         <Route path={'dashboard'} element={<Dashboard />} />
       </Routes>
       {/* </div> */}

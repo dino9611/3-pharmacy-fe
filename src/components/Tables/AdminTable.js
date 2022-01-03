@@ -77,9 +77,11 @@ export default function AdminTable({
           <div className='flex flex-wrap items-center'>
             <div className='relative w-full px-4 max-w-full flex justify-between'>
               <h3 className='text-xl font-semibold self-center'>{name}</h3>
-              <button className='btn btn-blue' onClick={toggleCreateModal}>
-                Add New {name}
-              </button>
+              {CreateModal && (
+                <button className='btn btn-blue' onClick={toggleCreateModal}>
+                  Add New {name}
+                </button>
+              )}
             </div>
           </div>
         </div>
