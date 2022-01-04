@@ -112,19 +112,21 @@ export default function AdminTable({
                         {col.format(row)}
                       </td>
                     ) : (
-                      <td
-                        key={col.label}
-                        className='h-12 flex justify-center items-center'
-                      >
-                        <AdminTableDropdown
-                          row={row}
-                          index={index}
-                          setinitialValues={setinitialValues}
-                          toggleDetailsModal={toggleDetailsModal}
-                          toggleEditModal={toggleEditModal}
-                          toggleDeleteModal={toggleDeleteModal}
-                        />
-                      </td>
+                      (EditModal || DeleteModal || DetailsModal) && (
+                        <td
+                          key={col.label}
+                          className='h-12 flex justify-center items-center'
+                        >
+                          <AdminTableDropdown
+                            row={row}
+                            index={index}
+                            setinitialValues={setinitialValues}
+                            toggleDetailsModal={toggleDetailsModal}
+                            toggleEditModal={toggleEditModal}
+                            toggleDeleteModal={toggleDeleteModal}
+                          />
+                        </td>
+                      )
                     )
                   )}
                 </tr>
@@ -148,6 +150,7 @@ export default function AdminTable({
                 />
               </svg>
             </button>
+            {page + 1}
             <button
               onClick={() => setPage(page + 1)}
               className={`mx-4 ${

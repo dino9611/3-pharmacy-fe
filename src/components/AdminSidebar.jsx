@@ -112,18 +112,14 @@ export default function AdminSideBar(props) {
                   <path d='M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z' />
                 }
               />
-              {/* <SidebarLink
-                name={'Revenue'}
-                pathname={'/admin/revenue'}
+              <SidebarLink
+                name={'History'}
+                pathname={'/admin/history'}
                 location={location}
                 svgPath={
-                  <path
-                    fillRule='evenodd'
-                    d='M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z'
-                    clipRule='evenodd'
-                  />
+                  <path d='M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z' />
                 }
-              /> */}
+              />
             </ul>
 
             {/* Divider */}
@@ -229,13 +225,13 @@ function SidebarLink({ name, pathname, location, svgPath }) {
     <li
       className={
         'items-center rounded-lg ' +
-        (location.pathname === pathname ? 'bg-fourth2' : '')
+        (location.pathname.includes(pathname) ? 'bg-fourth2' : '')
       }
     >
       <Link
         className={
           'pl-3 text-xs uppercase py-3 font-bold block ' +
-          (location.pathname === pathname
+          (location.pathname.includes(pathname)
             ? 'text-gray-800'
             : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
         }

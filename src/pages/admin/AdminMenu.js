@@ -4,12 +4,15 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // ? pages
 import AdminSidebar from '../../components/AdminSidebar';
 
+// * view
+import Dashboard from './Dashboard';
+import History from './History';
+import RawMaterialsRecord from './RawMaterialsRecord';
+
+// * manage
 import ManageRawMaterials from './ManageRawMaterials';
 // import ManageProducts from './ManageProducts';
-
-import RawMaterialsRecord from './RawMaterialsRecord';
 import AdminProducts from './AdminProducts';
-import Dashboard from './Dashboard';
 
 export default function AdminMenu() {
   return (
@@ -18,10 +21,13 @@ export default function AdminMenu() {
       <AdminSidebar />
       <Routes>
         <Route path='/' element={<Navigate replace to='/admin/dashboard' />} />
+
+        <Route path={'dashboard'} element={<Dashboard />} />
+        <Route path={'history/*'} element={<History />} />
+
         <Route path={'raw_materials'} element={<ManageRawMaterials />} />
         <Route path={'products'} element={<AdminProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
-        <Route path={'dashboard'} element={<Dashboard />} />
       </Routes>
       {/* </div> */}
     </>
