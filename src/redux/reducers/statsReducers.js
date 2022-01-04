@@ -3,10 +3,20 @@ import { actionTypes } from '../action-types';
 const initialState = {
   revenue: [],
   potentialRevenue: [],
-  profit: [],
+  salesByCategory: [],
+  //
+  recentRevenue: null,
+  recentPotentialRevenue: null,
+  recentNewUsers: null,
+  recentCartedItems: null,
+  //
+  // productSales: [],
+  // prescriptionSales: [],
+  cartedItem: [],
+  salesSuccessRate: [],
 };
 
-export const revenueReducers = (state = initialState, action) => {
+export const statsReducers = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.revenue.SET_STATE:
       return { ...state, [action.propName]: action.payload };

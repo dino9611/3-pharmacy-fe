@@ -82,7 +82,7 @@ const Header = () => {
   };
 
   return (
-    <div className='flex items-center bg-green-dark h-24 px-6'>
+    <div className='flex items-center bg-green-dark h-24 px-6 font-poppins'>
       <Login open={openLogin} handleClose={handleCloseLogin} />
       <Register
         open={open}
@@ -125,7 +125,7 @@ const Header = () => {
       </Box>
       <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Link to='/products'>
-          <button className='poppins text-white py-1 px-3 rounded hover:bg-green-light hover:shadow-md'>
+          <button className='text-white py-1 px-3 rounded hover:bg-green-light hover:shadow-md'>
             Products
           </button>
         </Link>
@@ -154,7 +154,7 @@ const Header = () => {
               </IconButton>
             </Tooltip>
           </Link>
-          <p className='poppins text-light-light cursor-pointer mr-2'>
+          <p className='text-light-light cursor-pointer mr-2'>
             {authState.username}
           </p>
           <Box sx={{ flexGrow: 0 }}>

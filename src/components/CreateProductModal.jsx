@@ -115,7 +115,7 @@ const CreateModal = ({ title, open, handleClose, setOpen }) => {
 
     dispatch(
       addProduct(file, input, {
-        handleSuccess: () => toast.success('success'),
+        handleSuccess: () => toast.success('successfully created new product'),
         handleFail: (err) =>
           toast.error(err.response.data.message || 'server error'),
         handleFinally: () => {

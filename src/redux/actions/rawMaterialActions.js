@@ -28,7 +28,11 @@ export const addRawMaterial = (input, handleResult = {}) => {
 
     addRawMaterial_timeoutID = setTimeout(async () => {
       try {
-        await axios.post(API_URL + '/raw_material', input);
+        await axios.post(API_URL + '/raw_material', input, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        });
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
         handleFail !== undefined && handleFail(error);
@@ -48,7 +52,12 @@ export const getRawMaterials = (page, limit, handleResult = {}) => {
     getRawMaterials_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          API_URL + `/raw_material/?page=${page}&limit=${limit}`
+          API_URL + `/raw_material/?page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch(setState('rawMaterials', data.result));
         handleSuccess !== undefined && handleSuccess();
@@ -70,7 +79,11 @@ export const getRawMaterial = (id, index, handleResult = {}) => {
 
     getRawMaterial_timeoutID = setTimeout(async () => {
       try {
-        const { data } = await axios.get(API_URL + `/raw_material/${id}`);
+        const { data } = await axios.get(API_URL + `/raw_material/${id}`, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        });
         rawMaterials[index] = data.result[0];
         dispatch(setState('rawMaterials', [...rawMaterials])); // ! needs to be new array to trigger render
         handleSuccess !== undefined && handleSuccess();
@@ -91,7 +104,12 @@ export const getRawMaterialsRecord = (page, limit, handleResult = {}) => {
     getRawMaterialsRecord_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          API_URL + `/raw_material/record/?page=${page}&limit=${limit}`
+          API_URL + `/raw_material/record/?page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch(setState('rawMaterialsRecord', data.result));
 
@@ -115,7 +133,11 @@ export const editRawMaterial = (input, handleResult = {}) => {
       try {
         const { index } = input;
         delete input.index;
-        await axios.patch(API_URL + `/raw_material/${input.id}`, input);
+        await axios.patch(API_URL + `/raw_material/${input.id}`, input, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        });
         dispatch(getRawMaterial(input.id, index));
 
         handleSuccess !== undefined && handleSuccess();
