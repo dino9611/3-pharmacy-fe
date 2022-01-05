@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
     return (
-        <div className="h-72 w-full bg-green-dark flex">
+        <div className="h-72 w-full bg-primary1 flex">
             <h1 className="footer-font-style w-1/4 pt-10 pl-20 ">Tokobat</h1>
             <div className="pt-14 pl-20">
                 <h1 className="poppins font-bold text-light-light mb-4">Contact us</h1>

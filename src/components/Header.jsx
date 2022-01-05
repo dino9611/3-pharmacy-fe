@@ -82,7 +82,7 @@ const Header = () => {
   };
 
   return (
-    <div className='flex items-center bg-green-dark h-24 px-6 font-poppins'>
+    <div className='flex items-center bg-primary1 h-24 px-6 font-poppins'>
       <Login open={openLogin} handleClose={handleCloseLogin} />
       <Register
         open={open}
@@ -125,7 +125,7 @@ const Header = () => {
       </Box>
       <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Link to='/products'>
-          <button className='text-white py-1 px-3 rounded hover:bg-green-light hover:shadow-md'>
+          <button className='text-white py-1 px-3 rounded hover:bg-secondary1 hover:shadow-md'>
             Products
           </button>
         </Link>
@@ -198,13 +198,12 @@ const Header = () => {
         </>
       ) : (
         <>
-          <Button
-            variant='text'
-            style={{ color: 'white' }}
+          <button
+            className=' text-white mr-3 hover:bg-secondary1 px-3 py-1 rounded'
             onClick={handleOpenLogin}
           >
-            Log in
-          </Button>
+            Login
+          </button>
           <ColorButton variant='contained' className='' onClick={handleOpen}>
             Sign up
           </ColorButton>

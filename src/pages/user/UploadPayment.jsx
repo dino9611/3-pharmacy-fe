@@ -71,9 +71,9 @@ const UploadPayment = () => {
     return (
         <div>
             <Header />
-            <div className='text-center mt-16'>
+            <div className='text-center h-screen pt-16 bg-secondary1'>
                 <div className='flex w-max mx-auto'>
-                    <Alert icon={false} severity="success">{`${checkout[0]?.bank} - ${checkout[0]?.accountNumber}`}</Alert>
+                    <Alert icon={false} severity="info">{`${checkout[0]?.bank} - ${checkout[0]?.accountNumber}`}</Alert>
                 </div>
                 <input
                     type="file"
@@ -90,40 +90,37 @@ const UploadPayment = () => {
                             onClick={handleClick}
                         ></img>
                         <Link to='/history'>
-                            <Button
-                                variant="contained"
-                                style={{ backgroundColor: '#66806a', marginRight: 10 }}
+                            <button
+                                className='bg-primary1 text-white px-5 py-2 rounded mr-4 hover:bg-peach-light'
                                 onClick={onUpload}
                             >
                                 Upload
-                            </Button>
+                            </button>
                         </Link>
                     </>
                 ) : (
                     <>
                         <div
-                            className='h-64 w-96 bg-gray-200 hover:bg-gray-300 cursor-pointer border-dashed border-2 border-green-dark rounded-lg mx-auto my-5 flex items-center justify-center'
+                            className='h-64 w-96 bg-gray-200 hover:bg-gray-300 cursor-pointer border-dashed border-2 border-primary1 rounded-lg mx-auto my-5 flex items-center justify-center'
                             onClick={handleClick}
                         >
-                            <p className='text-green-dark font-medium text-lg'>No image</p>
+                            <p className='text-primary1 font-medium text-lg'>No image</p>
                         </div>
-                        <Button
-                            variant="contained"
-                            style={{ backgroundColor: '#66806a', marginRight: 10 }}
+                        <button
+                            className='bg-primary1 text-white px-5 py-2 rounded mr-4 hover:bg-peach-light hover:text-black'
                             onClick={onUpload}
                         >
                             Upload
-                        </Button>
+                        </button>
                     </>
                 )}
 
                 <Link to="/products">
-                    <Button
-                        variant="text"
-                        style={{ color: '#66806a', fontWeight: "bold" }}
+                    <button
+                        className='text-primary1 font-bold'
                     >
                         Later
-                    </Button>
+                    </button>
                 </Link>
             </div>
         </div>
