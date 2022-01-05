@@ -61,7 +61,7 @@ const ProductTransactionHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='px-5 py-2 mr-2 bg-green-dark border-2 border-green-dark rounded-full text-sm font-bold text-white poppins'
+                        className='px-5 py-2 mr-2 bg-primary1 border-2 border-primary1 rounded-full text-sm font-bold text-white poppins'
                     >
                         {val.status}
                     </button>
@@ -71,7 +71,7 @@ const ProductTransactionHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='bg-white px-5 py-2 mr-2 border-solid border-2 border-green-dark rounded-full text-sm font-bold text-green-dark poppins'
+                        className='bg-white px-5 py-2 mr-2 border-solid border-2 border-primary1 rounded-full text-sm font-bold text-primary1 poppins'
                     >
                         {val.status}
                     </button>
@@ -134,14 +134,14 @@ const ProductTransactionHistory = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <p className='poppins font-bold text-xl text-center mb-5'>
+                    <p className='font-poppins font-bold text-xl text-center mb-5'>
                         Transaction Details
                     </p>
-                    <div className='flex justify-between mb-2'>
-                        <p className='poppins text-sm font-bold'>
+                    <div className='font-poppins flex justify-between mb-2'>
+                        <p className='text-sm font-bold'>
                             Status
                         </p>
-                        <p className='poppins text-sm' >
+                        <p className='text-sm' >
                             {history?.status === 'checkout' && !history?.paymentProof ? 'Waiting for payment' : ''}
                             {history?.status === 'checkout' && history?.paymentProof ? 'Waiting for confirmation' : ''}
                             {history?.status === 'paymentAcc' ? 'Accepted' : ''}
@@ -151,33 +151,33 @@ const ProductTransactionHistory = () => {
                             {history?.status === 'paymentRej' ? 'Rejected' : ''}
                         </p>
                     </div>
-                    <div className='flex justify-between mb-2'>
-                        <p className='poppins text-sm font-bold'>
+                    <div className='font-poppins flex justify-between mb-2'>
+                        <p className='text-sm font-bold'>
                             Check Out Time
                         </p>
-                        <p className='poppins text-sm'>
+                        <p className='text-sm'>
                             {historyNoExist ? '' : parseDate(history?.checkedOutAt)}
                         </p>
                     </div>
-                    <div className='flex justify-between'>
-                        <p className='poppins text-sm font-bold'>
+                    <div className='font-poppins flex justify-between'>
+                        <p className='text-sm font-bold'>
                             Payment Method
                         </p>
-                        <p className='poppins text-sm'>
+                        <p className='text-sm'>
                             {historyNoExist ? '' : history?.bank}
                         </p>
                     </div>
                     <hr className='my-4' />
-                    <p className='poppins text-sm font-bold mb-2'>Recipient :
-                        <span className='font-thin'> {history?.username}</span>
+                    <p className='font-poppins text-sm font-bold mb-2'>Recipient :
+                        <span className='font-normal'> {history?.username}</span>
                     </p>
-                    <p className='poppins text-sm font-bold'>
+                    <p className='font-poppins text-sm font-bold'>
                         Address :
-                        <span className='font-thin'> {history?.address}</span>
+                        <span className='font-normal'> {history?.address}</span>
                     </p>
                     <hr className='my-4' />
                     {boughtProducts.map((val, index) => (
-                        <div key={index + 1} className='poppins mb-1 flex items-center shadow-md p-2 rounded'>
+                        <div key={index + 1} className='font-poppins mb-1 flex items-center shadow-md p-2 rounded'>
                             <img
                                 src={API_URL + val.imagePath} alt={val.productName}
                                 className='w-16 h-16 mr-5'
@@ -190,17 +190,17 @@ const ProductTransactionHistory = () => {
                         </div>
                     ))}
                     <hr className='my-4' />
-                    <div className='flex justify-between mb-2'>
-                        <p className='poppins text-sm font-bold'>Total Price</p>
-                        <p className='poppins text-sm'>{historyNoExist ? '' : toRupiah(history?.totalPrice)}</p>
+                    <div className='font-poppins flex justify-between mb-2'>
+                        <p className='text-sm font-bold'>Total Price</p>
+                        <p className='text-sm'>{historyNoExist ? '' : toRupiah(history?.totalPrice)}</p>
                     </div>
-                    <div className='flex justify-between mb-2'>
-                        <p className='poppins text-sm font-bold'>Shipping Cost</p>
-                        <p className='poppins text-sm'>{historyNoExist ? '' : toRupiah(history?.shippingCost)}</p>
+                    <div className='font-poppins flex justify-between mb-2'>
+                        <p className='text-sm font-bold'>Shipping Cost</p>
+                        <p className='text-sm'>{historyNoExist ? '' : toRupiah(history?.shippingCost)}</p>
                     </div>
-                    <div className='flex justify-between mb-2'>
-                        <p className='poppins text-sm font-bold'>Grand Total</p>
-                        <p className='poppins text-sm font-bold'>{historyNoExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
+                    <div className='font-poppins flex justify-between mb-2'>
+                        <p className='text-sm font-bold'>Grand Total</p>
+                        <p className='text-sm font-bold'>{historyNoExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
                     </div>
                 </Box>
             </Modal>
@@ -209,18 +209,18 @@ const ProductTransactionHistory = () => {
 
     const renderHistory = () => {
         return userOrder.map((val, index) => (
-            <div key={index + 1} className='bg-white shadow-md my-5 p-4 rounded-lg' >
-                <p className='poppins font-bold text-green-dark'>{`Order #${val.id}`}</p>
+            <div key={index + 1} className='font-poppins bg-white shadow-md my-5 p-4 rounded-lg' >
+                <p className=' font-bold text-primary1'>{`Order #${val.id}`}</p>
                 {val.status === 'checkout' && !val.paymentProof ? (
-                    <p className='text-red-500 text-xs poppins'>You have not uploaded the payment proof for this order!</p>
+                    <p className='text-red-500 text-xs '>You have not uploaded the payment proof for this order!</p>
                 ) : ''}
                 {val.status === 'paymentRej' ? (
-                    <p className='text-red-500 text-xs poppins'>Your payment is rejected!</p>
+                    <p className='text-red-500 text-xs '>Your payment is rejected!</p>
                 ) : ''}
                 <div className='flex items-center justify-between mb-2'>
-                    <p className='poppins text-sm'>{parseDate(val.checkedOutAt)}</p>
+                    <p className=' text-sm'>{parseDate(val.checkedOutAt)}</p>
                     <button
-                        className='poppins text-sm text-green-dark font-bold hover:text-green-light'
+                        className=' text-sm text-primary1 font-bold hover:text-secondary1'
                         onClick={() => modalHandler(val.id)}
                     >
                         Detail
@@ -228,7 +228,7 @@ const ProductTransactionHistory = () => {
                 </div>
                 <hr className='mb-5' />
                 {JSON.parse(val.product_list).map((val, index) => (
-                    <div key={index + 1} className='poppins mb-1 flex items-center shadow-md p-2 rounded'>
+                    <div key={index + 1} className=' mb-1 flex items-center shadow-md p-2 rounded'>
                         <img
                             src={API_URL + val.imagePath} alt={val.productName}
                             className='w-16 h-16 mr-5'
@@ -245,7 +245,7 @@ const ProductTransactionHistory = () => {
                     {val.status === 'checkout' && !val.paymentProof ? (
                         <Link to={`/uploadpayment/${val.id}`}>
                             <button
-                                className='poppins text-sm text-white font-bold bg-green-dark hover:bg-green-light px-3 py-2 rounded-lg'
+                                className=' text-sm text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
                             >
                                 Upload Payment
                             </button>
@@ -253,7 +253,7 @@ const ProductTransactionHistory = () => {
                     ) : ''}
 
                     {val.status === 'checkout' && val.paymentProof ? (
-                        <p className='poppins text-sm text-right text-green-dark'>
+                        <p className=' text-sm text-right text-primary1'>
                             Waiting for confirmation
                         </p>
                     ) : ''}
@@ -261,7 +261,7 @@ const ProductTransactionHistory = () => {
                     {val.status === 'paymentRej' ? (
                         <Link to={`/uploadpayment/${val.id}`}>
                             <button
-                                className='poppins text-sm text-white font-bold bg-green-dark hover:bg-green-light px-2 py-2 rounded-lg'
+                                className=' text-sm text-white font-bold bg-primary1 hover:bg-secondary1 px-2 py-2 rounded-lg'
                             >
                                 Resent Payment Proof
                             </button>
@@ -269,26 +269,26 @@ const ProductTransactionHistory = () => {
                     ) : ''}
 
                     {val.status === 'paymentAcc' ? (
-                        <p className='poppins text-sm text-right text-green-dark'>
+                        <p className=' text-sm text-right text-primary1'>
                             Waiting for your order to be processed
                         </p>
                     ) : ''}
 
                     {val.status === 'processing' ? (
-                        <p className='poppins text-sm text-right text-green-dark'>
+                        <p className=' text-sm text-right text-primary1'>
                             Your order is being processed
                         </p>
                     ) : ''}
 
                     {val.status === 'delivered' ? (
-                        <p className='poppins text-sm text-right text-green-dark'>
+                        <p className=' text-sm text-right text-primary1'>
                             Delivered
                         </p>
                     ) : ''}
 
                     {val.status === 'otw' ? (
                         <button
-                            className='poppins text-sm text-white font-bold bg-green-dark hover:bg-green-light px-3 py-2 rounded-lg'
+                            className=' text-sm text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
                             onClick={() => onDelivered(val.id)}
                         >
                             Confirm Delivery
@@ -296,7 +296,7 @@ const ProductTransactionHistory = () => {
                     ) : ''}
 
                     {val.status === 'delivered' && !val.paymentProof ? (
-                        <p className='poppins text-sm text-right text-green-dark'>
+                        <p className=' text-sm text-right text-primary1'>
                             Delivered
                         </p>
                     ) : ''}
@@ -341,9 +341,9 @@ const ProductTransactionHistory = () => {
     return (
         <div>
             <Header />
-            <div className='px-20'>
+            <div className='bg-secondary1 font-poppins px-20 min-h-screen'>
                 {modalDetail()}
-                <div class="poppins pt-5">
+                <div class="pt-5">
                     <select
                         onChange={onRangeChange}
                         class="w-1/4 mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark"
@@ -360,7 +360,7 @@ const ProductTransactionHistory = () => {
                     (
                         <>
                             {renderHistory()}
-                            <div className='w-max mx-auto mb-10'>
+                            <div className='w-max mx-auto pb-10'>
                                 <Pagination count={Math.ceil(orderLength / 5)} page={page} onChange={handleChange} />
                             </div>
                         </>
@@ -368,7 +368,7 @@ const ProductTransactionHistory = () => {
                     : (
                         <div className='mt-20'>
                             <img className='w-72 mx-auto mb-4' src={EmptyData} alt="empty-data" />
-                            <p className='text-green-dark text-center text-xl font-medium'>No data</p>
+                            <p className='text-primary1 text-center text-xl font-bold'>No data</p>
                         </div>
                     )
                 }

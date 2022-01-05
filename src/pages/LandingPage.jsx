@@ -21,27 +21,27 @@ const LandingPage = () => {
     return (
         <div>
             <Header />
-            <div className="poppins top-cont container px-10 ">
-                <div className=" flex justify-evenly items-center">
+            <div className="bg-primary1">
+                <div className="font-poppins flex justify-evenly items-center">
                     <div >
-                        <div className="max-w-md text-3xl font-bold text-white">Lorem ipsum dolor </div>
-                        <div className="max-w-sm text-base text-white">sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin</div>
+                        <p className="max-w-sm text-3xl font-bold text-white mb-4">Lorem ipsum dolor </p>
+                        <p className="max-w-sm text-base text-white">sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin</p>
                     </div>
                     <div className=" img-cont">
                         <img src={Logo1} alt="Default" className="image-1" />
                     </div>
                 </div>
             </div>
-            <div className="poppins flex justify-evenly items-center pt-8 my-20">
+            <div className="font-poppins bg-secondary1 flex justify-evenly items-center pt-8 py-20">
                 <div className="img-cont">
                     <img src={Logo2} alt="Default" className="image-2" />
                 </div>
                 <div className="shop-bttn">
-                    <div className="max-w-md text-3xl font-bold">Lorem ipsum dolor </div>
-                    <div className="max-w-sm text-base">sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin</div>
+                    <p className="max-w-md text-3xl font-bold text-white mb-4">Lorem ipsum dolor </p>
+                    <p className="max-w-sm text-base text-white">sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin</p>
                     <div>
                         <Link to="/products">
-                            <ColorButton sx={{ mt: 3 }} > Shop Now! </ColorButton>
+                            <button className="bg-primary1 hover:bg-secondary1 text-white rounded-md px-4 py-2 mt-4">Shop Now!</button>
                         </Link>
                     </div>
                 </div>

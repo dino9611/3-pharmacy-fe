@@ -26,9 +26,11 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 500,
     bgcolor: 'background.paper',
-    borderRadius: '15px',
     boxShadow: 24,
     p: 4,
+    maxHeight: 500,
+    overflow: 'scroll',
+    overflowX: 'hidden'
 };
 
 const Products = () => {
@@ -52,42 +54,47 @@ const Products = () => {
     const renderProducts = () => {
         return paginatedProducts.map((val, index) => {
             return (
-                <Card key={index + 1} className="m-2">
-                    <div className='h-60 overflow-hidden'>
-                        <img src={API_URL + val.imagePath} alt="" className='min-h-full' />
-                    </div>
-                    <CardContent>
+                <div key={index + 1} className="m-2 bg-white rounded-md overflow-hidden p-4 shadow-md">
+                    <img
+                        src={API_URL + val.imagePath} alt=""
+                        className='object-contain w-48 h-48 phone:w-full phone:h-24 mx-auto bg-gray-200 rounded-md mb-4'
+                    />
+                    <div>
+                        <div className='flex justify-between items-center mb-4'>
+                            <p
+                                className='poppins text-primary1 font-bold text-lg phone:text-sm'
+                            >
+                                {capitalize(val.productName)}
+                            </p>
+                            <svg
+                                class="w-6 h-6 phone:w-4 phone:h-4 text-primary1 hover:text-secondary1 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                onClick={() => productDetailsHandler(val.id)}
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
                         <p
-                            className='poppins text-green-dark font-bold text-lg mb-4'
-                        >
-                            {capitalize(val.productName)}
-                        </p>
-                        <p
-                            className='poppins text-gray-600 font-bold text-sm mb-2'
+                            className='poppins text-gray-600 font-bold text-sm mb-2 phone:text-xs'
                         >
                             {toRupiah(val.productPriceRp)}
                         </p>
                         <p
-                            className='poppins text-gray-400 text-sm'
+                            className='poppins text-gray-400 text-sm phone:text-xs'
                         >
                             Stock {val.stock}
                         </p>
-                    </CardContent>
-                    <CardActions>
-                        <button
-                            className='poppins text-green-dark text-sm font-bold hover:bg-green-light py-1 px-2 rounded'
-                            onClick={() => addToCart(index)}
-                        >
-                            Add to Cart
-                        </button>
-                        <button
-                            className='poppins text-green-dark text-sm font-bold hover:bg-green-light py-1 px-2 rounded'
-                            onClick={() => productDetailsHandler(val.id)}
-                        >
-                            Details
-                        </button>
-                    </CardActions>
-                </Card >
+                    </div>
+                    <hr className='my-4 border' />
+                    <button
+                        className='text-primary1 text-base font-bold hover:text-secondary1 flex items-center phone:text-xs'
+                        onClick={() => addToCart(index)}
+                    >
+                        <svg class="w-5 h-5 phone:w-4 phone:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Add to cart
+                    </button>
+                </div>
             )
         })
     }
@@ -115,6 +122,16 @@ const Products = () => {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'You need to login first!',
+                timer: 1500,
+                timerProgressBar: true
+            })
+            return
+        }
+        if (paginatedProducts[index].qty <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Out of stock!',
                 timer: 1500,
                 timerProgressBar: true
             })
@@ -187,31 +204,35 @@ const Products = () => {
             >
                 <Box sx={style}>
                     <div className="mb-4">
-                        <p className='poppins text-green-dark text-2xl font-bold'>
+                        <p className='font-poppins text-primary1 text-2xl font-bold'>
                             {noExist ? "" : capitalize(dataDeskripsi[0]?.productName)}
                         </p>
                     </div>
+                    <img
+                        src={API_URL + dataDeskripsi[0]?.imagePath} alt=""
+                        className='object-contain w-full h-80 bg-gray-200 mb-4'
+                    />
                     <div className="mb-4">
-                        <p className='poppins font-bold text-base text-gray-600'>
+                        <p className='font-poppins font-bold text-base text-gray-600'>
                             Description :
                         </p>
-                        <p className='poppins text-sm text-gray-500'>
+                        <p className='font-poppins text-sm text-gray-500'>
                             {dataDeskripsi[0]?.description}
                         </p>
                     </div>
                     <div className="mb-4">
-                        <p className='poppins font-bold text-base text-gray-600'>
+                        <p className='font-poppins font-bold text-base text-gray-600'>
                             Category :
                         </p>
-                        <p className='poppins text-sm text-gray-500'>
+                        <p className='font-poppins text-sm text-gray-500'>
                             {noExist ? "" : capitalize(dataDeskripsi[0]?.categoryName)}
                         </p>
                     </div>
                     <div>
-                        <p className='poppins font-bold text-base text-gray-600'>
+                        <p className='font-poppins font-bold text-base text-gray-600'>
                             Composition :
                         </p>
-                        <p className='poppins text-sm text-gray-500'>
+                        <p className='font-poppins text-sm text-gray-500'>
                             {noExist ? "" : capitalize(dataDeskripsi[0]?.composition)}
                         </p>
                     </div>
@@ -285,50 +306,43 @@ const Products = () => {
                 message="Added to cart!"
                 action={action}
             />
-            <div className="pt-6">
-                <div className=" flex justify-center mb-4">
+            <div className="pt-6 font-poppins bg-secondary1">
+                <div className="flex justify-center mb-4 phone:flex-col">
                     <input
-                        className="border border-gray-300 border-solid focus:outline-none focus:border-green-700  px-4 rounded-md mr-2"
+                        className="h-14 phone:h-10 phone:text-sm border border-gray-300 border-solid focus:outline-none px-4 rounded-md mr-2 phone:w-11/12 phone:mx-auto phone:mb-2"
                         type="text"
                         placeholder="Search medicine"
                         onChange={searchHandler}
                     />
-                    <FormControl sx={{ minWidth: 250, marginRight: 1 }}>
-                        <InputLabel id="demo-simple-select-label" color="success">Sort</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filter}
-                            label="Sort"
-                            onChange={handleChangeFilter}
-                            color="success"
-                        >
-                            <MenuItem value="default">Sort by the latest</MenuItem>
-                            <MenuItem value="lowest">Price: Lowest to Highest</MenuItem>
-                            <MenuItem value="highest">Price: Highest to Lowest</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ minWidth: 150 }}>
-                        <InputLabel id="demo-simple-select-label" color="success">Category</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={kategori}
-                            label="Category"
-                            onChange={handleChangeKategori}
-                            color="success"
-                        >
-                            <MenuItem value={0}>All Categories</MenuItem>
-                            {dataKategori.map((val, index) => (
-                                <MenuItem key={index + 1} value={val.id}>{val.categoryName}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <select
+                        value={filter}
+                        onChange={handleChangeFilter}
+                        className='h-14 phone:h-10 phone:text-sm mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
+                    >
+                        <option value="default">Sort by the latest</option>
+                        <option value="lowest">Price: Lowest to Highest</option>
+                        <option value="highest">Price: Highest to Lowest</option>
+                    </select>
+                    <select
+                        value={kategori}
+                        onChange={handleChangeKategori}
+                        className='h-14 phone:h-10 phone:text-sm mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
+                    >
+                        <option value={0}>All Categories</option>
+                        {dataKategori.map((val, index) => (
+                            // <MenuItem key={index + 1} value={val.id}>{val.categoryName}</MenuItem>
+                            <option key={index + 1} value={val.id}>{val.categoryName}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className="text-center mb-16">
                     <label htmlFor="contained-button-file">
                         <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                        <Button variant="contained" component="span" style={{ backgroundColor: "#66806a" }}>
+                        <Button variant="contained" component="span" style={{ backgroundColor: "#22577A" }}>
+                            <svg
+                                class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
                             Upload Prescription
                         </Button>
                     </label>
@@ -337,18 +351,18 @@ const Products = () => {
                     </label>
                 </div>
                 <div hidden={spinner} className="text-center mb-10">
-                    <CircularProgress sx={{ color: "#66806a" }} />
+                    <CircularProgress sx={{ color: "white" }} />
                 </div>
                 {paginatedProducts.length ? (
                     <div hidden={hideproductlist}>
-                        <div className="grid grid-cols-4 grid-flow-row gap-2 w-3/4 mx-auto mb-10">
+                        <div className="grid grid-cols-4 phone:grid-cols-2 grid-flow-row gap-2 phone:gap-0 w-3/4 phone:w-11/12 mx-auto mb-10">
                             {renderProducts()}
                         </div>
                     </div>
                 ) : (
                     <div hidden={hideproductlist} className="text-center mt-24 mb-10">
                         <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
-                        <p className="text-lg font-bold text-green-dark">Tidak ada produk</p>
+                        <p className="text-lg font-bold text-primary1">Product is not found</p>
                     </div>
                 )}
                 <div className="mb-10 w-max mx-auto">
