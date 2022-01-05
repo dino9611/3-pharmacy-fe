@@ -14,18 +14,18 @@ const CheckOut = () => {
     const dispatch = useDispatch()
 
     const [form, setForm] = useState({
-        address: "",
+        address: authState.address,
         bank_id: 0
     })
 
     const renderCart = () => {
         return cartState.map((val, index) => (
-            <div key={index + 1} className='bg-white my-5 flex rounded-lg overflow-hidden'>
-                <img src={API_URL + val.imagePath} alt="" className='w-32 h-28' />
-                <div className='ml-5 flex flex-col mt-5'>
-                    <p>{capitalize(val.productName)}</p>
-                    <p>{`${toRupiah(val.productPriceRp)} x ${val.qty}`}</p>
-                    <p>= {toRupiah(val.productPriceRp * val.qty)}</p>
+            <div key={index + 1} className='bg-white my-5 flex items-center rounded-lg overflow-hidden'>
+                <img src={API_URL + val.imagePath} alt="" className='w-32 h-32 bg-gray-300 object-contain m-2 rounded-lg' />
+                <div className='ml-5 flex flex-col'>
+                    <p className='font-bold text-sm mb-2'>{capitalize(val.productName)}</p>
+                    <p className='text-sm'>{`${toRupiah(val.productPriceRp)} x ${val.qty}`}</p>
+                    <p className='text-sm'>= {toRupiah(val.productPriceRp * val.qty)}</p>
                 </div>
             </div>
         ))
@@ -96,21 +96,22 @@ const CheckOut = () => {
     return (
         <div>
             <Header />
-            <div className='flex px-20 py-5 h-screen'>
+            <div className='poppins flex px-20 py-5 h-screen'>
                 <div className='bg-green-light w-1/2 mr-5 p-5 rounded-lg overflow-x-hidden overflow-y-scroll'>
-                    <p className='text-center text-2xl mb-2 font-medium'>Products</p>
+                    <p className='font-bold text-center text-2xl mb-2'>Products</p>
                     <hr />
                     {renderCart()}
                 </div>
                 <div className='w-1/2 ml-5 h-auto rounded-lg overflow-hidden'>
                     <div className='bg-green-light p-5'>
-                        <p className='mb-2 font-medium text-xl'>Order Summary</p>
+                        <p className='mb-2 font-bold text-xl'>Order Summary</p>
                         <hr className='mb-2' />
                         <p className='mb-2'>Recipient : {`${authState.firstName} ${authState.lastName}`}</p>
                         <textarea
                             className='resize-none focus:outline-none p-2 w-full h-32 mb-2'
                             placeholder='Address'
                             name='address'
+                            value={form.address}
                             onChange={inputHandler}
                         />
                         <p>Payment Via :</p>
@@ -120,7 +121,7 @@ const CheckOut = () => {
                         <p>Items = {toRupiah(renderTotal())}</p>
                         <p className='mb-2'>Shipping Cost = {toRupiah(9000)}</p>
                         <hr className='mb-2' />
-                        <p>Grand Total = {toRupiah(renderTotal() + 9000)}</p>
+                        <p className='font-bold'>Grand Total = {toRupiah(renderTotal() + 9000)}</p>
                     </div>
                     {!form.address || !form.bank_id ? (
                         <button

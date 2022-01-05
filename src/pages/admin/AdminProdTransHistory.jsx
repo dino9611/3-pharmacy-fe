@@ -2,7 +2,7 @@ import {
     Paper, Table, TableBody,
     TableCell, TableContainer,
     TableHead, TableRow, Modal,
-    Box
+    Box, TablePagination
 } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -24,7 +24,8 @@ const style = {
     borderRadius: '15px',
     boxShadow: 24,
     p: 4,
-    display: 'flex'
+    display: 'flex',
+    height: 550
 };
 
 const AdminProdTransHistory = () => {
@@ -46,6 +47,7 @@ const AdminProdTransHistory = () => {
 
     const pickFilter = (value) => {
         setFilter(value)
+        setPage(0)
     }
 
     const renderFilterList = () => {
@@ -55,7 +57,7 @@ const AdminProdTransHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='px-5 py-2 mr-2 bg-green-dark border-2 border-green-dark rounded-full text-sm font-bold text-white poppins'
+                        className='px-5 py-2 mr-2 bg-green-dark border-2 border-green-dark rounded-full text-xs font-bold text-white poppins'
                     >
                         {val.status}
                     </button>
@@ -65,7 +67,7 @@ const AdminProdTransHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='px-5 py-2 mr-2 border-solid border-2 border-green-dark rounded-full text-sm font-bold text-green-dark poppins'
+                        className='px-5 py-2 mr-2 border-solid border-2 border-green-dark rounded-full text-xs font-bold text-green-dark poppins'
                     >
                         {val.status}
                     </button>
@@ -89,7 +91,8 @@ const AdminProdTransHistory = () => {
                     type: action
                 })
                 dispatch({ type: 'setadminorder', payload: res.data })
-                setFilter()
+                setFilter('')
+                setPage(0)
                 Swal.fire({
                     icon: 'success',
                     title: 'Confirmed!',
@@ -104,10 +107,13 @@ const AdminProdTransHistory = () => {
 
     const [open, setOpen] = useState(false)
     const [historydetails, setHistorydetails] = useState([])
+    const [boughtProducts, setBoughtProducts] = useState([])
     const modalHandler = async (id) => {
         try {
-            let res = await axios.get(`${API_URL}/transaction/historydetails/${id}`)
-            setHistorydetails(res.data)
+            let historyRes = await axios.get(`${API_URL}/transaction/historydetails/${id}`)
+            setHistorydetails(historyRes.data)
+            let boughtRes = await axios.get(`${API_URL}/transaction/boughtproducts/${id}`)
+            setBoughtProducts(boughtRes.data)
             setOpen(!open)
         } catch (error) {
             alert(error.response.data.message)
@@ -117,6 +123,7 @@ const AdminProdTransHistory = () => {
     const modalDetail = () => {
         const noExist = historydetails.length === 0
         const history = historydetails[0]
+        const boughtNoExist = boughtProducts.length === 0
         return (
             <Modal
                 open={open}
@@ -126,7 +133,7 @@ const AdminProdTransHistory = () => {
             >
                 <Box sx={style}>
                     <div className='flex'>
-                        <div className='w-96'>
+                        <div className='w-96 h-full overflow-scroll overflow-x-hidden pr-3 ml-2'>
                             <p className='poppins font-bold text-xl text-center mb-5'>
                                 Transaction Details
                             </p>
@@ -169,6 +176,20 @@ const AdminProdTransHistory = () => {
                                 <span className='font-thin'> {history?.address}</span>
                             </p>
                             <hr className='my-4' />
+                            {boughtProducts.map((val, index) => (
+                                <div key={index + 1} className='mb-1 flex items-center shadow-md p-2 rounded'>
+                                    <img
+                                        src={API_URL + val.imagePath} alt={val.productName}
+                                        className='w-16 h-16 mr-5'
+                                    />
+                                    <div>
+                                        <p className='text-sm'>{boughtNoExist ? '' : capitalize(val.productName)}</p>
+                                        <p className='text-sm'>{boughtNoExist ? '' : toRupiah(val.productPriceRp)}</p>
+                                        <p className='text-sm'>{val.qty} x</p>
+                                    </div>
+                                </div>
+                            ))}
+                            <hr className='my-4' />
                             <div className='flex justify-between mb-2'>
                                 <p className='poppins text-sm font-bold'>Total Price</p>
                                 <p className='poppins text-sm'>{noExist ? '' : toRupiah(history?.totalPrice)}</p>
@@ -182,18 +203,17 @@ const AdminProdTransHistory = () => {
                                 <p className='poppins text-sm font-bold'>{noExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
                             </div>
                         </div>
-                        <div className='mx-4' />
                         <div className='w-96'>
                             <p className='poppins font-bold text-xl text-center mb-5'>
                                 Payment Proof
                             </p>
                             {history?.paymentProof ? (
                                 <a href={API_URL + history?.paymentProof}>
-                                    <img src={API_URL + history?.paymentProof} alt="" className='object-contain h-64 w-11/12 cursor-pointer bg-gray-200 rounded-lg mx-auto my-5' />
+                                    <img src={API_URL + history?.paymentProof} alt="" className='object-contain h-5/6 w-11/12 cursor-pointer bg-gray-200 rounded-lg mx-auto my-5' />
                                 </a>
                             ) : (
                                 <div
-                                    className='h-64 w-11/12 bg-gray-200 cursor-pointer rounded-lg mx-auto my-5 flex items-center justify-center'
+                                    className=' h-5/6 w-11/12 bg-gray-200 cursor-pointer rounded-lg mx-auto my-5 flex items-center justify-center'
                                 >
                                     <p className='text-green-dark font-medium text-lg'>No Payment Proof</p>
                                 </div>
@@ -304,11 +324,47 @@ const AdminProdTransHistory = () => {
         ))
     }
 
+    const [timeRange, setTimeRange] = useState('')
+    const onRangeChange = e => {
+        setTimeRange(e.target.value)
+    }
+
+    const [orderLength, setOrderLength] = useState(0)
+
+    // state rows per page
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const handleChangeRowsPerPage = (e) => {
+        setRowsPerPage(e.target.value)
+    }
+
+    // state page
+    const [page, setPage] = useState(0);
+    const handleChangePage = (e, newPage) => {
+        setPage(newPage);
+    };
+
     useEffect(() => {
+        const getOrderLength = async () => {
+            try {
+                let res = await axios.get(`${API_URL}/transaction/adminorderlength?filter=${filter}&range=${timeRange}`)
+                setOrderLength(res.data[0].order_length)
+            } catch (error) {
+                alert(error.response.data.message)
+            }
+        }
+        getOrderLength()
+
+        // handle paginated list products
+        setRowsPerPage(rowsPerPage);
+        setPage(page);
+        const offset = page * rowsPerPage;
+
+        setTimeRange(timeRange)
+
         // get order data
         const getOrder = async () => {
             try {
-                let res = await axios.get(`${API_URL}/transaction/admingetorder?filter=${filter}`)
+                let res = await axios.get(`${API_URL}/transaction/admingetorder?filter=${filter}&limit=${rowsPerPage}&offset=${offset}&range=${timeRange}`)
                 dispatch({ type: 'setadminorder', payload: res.data })
             } catch (error) {
                 alert(error.response.data.message)
@@ -317,17 +373,27 @@ const AdminProdTransHistory = () => {
         getOrder()
 
         setFilter(filter)
-    }, [filter])
+    }, [filter, rowsPerPage, page, timeRange])
 
     return (
-        <div className='ml-64'>
+        <div className='ml-64 px-8'>
             {modalDetail()}
-            <div className='pt-5 text-center'>
+            <div class="poppins pt-5">
+                <select
+                    onChange={onRangeChange}
+                    class="w-1/4 mt-1 py-2 px-3 text-sm border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark"
+                >
+                    <option value=''>All time</option>
+                    <option value='week'>Last 7 days</option>
+                    <option value='month'>Last 30 days</option>
+                </select>
+            </div>
+            <div className='pt-5'>
                 {renderFilterList()}
             </div>
             {adminOrder.length ?
                 (
-                    <TableContainer component={Paper} sx={{ width: "75vw" }} className="mx-auto my-5">
+                    <TableContainer component={Paper} sx={{ width: "100%" }} className=" my-5">
                         <Table aria-label="simple table">
                             <TableHead sx={{ backgroundColor: "#66806a" }}>
                                 <TableRow>
@@ -344,6 +410,16 @@ const AdminProdTransHistory = () => {
                                 {renderOrderList()}
                             </TableBody>
                         </Table>
+                        <TablePagination
+                            component="div"
+                            count={orderLength}
+                            rowsPerPageOptions={[5, 10, 15]}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            rowsPerPage={rowsPerPage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            sx={{ color: 'white', backgroundColor: "#66806a" }}
+                        />
                     </TableContainer>
                 )
                 : (
@@ -353,7 +429,7 @@ const AdminProdTransHistory = () => {
                     </div>
                 )
             }
-        </div>
+        </div >
     )
 }
 

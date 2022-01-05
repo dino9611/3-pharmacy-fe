@@ -1,4 +1,4 @@
-import { Modal, Box } from '@mui/material';
+import { Modal, Box, Pagination } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,17 +9,20 @@ import { API_URL } from '../../constants/api';
 import { parseDate } from '../../helpers/parseDate';
 import { toRupiah } from '../../helpers/toRupiah';
 import EmptyData from './assets/empty-data.svg'
+import { capitalize } from '../../helpers/capitalize';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 500,
     bgcolor: 'background.paper',
-    borderRadius: '15px',
     boxShadow: 24,
     p: 4,
+    overflow: 'scroll',
+    overflowX: 'hidden',
+    maxHeight: 450
 };
 
 const ProductTransactionHistory = () => {
@@ -27,12 +30,19 @@ const ProductTransactionHistory = () => {
     const authState = useSelector(state => state.auth)
     const userOrder = useSelector(state => state.order.userOrder)
 
+    const [orderLength, setOrderLength] = useState(0)
+    const [page, setPage] = useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
+
     const [filter, setFilter] = useState('');
 
     const filterList = [
         { status: 'All', value: '' },
         { status: 'Waiting For Payment', value: 'waitingpayment' },
         { status: 'Checked Out', value: 'checkout' },
+        { status: 'Accepted', value: 'paymentAcc' },
         { status: 'On Process', value: 'processing' },
         { status: 'On Delivery', value: 'otw' },
         { status: 'Delivered', value: 'delivered' },
@@ -41,6 +51,7 @@ const ProductTransactionHistory = () => {
 
     const pickFilter = (value) => {
         setFilter(value)
+        setPage(1)
     }
 
     const renderFilterList = () => {
@@ -71,7 +82,7 @@ const ProductTransactionHistory = () => {
         try {
             let result = await Swal.fire({
                 title: `Confirmation`,
-                text: "Confirm  if your order is delivered",
+                text: "Confirm that your order is delivered",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#687',
@@ -98,10 +109,13 @@ const ProductTransactionHistory = () => {
 
     const [open, setOpen] = useState(false)
     const [historydetails, setHistorydetails] = useState([])
+    const [boughtProducts, setBoughtProducts] = useState([])
     const modalHandler = async (id) => {
         try {
-            let res = await axios.get(`${API_URL}/transaction/historydetails/${id}`)
-            setHistorydetails(res.data)
+            let historyRes = await axios.get(`${API_URL}/transaction/historydetails/${id}`)
+            setHistorydetails(historyRes.data)
+            let boughtRes = await axios.get(`${API_URL}/transaction/boughtproducts/${id}`)
+            setBoughtProducts(boughtRes.data)
             setOpen(!open)
         } catch (error) {
             alert(error.response.data.message)
@@ -109,8 +123,9 @@ const ProductTransactionHistory = () => {
     }
 
     const modalDetail = () => {
-        const noExist = historydetails.length === 0
+        const historyNoExist = historydetails.length === 0
         const history = historydetails[0]
+        const boughtNoExist = boughtProducts.length === 0
         return (
             <Modal
                 open={open}
@@ -129,6 +144,7 @@ const ProductTransactionHistory = () => {
                         <p className='poppins text-sm' >
                             {history?.status === 'checkout' && !history?.paymentProof ? 'Waiting for payment' : ''}
                             {history?.status === 'checkout' && history?.paymentProof ? 'Waiting for confirmation' : ''}
+                            {history?.status === 'paymentAcc' ? 'Accepted' : ''}
                             {history?.status === 'processing' ? 'On process' : ''}
                             {history?.status === 'otw' ? 'On Delivery' : ''}
                             {history?.status === 'delivered' ? 'Delivered' : ''}
@@ -140,7 +156,7 @@ const ProductTransactionHistory = () => {
                             Check Out Time
                         </p>
                         <p className='poppins text-sm'>
-                            {noExist ? '' : parseDate(history?.checkedOutAt)}
+                            {historyNoExist ? '' : parseDate(history?.checkedOutAt)}
                         </p>
                     </div>
                     <div className='flex justify-between'>
@@ -148,7 +164,7 @@ const ProductTransactionHistory = () => {
                             Payment Method
                         </p>
                         <p className='poppins text-sm'>
-                            {noExist ? '' : history?.bank}
+                            {historyNoExist ? '' : history?.bank}
                         </p>
                     </div>
                     <hr className='my-4' />
@@ -160,17 +176,31 @@ const ProductTransactionHistory = () => {
                         <span className='font-thin'> {history?.address}</span>
                     </p>
                     <hr className='my-4' />
+                    {boughtProducts.map((val, index) => (
+                        <div key={index + 1} className='poppins mb-1 flex items-center shadow-md p-2 rounded'>
+                            <img
+                                src={API_URL + val.imagePath} alt={val.productName}
+                                className='w-16 h-16 mr-5'
+                            />
+                            <div>
+                                <p className='font-bold text-sm'>{boughtNoExist ? '' : capitalize(val.productName)}</p>
+                                <p className='text-sm'>{boughtNoExist ? '' : toRupiah(val.productPriceRp)}</p>
+                                <p className='text-sm'>{val.qty} x</p>
+                            </div>
+                        </div>
+                    ))}
+                    <hr className='my-4' />
                     <div className='flex justify-between mb-2'>
                         <p className='poppins text-sm font-bold'>Total Price</p>
-                        <p className='poppins text-sm'>{noExist ? '' : toRupiah(history?.totalPrice)}</p>
+                        <p className='poppins text-sm'>{historyNoExist ? '' : toRupiah(history?.totalPrice)}</p>
                     </div>
                     <div className='flex justify-between mb-2'>
                         <p className='poppins text-sm font-bold'>Shipping Cost</p>
-                        <p className='poppins text-sm'>{noExist ? '' : toRupiah(history?.shippingCost)}</p>
+                        <p className='poppins text-sm'>{historyNoExist ? '' : toRupiah(history?.shippingCost)}</p>
                     </div>
                     <div className='flex justify-between mb-2'>
                         <p className='poppins text-sm font-bold'>Grand Total</p>
-                        <p className='poppins text-sm font-bold'>{noExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
+                        <p className='poppins text-sm font-bold'>{historyNoExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
                     </div>
                 </Box>
             </Modal>
@@ -197,6 +227,20 @@ const ProductTransactionHistory = () => {
                     </button>
                 </div>
                 <hr className='mb-5' />
+                {JSON.parse(val.product_list).map((val, index) => (
+                    <div key={index + 1} className='poppins mb-1 flex items-center shadow-md p-2 rounded'>
+                        <img
+                            src={API_URL + val.imagePath} alt={val.productName}
+                            className='w-16 h-16 mr-5'
+                        />
+                        <div>
+                            <p className='font-bold text-sm'>{capitalize(val.productName)}</p>
+                            <p className='text-sm'>{toRupiah(val.productPriceRp)}</p>
+                            <p className='text-sm'>{val.qty} x</p>
+                        </div>
+                    </div>
+                ))}
+                <hr className='my-5' />
                 <div className='text-right'>
                     {val.status === 'checkout' && !val.paymentProof ? (
                         <Link to={`/uploadpayment/${val.id}`}>
@@ -224,6 +268,12 @@ const ProductTransactionHistory = () => {
                         </Link>
                     ) : ''}
 
+                    {val.status === 'paymentAcc' ? (
+                        <p className='poppins text-sm text-right text-green-dark'>
+                            Waiting for your order to be processed
+                        </p>
+                    ) : ''}
+
                     {val.status === 'processing' ? (
                         <p className='poppins text-sm text-right text-green-dark'>
                             Your order is being processed
@@ -238,7 +288,7 @@ const ProductTransactionHistory = () => {
 
                     {val.status === 'otw' ? (
                         <button
-                            className='poppins text-sm bg-peach-light hover:bg-peach-dark px-2 py-2 rounded-lg'
+                            className='poppins text-sm text-white font-bold bg-green-dark hover:bg-green-light px-3 py-2 rounded-lg'
                             onClick={() => onDelivered(val.id)}
                         >
                             Confirm Delivery
@@ -255,10 +305,30 @@ const ProductTransactionHistory = () => {
         ))
     }
 
+    const [timeRange, setTimeRange] = useState('')
+    const onRangeChange = e => {
+        setTimeRange(e.target.value)
+    }
+
     useEffect(() => {
+        const getOrderLength = async () => {
+            try {
+                let res = await axios.get(`${API_URL}/transaction/orderlength/${authState.id}?filter=${filter}&range=${timeRange}`)
+                setOrderLength(res.data[0].order_length)
+            } catch (error) {
+                alert(error.response.data.message)
+            }
+        }
+        getOrderLength()
+
+        // untuk offset pagingnya
+        setPage(page)
+        const offset = ((page - 1)) * 5
+        setTimeRange(timeRange)
+
         const getOrder = async () => {
             try {
-                let res = await axios.get(`${API_URL}/transaction/getorder/${authState.id}?filter=${filter}`)
+                let res = await axios.get(`${API_URL}/transaction/getorder/${authState.id}/${offset}?filter=${filter}&range=${timeRange}`)
                 dispatch({ type: 'setuserorder', payload: res.data })
             } catch (error) {
                 alert(error.response.data.message)
@@ -266,19 +336,34 @@ const ProductTransactionHistory = () => {
         }
         getOrder()
         setFilter(filter);
-    }, [filter])
+    }, [timeRange, filter, page])
 
     return (
         <div>
             <Header />
             <div className='px-20'>
                 {modalDetail()}
+                <div class="poppins pt-5">
+                    <select
+                        onChange={onRangeChange}
+                        class="w-1/4 mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark"
+                    >
+                        <option value=''>All time</option>
+                        <option value='week'>Last 7 days</option>
+                        <option value='month'>Last 30 days</option>
+                    </select>
+                </div>
                 <div className='pt-5'>
                     {renderFilterList()}
                 </div>
                 {userOrder.length ?
                     (
-                        renderHistory()
+                        <>
+                            {renderHistory()}
+                            <div className='w-max mx-auto mb-10'>
+                                <Pagination count={Math.ceil(orderLength / 5)} page={page} onChange={handleChange} />
+                            </div>
+                        </>
                     )
                     : (
                         <div className='mt-20'>

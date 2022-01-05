@@ -82,19 +82,19 @@ const Cart = () => {
             <div className='bg-white shadow-md h-44 my-5 rounded-lg flex overflow-hidden' key={index + 1}>
                 <div className='w-11/12 p-4 phone:p-4 flex items-center'>
                     <img src={API_URL + val.imagePath} alt={val.productName} className='h-full w-40 rounded-lg mr-8' />
-                    <p className='mr-8'>{capitalize(val.productName)}</p>
+                    <p className='mr-8 font-bold'>{capitalize(val.productName)}</p>
                     <p className='mr-8'>{toRupiah(val.productPriceRp)}</p>
                     <div className='mr-8'>
                         {val.qty >= val.stock ? (
-                            <button disabled className='bg-white h-10 w-10 cursor-not-allowed'>+</button>
+                            <button disabled className='border-2 border-r-0 bg-white h-10 w-10 cursor-not-allowed'>+</button>
                         ) : (
-                            <button className='bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "tambah")}>+</button>
+                            <button className='border-2 border-r-0 bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "tambah")}>+</button>
                         )}
-                        <input type="text" className='h-10 w-14 focus:outline-none text-center' value={val.qty} />
+                        <input type="text" className='h-10 w-14 focus:outline-none text-center border-2' value={val.qty} />
                         {val.qty <= 1 ? (
-                            <button disabled className='bg-white h-10 w-10 cursor-not-allowed'>-</button>
+                            <button disabled className='border-2 border-l-0 bg-white h-10 w-10 cursor-not-allowed'>-</button>
                         ) : (
-                            <button className='bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "kurang")}>-</button>
+                            <button className='border-2 border-l-0 bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "kurang")}>-</button>
                         )}
                     </div>
                     <p>Total = {toRupiah(val.productPriceRp * val.qty)}</p>
@@ -121,7 +121,7 @@ const Cart = () => {
             />
             {cartState.length ? (
                 <>
-                    <div className='px-20 phone:px-4 mb-28'>
+                    <div className='poppins px-20 phone:px-4 mb-28'>
                         {renderCart()}
                     </div>
                     <CartFooter />

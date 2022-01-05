@@ -37,7 +37,7 @@ const Products = () => {
     const dispatch = useDispatch()
 
     // Get semua produk
-    const [products, setProducts] = useState([])
+    const [products, setProducts] = useState(0)
 
     // Ganti page
     const [page, setPage] = useState(1);
@@ -187,33 +187,33 @@ const Products = () => {
             >
                 <Box sx={style}>
                     <div className="mb-4">
-                        <Typography variant="h5" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='poppins text-green-dark text-2xl font-bold'>
                             {noExist ? "" : capitalize(dataDeskripsi[0]?.productName)}
-                        </Typography>
+                        </p>
                     </div>
                     <div className="mb-4">
-                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='poppins font-bold text-base text-gray-600'>
                             Description :
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </p>
+                        <p className='poppins text-sm text-gray-500'>
                             {dataDeskripsi[0]?.description}
-                        </Typography>
+                        </p>
                     </div>
                     <div className="mb-4">
-                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='poppins font-bold text-base text-gray-600'>
                             Category :
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </p>
+                        <p className='poppins text-sm text-gray-500'>
                             {noExist ? "" : capitalize(dataDeskripsi[0]?.categoryName)}
-                        </Typography>
+                        </p>
                     </div>
                     <div>
-                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='poppins font-bold text-base text-gray-600'>
                             Composition :
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </p>
+                        <p className='poppins text-sm text-gray-500'>
                             {noExist ? "" : capitalize(dataDeskripsi[0]?.composition)}
-                        </Typography>
+                        </p>
                     </div>
                 </Box>
             </Modal>
@@ -230,7 +230,7 @@ const Products = () => {
         const getProducts = async () => {
             try {
                 let res = await axios.get(`${API_URL}/product/getproducts?search=${search}&kategori=${kategori}`)
-                setProducts(res.data)
+                setProducts(res.data[0].product_length)
             } catch (error) {
                 alert(error);
             }
@@ -288,7 +288,7 @@ const Products = () => {
             <div className="pt-6">
                 <div className=" flex justify-center mb-4">
                     <input
-                        className="poppins text-sm border border-gray-300 border-solid focus:outline-none focus:border-green-700  px-4 rounded-md mr-2"
+                        className="border border-gray-300 border-solid focus:outline-none focus:border-green-700  px-4 rounded-md mr-2"
                         type="text"
                         placeholder="Search medicine"
                         onChange={searchHandler}
@@ -352,7 +352,7 @@ const Products = () => {
                     </div>
                 )}
                 <div className="mb-10 w-max mx-auto">
-                    <Pagination count={Math.ceil(products.length / 8)} page={page} onChange={handleChange} />
+                    <Pagination count={Math.ceil(products / 8)} page={page} onChange={handleChange} />
                 </div>
                 <Footer />
             </div>
