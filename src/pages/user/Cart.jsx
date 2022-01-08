@@ -48,7 +48,6 @@ const Cart = () => {
             }
         };
         getCart();
-        console.log(cartState);
     }, []);
 
     const deleteFromCart = async (index) => {
@@ -86,28 +85,30 @@ const Cart = () => {
 
     const renderCart = () => {
         return cartState.map((val, index) => (
-            <div className='font-poppins bg-white shadow-md h-44 my-5 rounded-lg flex overflow-hidden' key={index + 1}>
+            <div className='font-poppins bg-white shadow-md h-44 phone:h-36 my-5 phone:my-2 rounded-lg flex overflow-hidden' key={index + 1}>
                 <div className='w-11/12 p-4 phone:p-4 flex items-center'>
-                    <img src={API_URL + val.imagePath} alt={val.productName} className='h-full w-40 rounded-lg mr-8' />
-                    <p className='mr-8 font-bold'>{capitalize(val.productName)}</p>
-                    <p className='mr-8'>{toRupiah(val.productPriceRp)}</p>
-                    <div className='mr-8'>
-                        {val.qty >= val.stock ? (
-                            <button disabled className='border-2 border-r-0 bg-white h-10 w-10 cursor-not-allowed'>+</button>
-                        ) : (
-                            <button className='border-2 border-r-0 bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "tambah")}>+</button>
-                        )}
-                        <input type="text" className='h-10 w-14 focus:outline-none text-center border-2' value={val.qty} />
-                        {val.qty <= 1 ? (
-                            <button disabled className='border-2 border-l-0 bg-white h-10 w-10 cursor-not-allowed'>-</button>
-                        ) : (
-                            <button className='border-2 border-l-0 bg-white hover:bg-peach-dark h-10 w-10' onClick={() => editQuantity(index, "kurang")}>-</button>
-                        )}
+                    <img src={API_URL + val.imagePath} alt={val.productName} className='bg-gray-200 w-40 phone:w-20 h-full object-contain rounded-lg mr-8 phone:mr-2' />
+                    <div className='flex items-center phone:flex-col'>
+                        <p className='mr-8 phone:mr-0 phone:mb-1 phone:order-1 phone:text-xs font-bold'>{capitalize(val.productName)}</p>
+                        <p className='mr-8 phone:mr-0 phone:hidden'>{toRupiah(val.productPriceRp)}</p>
+                        <div className='mr-8 phone:mr-0 phone:flex phone:items-center phone:order-3'>
+                            {val.qty >= val.stock ? (
+                                <button disabled className='border-2 border-r-0 bg-white h-10 w-10 phone:h-5 phone:w-5 phone:text-xs cursor-not-allowed'>+</button>
+                            ) : (
+                                <button className='border-2 border-r-0 bg-white hover:bg-peach-dark h-10 w-10 phone:h-5 phone:w-5 phone:text-xs' onClick={() => editQuantity(index, "tambah")}>+</button>
+                            )}
+                            <input type="text" className='h-10 w-14 phone:h-5 phone:w-7 focus:outline-none text-center phone:text-xs border-2' value={val.qty} />
+                            {val.qty <= 1 ? (
+                                <button disabled className='border-2 border-l-0 bg-white h-10 w-10 phone:h-5 phone:w-5 phone:text-xs cursor-not-allowed'>-</button>
+                            ) : (
+                                <button className='border-2 border-l-0 bg-white hover:bg-peach-dark h-10 w-10 phone:h-5 phone:text-xs phone:w-5' onClick={() => editQuantity(index, "kurang")}>-</button>
+                            )}
+                        </div>
+                        <p className='phone:text-xs phone:order-2 phone:mb-1 font-bold text-primary1'>{toRupiah(val.productPriceRp * val.qty)}</p>
                     </div>
-                    <p>Total = {toRupiah(val.productPriceRp * val.qty)}</p>
                 </div>
                 <button
-                    className='bg-primary1 hover:bg-peach-light hover:text-black w-1/12 text-white'
+                    className='bg-primary1 hover:bg-peach-light hover:text-black w-1/12 phone:w-3/12 text-white phone:text-xs'
                     onClick={() => deleteFromCart(index)}
                 >
                     Delete
@@ -128,13 +129,13 @@ const Cart = () => {
             />
             {cartState.length ? (
                 <>
-                    <div className='px-20 phone:px-4 pb-28'>{renderCart()}</div>
+                    <div className='px-20 phone:px-2 pb-28'>{renderCart()}</div>
                     <CartFooter />
                 </>
             ) : (
-                <div className='text-center pt-28'>
-                    <img src={EmptyCart} alt='empty-cart' className='w-72 mb-4 mx-auto' />
-                    <p className='text-primary1 text-lg font-bold'>
+                <div className='text-center pt-28 phone:pt-14'>
+                    <img src={EmptyCart} alt='empty-cart' className='w-72 phone:w-36 mb-4 mx-auto' />
+                    <p className='text-primary1 text-lg phone:text-sm font-bold'>
                         No product in the cart
                     </p>
                 </div>

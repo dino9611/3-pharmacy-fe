@@ -60,7 +60,7 @@ const Products = () => {
                         className='object-contain w-48 h-48 phone:w-full phone:h-24 mx-auto bg-gray-200 rounded-md mb-4'
                     />
                     <div>
-                        <div className='flex justify-between items-center mb-4'>
+                        <div className='flex justify-between items-center mb-4 phone:mb-1'>
                             <p
                                 className='poppins text-primary1 font-bold text-lg phone:text-sm'
                             >
@@ -74,7 +74,7 @@ const Products = () => {
                             </svg>
                         </div>
                         <p
-                            className='poppins text-gray-600 font-bold text-sm mb-2 phone:text-xs'
+                            className='poppins text-gray-600 font-bold text-sm mb-2 phone:mb-1 phone:text-xs'
                         >
                             {toRupiah(val.productPriceRp)}
                         </p>
@@ -84,7 +84,7 @@ const Products = () => {
                             Stock {val.stock}
                         </p>
                     </div>
-                    <hr className='my-4 border' />
+                    <hr className='my-4 phone:my-2 border' />
                     <button
                         className='text-primary1 text-base font-bold hover:text-secondary1 flex items-center phone:text-xs'
                         onClick={() => addToCart(index)}
@@ -127,7 +127,7 @@ const Products = () => {
             })
             return
         }
-        if (paginatedProducts[index].qty <= 0) {
+        if (paginatedProducts[index].stock <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -306,10 +306,10 @@ const Products = () => {
                 message="Added to cart!"
                 action={action}
             />
-            <div className="pt-6 font-poppins bg-secondary1">
+            <div className="pt-6 phone:pt-2 font-poppins bg-secondary1">
                 <div className="flex justify-center mb-4 phone:flex-col">
                     <input
-                        className="h-14 phone:h-10 phone:text-sm border border-gray-300 border-solid focus:outline-none px-4 rounded-md mr-2 phone:w-11/12 phone:mx-auto phone:mb-2"
+                        className="h-14 phone:h-10 phone:text-xs border border-gray-300 border-solid focus:outline-none px-4 rounded-md mr-2 phone:w-11/12 phone:mx-auto phone:mb-2"
                         type="text"
                         placeholder="Search medicine"
                         onChange={searchHandler}
@@ -317,7 +317,7 @@ const Products = () => {
                     <select
                         value={filter}
                         onChange={handleChangeFilter}
-                        className='h-14 phone:h-10 phone:text-sm mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
+                        className='h-14 phone:h-10 phone:text-xs mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
                     >
                         <option value="default">Sort by the latest</option>
                         <option value="lowest">Price: Lowest to Highest</option>
@@ -326,16 +326,15 @@ const Products = () => {
                     <select
                         value={kategori}
                         onChange={handleChangeKategori}
-                        className='h-14 phone:h-10 phone:text-sm mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
+                        className='h-14 phone:h-10 phone:text-xs mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
                     >
                         <option value={0}>All Categories</option>
                         {dataKategori.map((val, index) => (
-                            // <MenuItem key={index + 1} value={val.id}>{val.categoryName}</MenuItem>
                             <option key={index + 1} value={val.id}>{val.categoryName}</option>
                         ))}
                     </select>
                 </div>
-                <div className="text-center mb-16">
+                <div className="text-center mb-16 phone:mb-4">
                     <label htmlFor="contained-button-file">
                         <Input accept="image/*" id="contained-button-file" multiple type="file" />
                         <Button variant="contained" component="span" style={{ backgroundColor: "#22577A" }}>
@@ -361,8 +360,8 @@ const Products = () => {
                     </div>
                 ) : (
                     <div hidden={hideproductlist} className="text-center mt-24 mb-10">
-                        <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
-                        <p className="text-lg font-bold text-primary1">Product is not found</p>
+                        <img src={EmptyProducts} alt="hai" className="w-1/3 phone:w-48 mx-auto mb-6" />
+                        <p className="text-lg phone:text-sm font-bold text-primary1">Product is not found</p>
                     </div>
                 )}
                 <div className="mb-10 w-max mx-auto">

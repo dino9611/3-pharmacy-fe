@@ -104,14 +104,11 @@ const Login = ({ open, handleClose }) => {
       >
         <Box sx={style} style={{ textAlign: 'center' }}>
           <div className='mb-8'>
-            <Typography
-              id='modal-modal-title'
-              variant='h4'
-              component='h4'
-              fontWeight={'bold'}
+            <p
+              className='font-bold text-3xl'
             >
               Login
-            </Typography>
+            </p>
           </div>
           <div className='mb-3'>
             <TextField
@@ -122,7 +119,7 @@ const Login = ({ open, handleClose }) => {
               name='usernamemail'
               onChange={inputHandler}
               onKeyDown={(e) => e.key === 'Enter' && onLogin()}
-              color='success'
+              color='info'
             />
           </div>
           <div className='mb-3'>
@@ -135,7 +132,7 @@ const Login = ({ open, handleClose }) => {
               name='password'
               onChange={inputHandler}
               onKeyDown={(e) => e.key === 'Enter' && onLogin()}
-              color='success'
+              color='info'
             />
           </div>
           <div className='mb-3' hidden={fillAlert}>
@@ -160,7 +157,7 @@ const Login = ({ open, handleClose }) => {
             <Button
               disabled
               variant='contained'
-              style={{ backgroundColor: '#b4c6a6' }}
+              style={{ backgroundColor: '#22577A' }}
             >
               Login
             </Button>
@@ -168,7 +165,7 @@ const Login = ({ open, handleClose }) => {
             <Button
               variant='contained'
               onClick={onLogin}
-              style={{ backgroundColor: '#66806a' }}
+              style={{ backgroundColor: '#22577A' }}
             >
               Login
             </Button>

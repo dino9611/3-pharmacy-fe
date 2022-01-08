@@ -20,12 +20,12 @@ const CheckOut = () => {
 
     const renderCart = () => {
         return cartState.map((val, index) => (
-            <div key={index + 1} className='bg-white my-5 flex items-center rounded-lg overflow-hidden'>
-                <img src={API_URL + val.imagePath} alt="" className='w-32 h-32 bg-gray-300 object-contain m-2 rounded-lg' />
+            <div key={index + 1} className='shadow-md my-5 phone:my-2 flex items-center rounded-lg overflow-hidden'>
+                <img src={API_URL + val.imagePath} alt="" className='w-32 h-32 phone:w-16 phone:h-16 bg-gray-300 object-contain m-2 rounded-lg' />
                 <div className='ml-5 flex flex-col'>
-                    <p className='font-bold text-sm mb-2'>{capitalize(val.productName)}</p>
-                    <p className='text-sm'>{`${toRupiah(val.productPriceRp)} x ${val.qty}`}</p>
-                    <p className='text-sm'>= {toRupiah(val.productPriceRp * val.qty)}</p>
+                    <p className='font-bold text-sm phone:text-xs mb-2 phone:mb-0'>{capitalize(val.productName)}</p>
+                    <p className='text-sm phone:text-xs'>{`${toRupiah(val.productPriceRp)} x ${val.qty}`}</p>
+                    <p className='text-sm phone:text-xs'>= {toRupiah(val.productPriceRp * val.qty)}</p>
                 </div>
             </div>
         ))
@@ -36,7 +36,7 @@ const CheckOut = () => {
         return bank.map((val, index) => (
             <div key={index + 1}>
                 <input className='mr-2' type="radio" id={val.bank} name='bank_id' value={val.id} onChange={inputHandler} />
-                <label htmlFor={val.bank}>{val.bank}</label>
+                <label htmlFor={val.bank} className='phone:text-sm'>{val.bank}</label>
             </div>
         ))
     }
@@ -96,43 +96,44 @@ const CheckOut = () => {
     return (
         <div>
             <Header />
-            <div className='poppins flex px-20 py-5 h-screen'>
-                <div className='bg-green-light w-1/2 mr-5 p-5 rounded-lg overflow-x-hidden overflow-y-scroll'>
-                    <p className='font-bold text-center text-2xl mb-2'>Products</p>
-                    <hr />
+            <div className='font-poppins bg-secondary1 flex phone:flex-col px-20 phone:px-2 py-5 phone:py-2 h-screen'>
+                <div className='bg-white shadow-md w-1/2 mr-5 phone:mr-0 phone:w-full phone:h-5/6 p-5 phone:mb-2 rounded-lg overflow-x-hidden overflow-y-auto'>
+                    <p className='font-bold text-center text-2xl phone:text-base mb-2'>Products</p>
+                    <hr className='border' />
                     {renderCart()}
                 </div>
-                <div className='w-1/2 ml-5 h-auto rounded-lg overflow-hidden'>
-                    <div className='bg-green-light p-5'>
-                        <p className='mb-2 font-bold text-xl'>Order Summary</p>
-                        <hr className='mb-2' />
-                        <p className='mb-2'>Recipient : {`${authState.firstName} ${authState.lastName}`}</p>
+                <div className='w-1/2 ml-5 phone:ml-0 phone:w-full h-auto rounded-lg overflow-hidden phone:overflow-y-auto'>
+                    <div className='bg-white shadow-md p-5 phone:w-full phone:h-auto'>
+                        <p className='mb-2 font-bold text-xl phone:text-base'>Order Summary</p>
+                        <hr className='mb-2 border' />
+                        <p className='mb-2 phone:text-sm'>Recipient : {`${authState.firstName} ${authState.lastName}`}</p>
                         <textarea
-                            className='resize-none focus:outline-none p-2 w-full h-32 mb-2'
+                            className='resize-none phone:text-sm focus:outline-none border-2 border-dashed border-gray-400 rounded-md p-2 w-full h-32 phone:h-20 mb-2'
                             placeholder='Address'
                             name='address'
                             value={form.address}
                             onChange={inputHandler}
                         />
-                        <p>Payment Via :</p>
-                        <div className='flex justify-between px-28 mb-10'>
+                        <p className='phone:text-sm'>Payment Via :</p>
+                        <div className='flex-col phone:flex-col'>
                             {renderBanks()}
                         </div>
-                        <p>Items = {toRupiah(renderTotal())}</p>
-                        <p className='mb-2'>Shipping Cost = {toRupiah(9000)}</p>
-                        <hr className='mb-2' />
-                        <p className='font-bold'>Grand Total = {toRupiah(renderTotal() + 9000)}</p>
+                        <hr className='my-2 border' />
+                        <p className='phone:text-sm'>Items = {toRupiah(renderTotal())}</p>
+                        <p className='mb-2 phone:text-sm'>Shipping Cost = {toRupiah(9000)}</p>
+                        <hr className='my-2 border' />
+                        <p className='font-bold phone:text-sm'>Grand Total = {toRupiah(renderTotal() + 9000)}</p>
                     </div>
                     {!form.address || !form.bank_id ? (
                         <button
-                            className='bg-green-light cursor-not-allowed w-full h-14 rounded-b-lg text-white'
+                            className='bg-gray-200 cursor-not-allowed w-full h-14 rounded-b-lg text-black phone:text-sm'
                         >
                             Next
                         </button>
                     ) : (
                         <Link to={`/uploadpayment/${cartState[0].order_id}`}>
                             <button
-                                className='bg-green-dark hover:bg-peach-dark w-full h-14 rounded-b-lg text-white hover:text-black'
+                                className='bg-primary1 hover:bg-peach-dark w-full h-14 rounded-b-lg text-white hover:text-black phone:text-sm'
                                 onClick={onCheckout}
                             >
                                 Next
