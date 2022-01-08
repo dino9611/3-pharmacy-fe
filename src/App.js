@@ -85,7 +85,7 @@ function App() {
         <Route path={'/cart'} element={<Cart />} />
         <Route path={'/checkout'} element={<CheckOut />} />
         <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
-        <Route path={'/history'} element={<ProductTransactionHistory />} />
+        <Route path={'/order-list'} element={<ProductTransactionHistory />} />
         <Route path={'/*'} element={<NotFound />} />
       </Routes>
       <ToastContainer />

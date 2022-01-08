@@ -61,7 +61,7 @@ const ProductTransactionHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='px-5 py-2 mr-2 bg-primary1 border-2 border-primary1 rounded-full text-sm font-bold text-white poppins'
+                        className='px-5 py-2 phone:px-3 phone:py-1 phone:text-xs mr-2 bg-primary1 border-2 border-primary1 rounded-full text-sm font-bold text-white poppins'
                     >
                         {val.status}
                     </button>
@@ -71,7 +71,7 @@ const ProductTransactionHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='bg-white px-5 py-2 mr-2 border-solid border-2 border-primary1 rounded-full text-sm font-bold text-primary1 poppins'
+                        className='bg-white px-5 py-2 phone:px-3 phone:py-1 phone:text-xs mr-2 border-solid border-2 border-primary1 rounded-full text-sm font-bold text-primary1 poppins'
                     >
                         {val.status}
                     </button>
@@ -209,8 +209,8 @@ const ProductTransactionHistory = () => {
 
     const renderHistory = () => {
         return userOrder.map((val, index) => (
-            <div key={index + 1} className='font-poppins bg-white shadow-md my-5 p-4 rounded-lg' >
-                <p className=' font-bold text-primary1'>{`Order #${val.id}`}</p>
+            <div key={index + 1} className='font-poppins bg-white shadow-md my-5 phone:my-2 p-4 rounded-lg' >
+                <p className=' font-bold text-primary1 phone:text-sm'>{`Order #${val.id}`}</p>
                 {val.status === 'checkout' && !val.paymentProof ? (
                     <p className='text-red-500 text-xs '>You have not uploaded the payment proof for this order!</p>
                 ) : ''}
@@ -218,9 +218,9 @@ const ProductTransactionHistory = () => {
                     <p className='text-red-500 text-xs '>Your payment is rejected!</p>
                 ) : ''}
                 <div className='flex items-center justify-between mb-2'>
-                    <p className=' text-sm'>{parseDate(val.checkedOutAt)}</p>
+                    <p className=' text-sm phone:text-xs'>{parseDate(val.checkedOutAt)}</p>
                     <button
-                        className=' text-sm text-primary1 font-bold hover:text-secondary1'
+                        className=' text-sm phone:text-xs text-primary1 font-bold hover:text-secondary1'
                         onClick={() => modalHandler(val.id)}
                     >
                         Detail
@@ -234,9 +234,9 @@ const ProductTransactionHistory = () => {
                             className='w-16 h-16 mr-5'
                         />
                         <div>
-                            <p className='font-bold text-sm'>{capitalize(val.productName)}</p>
-                            <p className='text-sm'>{toRupiah(val.productPriceRp)}</p>
-                            <p className='text-sm'>{val.qty} x</p>
+                            <p className='font-bold text-sm phone:text-xs'>{capitalize(val.productName)}</p>
+                            <p className='text-sm phone:text-xs'>{toRupiah(val.productPriceRp)}</p>
+                            <p className='text-sm phone:text-xs'>{val.qty} x</p>
                         </div>
                     </div>
                 ))}
@@ -245,7 +245,7 @@ const ProductTransactionHistory = () => {
                     {val.status === 'checkout' && !val.paymentProof ? (
                         <Link to={`/uploadpayment/${val.id}`}>
                             <button
-                                className=' text-sm text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
+                                className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
                             >
                                 Upload Payment
                             </button>
@@ -253,7 +253,7 @@ const ProductTransactionHistory = () => {
                     ) : ''}
 
                     {val.status === 'checkout' && val.paymentProof ? (
-                        <p className=' text-sm text-right text-primary1'>
+                        <p className=' text-sm phone:text-xs text-right text-primary1'>
                             Waiting for confirmation
                         </p>
                     ) : ''}
@@ -261,7 +261,7 @@ const ProductTransactionHistory = () => {
                     {val.status === 'paymentRej' ? (
                         <Link to={`/uploadpayment/${val.id}`}>
                             <button
-                                className=' text-sm text-white font-bold bg-primary1 hover:bg-secondary1 px-2 py-2 rounded-lg'
+                                className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-secondary1 px-2 py-2 rounded-lg'
                             >
                                 Resent Payment Proof
                             </button>
@@ -269,26 +269,26 @@ const ProductTransactionHistory = () => {
                     ) : ''}
 
                     {val.status === 'paymentAcc' ? (
-                        <p className=' text-sm text-right text-primary1'>
+                        <p className=' text-sm phone:text-xs text-right text-primary1'>
                             Waiting for your order to be processed
                         </p>
                     ) : ''}
 
                     {val.status === 'processing' ? (
-                        <p className=' text-sm text-right text-primary1'>
+                        <p className=' text-sm phone:text-xs text-right text-primary1'>
                             Your order is being processed
                         </p>
                     ) : ''}
 
                     {val.status === 'delivered' ? (
-                        <p className=' text-sm text-right text-primary1'>
+                        <p className=' text-sm phone:text-xs text-right text-primary1'>
                             Delivered
                         </p>
                     ) : ''}
 
                     {val.status === 'otw' ? (
                         <button
-                            className=' text-sm text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
+                            className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
                             onClick={() => onDelivered(val.id)}
                         >
                             Confirm Delivery
@@ -296,7 +296,7 @@ const ProductTransactionHistory = () => {
                     ) : ''}
 
                     {val.status === 'delivered' && !val.paymentProof ? (
-                        <p className=' text-sm text-right text-primary1'>
+                        <p className=' text-sm phone:text-xs text-right text-primary1'>
                             Delivered
                         </p>
                     ) : ''}
@@ -341,19 +341,19 @@ const ProductTransactionHistory = () => {
     return (
         <div>
             <Header />
-            <div className='bg-secondary1 font-poppins px-20 min-h-screen'>
+            <div className='bg-secondary1 font-poppins px-20 phone:px-2 min-h-screen'>
                 {modalDetail()}
-                <div class="pt-5">
+                <div class="pt-5 phone:pt-2">
                     <select
                         onChange={onRangeChange}
-                        class="w-1/4 mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark"
+                        class="w-1/4 mt-1 py-2 px-3 phone:text-xs border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark phone:w-full"
                     >
                         <option value=''>All time</option>
                         <option value='week'>Last 7 days</option>
                         <option value='month'>Last 30 days</option>
                     </select>
                 </div>
-                <div className='pt-5'>
+                <div className='pt-5 phone:pt-2 flex phone:overflow-x-scroll'>
                     {renderFilterList()}
                 </div>
                 {userOrder.length ?
@@ -367,8 +367,8 @@ const ProductTransactionHistory = () => {
                     )
                     : (
                         <div className='mt-20'>
-                            <img className='w-72 mx-auto mb-4' src={EmptyData} alt="empty-data" />
-                            <p className='text-primary1 text-center text-xl font-bold'>No data</p>
+                            <img className='w-72 phone:w-36 mx-auto mb-4' src={EmptyData} alt="empty-data" />
+                            <p className='text-primary1 text-center text-xl phone:text-sm font-bold'>No data</p>
                         </div>
                     )
                 }
