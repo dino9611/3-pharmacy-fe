@@ -64,12 +64,18 @@ export default function AdminTable({
       )}
       {DeleteModal !== undefined && (
         <ModalOverlay isOpen={deleteIsOpen} toggleModal={toggleDeleteModal}>
-          <DetailsModal toggleModal={toggleDeleteModal} />
+          <DeleteModal
+            toggleModal={toggleDeleteModal}
+            initialValues={initialValues}
+          />
         </ModalOverlay>
       )}
       {DetailsModal !== undefined && (
         <ModalOverlay isOpen={detailsIsOpen} toggleModal={toggleDetailsModal}>
-          <DetailsModal toggleModal={toggleDetailsModal} />
+          <DetailsModal
+            toggleModal={toggleDetailsModal}
+            initialValues={initialValues}
+          />
         </ModalOverlay>
       )}
       <div className='relative flex flex-col min-w-0 break-words w-full shadow-lg rounded bg-white my-1'>
@@ -281,6 +287,7 @@ const AdminTableDropdown = ({
               e.preventDefault();
               closeDropdownPopover();
               toggleDeleteModal();
+              setinitialValues({ ...row, index });
             }}
           >
             Delete

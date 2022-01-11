@@ -197,28 +197,8 @@ export default function AdminSideBar(props) {
             {/* Divider */}
             <hr className='my-4 md:min-w-full' />
 
-            {/* Heading */}
-            <h6 className='lg:min-w-full text-white font-bold block pt-1 pb-4 no-underline'>
-              History
-            </h6>
             {/* Navigation */}
             <ul className='lg:flex-col lg:min-w-full flex flex-col list-none lg:mb-4'>
-              <SidebarLink
-                name={'Raw Materials Record'}
-                pathname={'/admin/raw_materials_record'}
-                location={location}
-              />
-              <SidebarLink
-                name={'Order History'}
-                pathname={'/admin/order_history'}
-                location={location}
-              />
-              <SidebarLink
-                name={'Prescription History'}
-                pathname={'/admin/prescription_history'}
-                location={location}
-              />
-
               <Link to={'/'}>
                 <button
                   onClick={onLogout}
