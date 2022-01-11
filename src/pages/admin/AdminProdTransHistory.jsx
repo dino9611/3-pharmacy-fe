@@ -1,13 +1,8 @@
 import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Modal,
-  Box,
+  Paper, Table, TableBody,
+  TableCell, TableContainer,
+  TableHead, TableRow, Modal,
+  Box, TablePagination
 } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -30,6 +25,7 @@ const style = {
   boxShadow: 24,
   p: 4,
   display: 'flex',
+  height: 550
 };
 
 const AdminProdTransHistory = () => {
@@ -50,33 +46,36 @@ const AdminProdTransHistory = () => {
   ];
 
   const pickFilter = (value) => {
-    setFilter(value);
-  };
+    setFilter(value)
+    setPage(0)
+  }
 
   const renderFilterList = () => {
     return filterList.map((val, index) =>
-      val.value === filter ? (
-        <button
-          key={index + 1}
-          onClick={() => pickFilter(val.value)}
-          className='px-5 py-2 mr-2 bg-green-dark border-2 border-green-dark rounded-full text-sm font-bold text-white poppins'
-        >
-          {val.status}
-        </button>
-      ) : (
-        <button
-          key={index + 1}
-          onClick={() => pickFilter(val.value)}
-          className='px-5 py-2 mr-2 border-solid border-2 border-green-dark rounded-full text-sm font-bold text-green-dark poppins'
-        >
-          {val.status}
-        </button>
-      )
-    );
-  };
+      val.value === filter ?
+        (
+          <button
+            key={index + 1}
+            onClick={() => pickFilter(val.value)}
+            className='px-5 py-2 mr-2 bg-green-dark border-2 border-green-dark rounded-full text-xs font-bold text-white poppins'
+          >
+            {val.status}
+          </button>
+        )
+        :
+        (
+          <button
+            key={index + 1}
+            onClick={() => pickFilter(val.value)}
+            className='px-5 py-2 mr-2 border-solid border-2 border-green-dark rounded-full text-xs font-bold text-green-dark poppins'
+          >
+            {val.status}
+          </button>
+        ))
+  }
 
   const actionClick = async (value, orderId) => {
-    let action = value;
+    let action = value
     try {
       let result = await Swal.fire({
         title: `${capitalize(action)}`,
@@ -85,66 +84,66 @@ const AdminProdTransHistory = () => {
         showCancelButton: true,
         confirmButtonColor: '#687',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!',
-      });
+        confirmButtonText: 'Yes!'
+      })
       if (result.isConfirmed) {
-        let res = await axios.patch(
-          `${API_URL}/transaction/transactionreq/${orderId}`,
-          {
-            type: action,
-          }
-        );
-        dispatch({ type: 'setadminorder', payload: res.data });
-        setFilter();
+        let res = await axios.patch(`${API_URL}/transaction/transactionreq/${orderId}`, {
+          type: action
+        })
+        dispatch({ type: 'setadminorder', payload: res.data })
+        setFilter('')
+        setPage(0)
         Swal.fire({
           icon: 'success',
           title: 'Confirmed!',
           timer: 1500,
-          timerProgressBar: true,
-        });
+          timerProgressBar: true
+        })
       }
     } catch (error) {
-      alert(error?.response?.data?.message);
+      alert(error.response.data.message)
     }
-  };
+  }
 
-  const [open, setOpen] = useState(false);
-  const [historydetails, setHistorydetails] = useState([]);
+  const [open, setOpen] = useState(false)
+  const [historydetails, setHistorydetails] = useState([])
+  const [boughtProducts, setBoughtProducts] = useState([])
   const modalHandler = async (id) => {
     try {
-      let res = await axios.get(`${API_URL}/transaction/historydetails/${id}`);
-      setHistorydetails(res.data);
-      setOpen(!open);
+      let historyRes = await axios.get(`${API_URL}/transaction/historydetails/${id}`)
+      setHistorydetails(historyRes.data)
+      let boughtRes = await axios.get(`${API_URL}/transaction/boughtproducts/${id}`)
+      setBoughtProducts(boughtRes.data)
+      setOpen(!open)
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response.data.message)
     }
-  };
+  }
 
   const modalDetail = () => {
-    const noExist = historydetails.length === 0;
-    const history = historydetails[0];
+    const noExist = historydetails.length === 0
+    const history = historydetails[0]
+    const boughtNoExist = boughtProducts.length === 0
     return (
       <Modal
         open={open}
         onClose={modalHandler}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           <div className='flex'>
-            <div className='w-96'>
+            <div className='w-96 h-full overflow-scroll overflow-x-hidden pr-3 ml-2'>
               <p className='poppins font-bold text-xl text-center mb-5'>
                 Transaction Details
               </p>
               <div className='flex justify-between mb-2'>
-                <p className='poppins text-sm font-bold'>Status</p>
-                <p className='poppins text-sm'>
-                  {history?.status === 'checkout' && !history?.paymentProof
-                    ? 'Waiting for payment'
-                    : ''}
-                  {history?.status === 'checkout' && history?.paymentProof
-                    ? 'Waiting for confirmation'
-                    : ''}
+                <p className='poppins text-sm font-bold'>
+                  Status
+                </p>
+                <p className='poppins text-sm' >
+                  {history?.status === 'checkout' && !history?.paymentProof ? 'Waiting for payment' : ''}
+                  {history?.status === 'checkout' && history?.paymentProof ? 'Waiting for confirmation' : ''}
                   {history?.status === 'processing' ? 'On process' : ''}
                   {history?.status === 'otw' ? 'On Delivery' : ''}
                   {history?.status === 'delivered' ? 'Delivered' : ''}
@@ -153,73 +152,78 @@ const AdminProdTransHistory = () => {
                 </p>
               </div>
               <div className='flex justify-between mb-2'>
-                <p className='poppins text-sm font-bold'>Check Out Time</p>
+                <p className='poppins text-sm font-bold'>
+                  Check Out Time
+                </p>
                 <p className='poppins text-sm'>
                   {noExist ? '' : parseDate(history?.checkedOutAt)}
                 </p>
               </div>
               <div className='flex justify-between'>
-                <p className='poppins text-sm font-bold'>Payment Method</p>
+                <p className='poppins text-sm font-bold'>
+                  Payment Method
+                </p>
                 <p className='poppins text-sm'>
                   {noExist ? '' : history?.bank}
                 </p>
               </div>
               <hr className='my-4' />
-              <p className='poppins text-sm font-bold mb-2'>
-                Recipient :
+              <p className='poppins text-sm font-bold mb-2'>Recipient :
                 <span className='font-thin'> {history?.username}</span>
               </p>
               <p className='poppins text-sm font-bold'>
-                Address :<span className='font-thin'> {history?.address}</span>
+                Address :
+                <span className='font-thin'> {history?.address}</span>
               </p>
+              <hr className='my-4' />
+              {boughtProducts.map((val, index) => (
+                <div key={index + 1} className='mb-1 flex items-center shadow-md p-2 rounded'>
+                  <img
+                    src={API_URL + val.imagePath} alt={val.productName}
+                    className='w-16 h-16 mr-5'
+                  />
+                  <div>
+                    <p className='text-sm'>{boughtNoExist ? '' : capitalize(val.productName)}</p>
+                    <p className='text-sm'>{boughtNoExist ? '' : toRupiah(val.productPriceRp)}</p>
+                    <p className='text-sm'>{val.qty} x</p>
+                  </div>
+                </div>
+              ))}
               <hr className='my-4' />
               <div className='flex justify-between mb-2'>
                 <p className='poppins text-sm font-bold'>Total Price</p>
-                <p className='poppins text-sm'>
-                  {noExist ? '' : toRupiah(history?.totalPrice)}
-                </p>
+                <p className='poppins text-sm'>{noExist ? '' : toRupiah(history?.totalPrice)}</p>
               </div>
               <div className='flex justify-between mb-2'>
                 <p className='poppins text-sm font-bold'>Shipping Cost</p>
-                <p className='poppins text-sm'>
-                  {noExist ? '' : toRupiah(history?.shippingCost)}
-                </p>
+                <p className='poppins text-sm'>{noExist ? '' : toRupiah(history?.shippingCost)}</p>
               </div>
               <div className='flex justify-between mb-2'>
                 <p className='poppins text-sm font-bold'>Grand Total</p>
-                <p className='poppins text-sm font-bold'>
-                  {noExist
-                    ? ''
-                    : toRupiah(history?.shippingCost + history?.totalPrice)}
-                </p>
+                <p className='poppins text-sm font-bold'>{noExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
               </div>
             </div>
-            <div className='mx-4' />
             <div className='w-96'>
               <p className='poppins font-bold text-xl text-center mb-5'>
                 Payment Proof
               </p>
               {history?.paymentProof ? (
                 <a href={API_URL + history?.paymentProof}>
-                  <img
-                    src={API_URL + history?.paymentProof}
-                    alt=''
-                    className='object-contain h-64 w-11/12 cursor-pointer bg-gray-200 rounded-lg mx-auto my-5'
-                  />
+                  <img src={API_URL + history?.paymentProof} alt="" className='object-contain h-5/6 w-11/12 cursor-pointer bg-gray-200 rounded-lg mx-auto my-5' />
                 </a>
               ) : (
-                <div className='h-64 w-11/12 bg-gray-200 cursor-pointer rounded-lg mx-auto my-5 flex items-center justify-center'>
-                  <p className='text-green-dark font-medium text-lg'>
-                    No Payment Proof
-                  </p>
+                <div
+                  className=' h-5/6 w-11/12 bg-gray-200 cursor-pointer rounded-lg mx-auto my-5 flex items-center justify-center'
+                >
+                  <p className='text-green-dark font-medium text-lg'>No Payment Proof</p>
                 </div>
               )}
             </div>
           </div>
         </Box>
       </Modal>
-    );
-  };
+    )
+  }
 
   const renderOrderList = () => {
     return adminOrder.map((val, index) => (
@@ -336,76 +340,113 @@ const AdminProdTransHistory = () => {
     ));
   };
 
+  const [timeRange, setTimeRange] = useState('')
+  const onRangeChange = e => {
+    setTimeRange(e.target.value)
+  }
+
+  const [orderLength, setOrderLength] = useState(0)
+
+  // state rows per page
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(e.target.value)
+  }
+
+  // state page
+  const [page, setPage] = useState(0);
+  const handleChangePage = (e, newPage) => {
+    setPage(newPage);
+  };
+
   useEffect(() => {
+    const getOrderLength = async () => {
+      try {
+        let res = await axios.get(`${API_URL}/transaction/adminorderlength?filter=${filter}&range=${timeRange}`)
+        setOrderLength(res.data[0].order_length)
+      } catch (error) {
+        alert(error.response.data.message)
+      }
+    }
+    getOrderLength()
+
+    // handle paginated list products
+    setRowsPerPage(rowsPerPage);
+    setPage(page);
+    const offset = page * rowsPerPage;
+
+    setTimeRange(timeRange)
+
     // get order data
     const getOrder = async () => {
       try {
-        let res = await axios.get(
-          `${API_URL}/transaction/admingetorder?filter=${filter}`
-        );
-        dispatch({ type: 'setadminorder', payload: res.data });
+        let res = await axios.get(`${API_URL}/transaction/admingetorder?filter=${filter}&limit=${rowsPerPage}&offset=${offset}&range=${timeRange}`)
+        dispatch({ type: 'setadminorder', payload: res.data })
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response.data.message)
       }
-    };
-    getOrder();
+    }
+    getOrder()
 
-    setFilter(filter);
-  }, [filter]);
+    setFilter(filter)
+  }, [filter, rowsPerPage, page, timeRange])
 
   return (
-    <div className='ml-64'>
+    <div className='ml-64 px-8'>
       {modalDetail()}
-      <div className='pt-5 text-center'>{renderFilterList()}</div>
-      {adminOrder.length ? (
-        <TableContainer
-          component={Paper}
-          sx={{ width: '75vw' }}
-          className='mx-auto my-5'
+      <div class="poppins pt-5">
+        <select
+          onChange={onRangeChange}
+          class="w-1/4 mt-1 py-2 px-3 text-sm border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark"
         >
-          <Table aria-label='simple table'>
-            <TableHead sx={{ backgroundColor: '#66806a' }}>
-              <TableRow>
-                <TableCell sx={{ color: 'white' }} align='left'>
-                  ID Order
-                </TableCell>
-                <TableCell sx={{ color: 'white' }} align='left'>
-                  Check Out Time
-                </TableCell>
-                <TableCell sx={{ color: 'white' }} align='left'>
-                  Username
-                </TableCell>
-                <TableCell sx={{ color: 'white' }} align='left'>
-                  Address
-                </TableCell>
-                <TableCell sx={{ color: 'white', width: '12vw' }} align='left'>
-                  Status
-                </TableCell>
-                <TableCell
-                  sx={{ color: 'white', width: '13vw' }}
-                  align='center'
-                >
-                  Action
-                </TableCell>
-                <TableCell
-                  sx={{ color: 'white', width: '5vw' }}
-                  align='center'
-                ></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{renderOrderList()}</TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <div className='mt-40'>
-          <img className='w-72 mx-auto mb-4' src={EmptyData} alt='empty-data' />
-          <p className='text-green-dark text-center text-xl font-medium'>
-            No data
-          </p>
-        </div>
-      )}
-    </div>
-  );
-};
+          <option value=''>All time</option>
+          <option value='week'>Last 7 days</option>
+          <option value='month'>Last 30 days</option>
+        </select>
+      </div>
+      <div className='pt-5'>
+        {renderFilterList()}
+      </div>
+      {adminOrder.length ?
+        (
+          <TableContainer component={Paper} sx={{ width: "100%" }} className=" my-5">
+            <Table aria-label="simple table">
+              <TableHead sx={{ backgroundColor: "#66806a" }}>
+                <TableRow>
+                  <TableCell sx={{ color: "white" }} align="left">ID Order</TableCell>
+                  <TableCell sx={{ color: "white" }} align="left">Check Out Time</TableCell>
+                  <TableCell sx={{ color: "white" }} align="left">Username</TableCell>
+                  <TableCell sx={{ color: "white" }} align="left">Address</TableCell>
+                  <TableCell sx={{ color: "white", width: "12vw" }} align="left">Status</TableCell>
+                  <TableCell sx={{ color: "white", width: "13vw" }} align="center">Action</TableCell>
+                  <TableCell sx={{ color: "white", width: "5vw" }} align="center"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {renderOrderList()}
+              </TableBody>
+            </Table>
+            <TablePagination
+              component="div"
+              count={orderLength}
+              rowsPerPageOptions={[5, 10, 15]}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{ color: 'white', backgroundColor: "#66806a" }}
+            />
+          </TableContainer>
+        )
+        : (
+          <div className='mt-40'>
+            <img className='w-72 mx-auto mb-4' src={EmptyData} alt="empty-data" />
+            <p className='text-green-dark text-center text-xl font-medium'>No data</p>
+          </div>
+        )
+      }
+    </div >
+  )
+}
 
 export default AdminProdTransHistory;

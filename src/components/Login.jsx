@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Typography,
   Modal,
   TextField,
   Button,
@@ -18,7 +17,9 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: {
+    xs: 300, md: 500
+  },
   bgcolor: 'background.paper',
   borderRadius: '15px',
   boxShadow: 24,
@@ -103,15 +104,12 @@ const Login = ({ open, handleClose }) => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style} style={{ textAlign: 'center' }}>
-          <div className='mb-8'>
-            <Typography
-              id='modal-modal-title'
-              variant='h4'
-              component='h4'
-              fontWeight={'bold'}
+          <div className='mb-8 phone:mb-4'>
+            <p
+              className='font-bold text-3xl phone:text-2xl'
             >
               Login
-            </Typography>
+            </p>
           </div>
           <div className='mb-3'>
             <TextField
@@ -122,7 +120,7 @@ const Login = ({ open, handleClose }) => {
               name='usernamemail'
               onChange={inputHandler}
               onKeyDown={(e) => e.key === 'Enter' && onLogin()}
-              color='success'
+              color='info'
             />
           </div>
           <div className='mb-3'>
@@ -135,7 +133,7 @@ const Login = ({ open, handleClose }) => {
               name='password'
               onChange={inputHandler}
               onKeyDown={(e) => e.key === 'Enter' && onLogin()}
-              color='success'
+              color='info'
             />
           </div>
           <div className='mb-3' hidden={fillAlert}>
@@ -144,7 +142,7 @@ const Login = ({ open, handleClose }) => {
           <div className='mb-3' hidden={accAlert}>
             <Alert severity='error'>Account is not registered!</Alert>
           </div>
-          <div className='mb-3 flex justify-between'>
+          <div className='mb-3 flex phone:flex-col justify-between'>
             <div>
               <input type='checkbox' onChange={lihatpwHandler} /> Show Password
             </div>
@@ -160,7 +158,7 @@ const Login = ({ open, handleClose }) => {
             <Button
               disabled
               variant='contained'
-              style={{ backgroundColor: '#b4c6a6' }}
+              style={{ backgroundColor: '#22577A' }}
             >
               Login
             </Button>
@@ -168,7 +166,7 @@ const Login = ({ open, handleClose }) => {
             <Button
               variant='contained'
               onClick={onLogin}
-              style={{ backgroundColor: '#66806a' }}
+              style={{ backgroundColor: '#22577A' }}
             >
               Login
             </Button>

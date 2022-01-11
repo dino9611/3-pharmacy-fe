@@ -39,7 +39,7 @@ const style = {
 
 const AdminProducts = () => {
   // state product
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(0);
 
   // modal tambah produk
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -191,15 +191,13 @@ const AdminProducts = () => {
     // fetch data products
     const getProducts = async () => {
       try {
-        let res = await axios.get(
-          `${API_URL}/product/admingetproducts?search=${search}`,
+        let res = await axios.get(`${API_URL}/product/admingetproducts?search=${search}`,
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
-          }
-        );
-        setProducts(res.data);
+          })
+        setProducts(res.data[0].product_length)
       } catch (error) {
         alert(error);
       }
@@ -375,8 +373,8 @@ const AdminProducts = () => {
                 </TableBody>
               </Table>
               <TablePagination
-                component='div'
-                count={products.length}
+                component="div"
+                count={products}
                 rowsPerPageOptions={[5, 10]}
                 page={page}
                 onPageChange={handleChangePage}
