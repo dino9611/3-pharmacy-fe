@@ -48,7 +48,7 @@ const Cart = () => {
             }
         };
         getCart();
-    }, []);
+    }, [authState]);
 
     const deleteFromCart = async (index) => {
         try {
