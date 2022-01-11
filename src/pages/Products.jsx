@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import {
-    Card, CardActions, CardContent, CardMedia, Button, Typography,
-    CircularProgress, Pagination, InputLabel, MenuItem, FormControl,
-    Select, Box, Modal, Snackbar, IconButton
+    Button, CircularProgress, Pagination,
+    Box, Modal, Snackbar, IconButton
 } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../constants/api';
@@ -17,18 +16,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import CloseIcon from '@mui/icons-material/Close';
 import UserCustomModal from '../components/UserCustomModal';
+import { capitalize } from '../helpers/capitalize';
 
 // Modal style
 const style = {
     position: 'absolute',
-    top: '50%',
+    top: {
+        xs: '45%', md: '50%'
+    },
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 500,
+    width: {
+        xs: 300, md: 500
+    },
     bgcolor: 'background.paper',
-    borderRadius: '15px',
     boxShadow: 24,
     p: 4,
+    maxHeight: {
+        xs: 400, md: 500
+    },
+    overflow: 'scroll',
+    overflowX: 'hidden'
 };
 
 const Products = () => {
@@ -37,7 +45,7 @@ const Products = () => {
     const dispatch = useDispatch()
 
     // Get semua produk
-    const [products, setProducts] = useState([])
+    const [products, setProducts] = useState(0)
 
     // Ganti page
     const [page, setPage] = useState(1);
@@ -63,26 +71,47 @@ const Products = () => {
     const renderProducts = () => {
         return paginatedProducts.map((val, index) => {
             return (
-                <Card className="m-2">
-                    <div className='h-60 overflow-hidden'>
-                        <img src={API_URL + val.imagePath} alt="" className='min-h-full' />
-                    </div>
-                    <CardContent>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: "#66806a", marginBottom: 2 }}>
-                            {val.productName}
-                        </Typography>
-                        <Typography variant="body3" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                <div key={index + 1} className="m-2 bg-white rounded-md overflow-hidden p-4 shadow-md">
+                    <img
+                        src={API_URL + val.imagePath} alt=""
+                        className='object-contain w-48 h-48 phone:w-full phone:h-24 mx-auto bg-gray-200 rounded-md mb-4'
+                    />
+                    <div>
+                        <div className='flex justify-between items-center mb-4 phone:mb-1'>
+                            <p
+                                className='poppins text-primary1 font-bold text-lg phone:text-sm'
+                            >
+                                {capitalize(val.productName)}
+                            </p>
+                            <svg
+                                className="w-6 h-6 phone:w-4 phone:h-4 text-primary1 hover:text-lightblue cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                onClick={() => productDetailsHandler(val.id)}
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <p
+                            className='poppins text-gray-600 font-bold text-sm mb-2 phone:mb-1 phone:text-xs'
+                        >
                             {toRupiah(val.productPriceRp)}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </p>
+                        <p
+                            className='poppins text-gray-400 text-sm phone:text-xs'
+                        >
                             Stock {val.stock}
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Button size="small" color="success" onClick={() => addToCart(index)}>Add to cart</Button>
-                        <Button size="small" color="success" onClick={() => { productDetailsHandler(index) }}>Details</Button>
-                    </CardActions>
-                </Card >
+                        </p>
+                    </div>
+                    <hr className='my-4 phone:my-2 border' />
+                    <button
+                        className='text-primary1 text-base font-bold hover:text-lightblue flex items-center phone:text-xs'
+                        onClick={() => addToCart(index)}
+                    >
+                        <svg className="w-5 h-5 phone:w-4 phone:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Add to cart
+                    </button>
+                </div>
             )
         })
     }
@@ -115,6 +144,16 @@ const Products = () => {
             })
             return
         }
+        if (paginatedProducts[index].stock <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Out of stock!',
+                timer: 1500,
+                timerProgressBar: true
+            })
+            return
+        }
         try {
             let res = await axios.post(`${API_URL}/transaction/addtocart/${authState.id}`, {
                 price: paginatedProducts[index].productPriceRp,
@@ -124,7 +163,7 @@ const Products = () => {
             dispatch({ type: "setcart", payload: res.data })
             openSnackbar()
         } catch (error) {
-            alert(error)
+            alert(error.response.data.message)
         }
     }
 
@@ -156,24 +195,23 @@ const Products = () => {
         setKategori(event.target.value);
     };
 
-    // Modal detail produk
-    const [indexProduk, setIndexProduk] = useState(-1)
+    // status modal
     const [open, setOpen] = useState(false)
 
-    const productDetailsHandler = (index) => {
-        if (index >= 0) {
-            setIndexProduk(index)
+    // modal handler
+    const productDetailsHandler = async (id) => {
+        try {
+            let res = await axios.get(`${API_URL}/product/getdescription/${id}`)
+            setDataDeskripsi(res.data)
             setOpen(!open)
-        } else {
-            setIndexProduk(-1)
-            setOpen(!open)
+        } catch (error) {
+            alert(error)
         }
     }
 
+    // detail produk
     const productDetails = () => {
-        const cekIndex = indexProduk < 0
-        const descIndex = dataDeskripsi.findIndex(x => x.id == paginatedProducts[indexProduk]?.id)
-        const produkIndex = dataDeskripsi[descIndex]
+        const noExist = dataDeskripsi.length === 0
         return (
             <Modal
                 open={open}
@@ -183,33 +221,37 @@ const Products = () => {
             >
                 <Box sx={style}>
                     <div className="mb-4">
-                        <Typography variant="h5" color="text.secondary" sx={{ fontWeight: 'bold' }}>
-                            {cekIndex ? "" : produkIndex.productName}
-                        </Typography>
+                        <p className='font-poppins text-primary1 text-2xl phone:text-xl font-bold'>
+                            {noExist ? "" : capitalize(dataDeskripsi[0]?.productName)}
+                        </p>
                     </div>
+                    <img
+                        src={API_URL + dataDeskripsi[0]?.imagePath} alt=""
+                        className='object-contain w-full h-80 phone:h-52 bg-gray-200 mb-4'
+                    />
                     <div className="mb-4">
-                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='font-poppins font-bold phone:text-sm text-base text-gray-600'>
                             Description :
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {cekIndex ? "" : produkIndex.description}
-                        </Typography>
+                        </p>
+                        <p className='font-poppins text-sm phone:text-xs text-gray-500'>
+                            {dataDeskripsi[0]?.description}
+                        </p>
                     </div>
                     <div className="mb-4">
-                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='font-poppins font-bold phone:text-sm text-base text-gray-600'>
                             Category :
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {cekIndex ? "" : produkIndex.categoryName}
-                        </Typography>
+                        </p>
+                        <p className='font-poppins text-sm phone:text-xs text-gray-500'>
+                            {noExist ? "" : capitalize(dataDeskripsi[0]?.categoryName)}
+                        </p>
                     </div>
                     <div>
-                        <Typography variant="body4" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        <p className='font-poppins font-bold phone:text-sm text-base text-gray-600'>
                             Composition :
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {cekIndex ? "" : produkIndex.composition}
-                        </Typography>
+                        </p>
+                        <p className='font-poppins text-sm phone:text-xs text-gray-500'>
+                            {noExist ? "" : capitalize(dataDeskripsi[0]?.composition)}
+                        </p>
                     </div>
                 </Box>
             </Modal>
@@ -225,8 +267,8 @@ const Products = () => {
         // Fetch produk untuk jumlah nomor page aja
         const getProducts = async () => {
             try {
-                let res = await axios.get(`${API_URL}/product/getproducts?search=${search}&kategori=${kategori}`)
-                setProducts(res.data)
+                let res = await axios.get(`${API_URL}/product/getproducts?search=${debouncedSearch}&kategori=${kategori}`)
+                setProducts(res.data[0].product_length)
             } catch (error) {
                 alert(error);
             }
@@ -244,23 +286,11 @@ const Products = () => {
         }
         getCategories()
 
-        // fetch description
-        const getDescription = async () => {
-            try {
-                let res = await axios.get(`${API_URL}/product/getdescription`)
-                setDataDeskripsi(res.data)
-            } catch (error) {
-                alert(error);
-            }
-        }
-        getDescription()
-
         // untuk offset pagingnya
         setPage(page)
         const offset = ((page - 1)) * 8
 
         // filter
-        setSearch(debouncedSearch)
         setFilter(filter)
         setKategori(kategori)
 
@@ -269,7 +299,7 @@ const Products = () => {
             setSpinner(false)
             setHideProductlist(true)
             try {
-                let res = await axios.get(`${API_URL}/product/gethomepagination/${offset}?search=${search}&filter=${filter}&kategori=${kategori}`)
+                let res = await axios.get(`${API_URL}/product/gethomepagination/${offset}?search=${debouncedSearch}&filter=${filter}&kategori=${kategori}`)
                 setPaginatedProducts(res.data)
             } catch (error) {
                 alert(error);
@@ -293,50 +323,43 @@ const Products = () => {
                 message="Added to cart!"
                 action={action}
             />
-            <div className="mt-6">
-                <div className=" flex justify-center mb-4">
+            <div className="pt-6 phone:pt-2 font-poppins bg-lightblue">
+                <div className="flex justify-center mb-4 phone:flex-col">
                     <input
-                        className="focus:outline-none bg-grey-light p-2 rounded-xl mr-2"
+                        className="h-14 shadow-md phone:h-10 phone:text-xs border-gray-300 border-solid focus:outline-none px-4 rounded-md mr-2 phone:w-11/12 phone:mx-auto phone:mb-2"
                         type="text"
                         placeholder="Search medicine"
                         onChange={searchHandler}
                     />
-                    <FormControl sx={{ minWidth: 120, marginRight: 1 }}>
-                        <InputLabel id="demo-simple-select-label" color="success">Sort</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filter}
-                            label="Sort"
-                            onChange={handleChangeFilter}
-                            color="success"
-                        >
-                            <MenuItem value="default">Default</MenuItem>
-                            <MenuItem value="lowest">Lowest to Highest</MenuItem>
-                            <MenuItem value="highest">Highest to Lowest</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ minWidth: 120 }}>
-                        <InputLabel id="demo-simple-select-label" color="success">Category</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={kategori}
-                            label="Category"
-                            onChange={handleChangeKategori}
-                            color="success"
-                        >
-                            <MenuItem value={0}>Default</MenuItem>
-                            {dataKategori.map((val, index) => (
-                                <MenuItem value={val.id}>{val.categoryName}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <select
+                        value={filter}
+                        onChange={handleChangeFilter}
+                        className='h-14 shadow-md phone:h-10 phone:text-xs mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
+                    >
+                        <option value="default">Sort by the latest</option>
+                        <option value="lowest">Price: Lowest to Highest</option>
+                        <option value="highest">Price: Highest to Lowest</option>
+                    </select>
+                    <select
+                        value={kategori}
+                        onChange={handleChangeKategori}
+                        className='h-14 shadow-md phone:h-10 phone:text-xs mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none phone:w-11/12 phone:mx-auto phone:mb-2'
+                    >
+                        <option value={0}>All Categories</option>
+                        {dataKategori.map((val, index) => (
+                            <option key={index + 1} value={val.id}>{val.categoryName}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className="text-center mb-16">
                     {/* <label htmlFor="contained-button-file">
+                <div className="text-center mb-16 phone:mb-4">
+                    <label htmlFor="contained-button-file">
                         <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                        <Button variant="contained" component="span" style={{ backgroundColor: "#66806a" }}>
+                        <Button variant="contained" component="span" style={{ backgroundColor: "#22577A" }}>
+                            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
                             Upload Prescription
                         </Button>
                     </label>
@@ -348,22 +371,22 @@ const Products = () => {
                     </Button>
                 </div>
                 <div hidden={spinner} className="text-center mb-10">
-                    <CircularProgress sx={{ color: "#66806a" }} />
+                    <CircularProgress sx={{ color: "white" }} />
                 </div>
                 {paginatedProducts.length ? (
                     <div hidden={hideproductlist}>
-                        <div className="grid grid-cols-4 grid-flow-row gap-2 w-3/4 mx-auto mb-10">
+                        <div className="grid grid-cols-4 phone:grid-cols-2 grid-flow-row gap-2 phone:gap-0 w-3/4 phone:w-11/12 mx-auto mb-10">
                             {renderProducts()}
                         </div>
                     </div>
                 ) : (
                     <div hidden={hideproductlist} className="text-center mt-24 mb-10">
-                        <img src={EmptyProducts} alt="hai" className="w-1/3 mx-auto mb-6" />
-                        <p className="text-lg font-bold text-green-dark">Tidak ada produk</p>
+                        <img src={EmptyProducts} alt="hai" className="w-1/3 phone:w-48 mx-auto mb-6" />
+                        <p className="text-lg phone:text-sm font-bold text-primary1">Product is not found</p>
                     </div>
                 )}
                 <div className="mb-10 w-max mx-auto">
-                    <Pagination count={Math.ceil(products.length / 8)} page={page} onChange={handleChange} />
+                    <Pagination count={Math.ceil(products / 8)} page={page} onChange={handleChange} />
                 </div>
                 <Footer />
             </div>

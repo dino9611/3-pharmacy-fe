@@ -7,7 +7,11 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
-import { editProduct, getProductCategories, resetState as resetStateProduct } from '../redux/actions/productActions';
+import {
+  editProduct,
+  getProductCategories,
+  resetState as resetStateProduct,
+} from '../redux/actions/productActions';
 import {
   getRawMaterials,
   resetState as resetStateRawMaterial,
@@ -16,6 +20,7 @@ import CompositionSelect from './ProductCompSelect';
 import { API_URL } from '../constants/api';
 import MultipleEdit from './ProductCategoryEdit';
 
+import { toast } from 'react-toastify';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -65,21 +70,18 @@ const EditModal = ({
   paginatedProducts,
   oldCat,
   amountDef,
-  compDef
+  compDef,
 }) => {
   // const initInput = React.useRef(null);
 
   // untuk dapetin data product mana yang mau diedit bedasarkan indexproduct
-  const produkIndex = paginatedProducts[indexProduct]
+  const produkIndex = paginatedProducts[indexProduct];
 
   // untuk get compositions dan category
   const categories = useSelector((state) => state.productReducers.categories);
   // const compositions = useSelector(
   //   (state) => state.rawMaterialReducers.rawMaterials
   // );
-  
-
-
 
   // Iniadalah initial value
   const initialInputVal = React.useMemo(() => {
@@ -92,26 +94,30 @@ const EditModal = ({
       compositionsAmount: [],
     };
   }, []);
-  
 
   // untuk menyimpan data yang diedit untuk dikirim ke API
-  const [dataUpdate, setdataUpdate] = useState(initialInputVal)
+  const [dataUpdate, setdataUpdate] = useState(initialInputVal);
   // const [input, setinput] = useState(initialInputVal);
   const inputHandler = (e) => {
     setdataUpdate({ ...dataUpdate, [e.target.name]: e.target.value });
-  }
-
+  };
 
   // untuk get data categories dan raw material
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getProductCategories())
-    dispatch(getRawMaterials(1, 40));
+    dispatch(getProductCategories(), {
+      handleFail: (err) =>
+        toast.error(err.response.data.message || 'server error'),
+    });
+    dispatch(getRawMaterials(1, 40), {
+      handleFail: (err) =>
+        toast.error(err.response.data.message || 'server error'),
+    });
     return () => {
-      dispatch(resetStateProduct('categories'))
+      dispatch(resetStateProduct('categories'));
       dispatch(resetStateRawMaterial('rawMaterials'));
-    }
-  },[dispatch])
+    };
+  }, [dispatch]);
 
   // untuk set file gambar
   const [file, setfile] = React.useState(null);
@@ -134,19 +140,34 @@ const EditModal = ({
 
   const onConfirmClick = (e) => {
     e.preventDefault();
-    if(dataUpdate.compositions.length !== amountDef.length){
-        alert("Please Select All Compositions")
-        return
-    } 
-    
-    let inputData = {...dataUpdate, oldCategories : oldCat, id : produkIndex?.id  }
-    dispatch(editProduct(file, inputData))
-    setOpen(false)
+    if (dataUpdate.compositions.length !== amountDef.length) {
+      alert('Please Select All Compositions');
+      return;
+    }
+
+    let inputData = {
+      ...dataUpdate,
+      oldCategories: oldCat,
+      id: produkIndex?.id,
+    };
+    dispatch(
+      editProduct(file, inputData, {
+        handleSuccess: () => toast.success('successfully edited product'),
+        handleFail: (err) =>
+          toast.error(err.response.data.message || 'server error'),
+      })
+    );
+    setOpen(false);
   };
 
   return (
     <div>
-      <input ref={fileInput} type='file' className='hidden' onChange={onFileChange} />
+      <input
+        ref={fileInput}
+        type='file'
+        className='hidden'
+        onChange={onFileChange}
+      />
       <Modal
         open={open}
         onClose={handleClose}
@@ -168,25 +189,25 @@ const EditModal = ({
           <div className='flex justify-evenly '>
             <div className='flex flex-col items-center '>
               <button
-                  onClick={() => fileInput.current.click()}
-                  className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32'
-                >
-                  Input Image
+                onClick={() => fileInput.current.click()}
+                className='btn bg-third text-white hover:bg-primary-450 transition-colors h-10 my-1 w-32'
+              >
+                Input Image
               </button>
-                {file ? (
-                  <img
-                    className='object-contain h-64 w-96 bg-gray-200 rounded-lg mt-2'
-                    src={URL.createObjectURL(file)}
-                    alt={file}
-                  ></img>
-                ) : (
-                  <img
-                    className='object-contain h-64 w-96 bg-gray-200 rounded-lg mt-2'
-                    src={API_URL + produkIndex?.imagePath}
-                    alt={file}
-                  ></img>
-                )}
-             <ColorButton
+              {file ? (
+                <img
+                  className='object-contain h-64 w-96 bg-gray-200 rounded-lg mt-2'
+                  src={URL.createObjectURL(file)}
+                  alt={file}
+                ></img>
+              ) : (
+                <img
+                  className='object-contain h-64 w-96 bg-gray-200 rounded-lg mt-2'
+                  src={API_URL + produkIndex?.imagePath}
+                  alt={file}
+                ></img>
+              )}
+              <ColorButton
                 fullWidth
                 variant='contained'
                 sx={{ mt: 3.5 }}
@@ -194,7 +215,7 @@ const EditModal = ({
                 onClick={onCancelClick}
               >
                 Cancel
-            </ColorButton>
+              </ColorButton>
             </div>
             <div className='flex flex-col'>
               <div className='flex mr-1'>
@@ -229,12 +250,12 @@ const EditModal = ({
               />
               <div>
                 <MultipleEdit
-                    input={dataUpdate}
-                    setinput={setdataUpdate}
-                    options={categories}
-                    label={'Categories'}
-                    oldCat={oldCat}
-                  />
+                  input={dataUpdate}
+                  setinput={setdataUpdate}
+                  options={categories}
+                  label={'Categories'}
+                  oldCat={oldCat}
+                />
                 <CompositionSelect
                   input={dataUpdate}
                   setinput={setdataUpdate}
