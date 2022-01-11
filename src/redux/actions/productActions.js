@@ -56,14 +56,13 @@ export const getProducts = (request, handleResult = {}) => {
     if (request !== undefined) {
       dispatch(setState('request', request));
     }
-    const { page, limit } = getState().productReducers.request;
-
+    const { page, limit, search } = getState().productReducers.request;
     clearTimeout(getProducts_timeoutID);
 
     getProducts_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          API_URL + `/product/?page=${page}&limit=${limit}`,
+          API_URL + `/product/?page=${page}&limit=${limit}&search=${search}`,
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),

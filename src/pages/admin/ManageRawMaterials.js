@@ -14,6 +14,7 @@ import {
 import AdminTable from '../../components/Tables/AdminTable';
 
 import { toast } from 'react-toastify';
+import { useDebounce } from '../../hooks';
 
 export default function RawMaterialsTable() {
   const dispatch = useDispatch();
@@ -23,16 +24,21 @@ export default function RawMaterialsTable() {
   // const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const rowsPerPage = 8;
 
+  const [search, setsearch] = React.useState('');
+  const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 500);
   // * modal states
   React.useEffect(() => {
     dispatch(
-      getRawMaterials(page + 1, rowsPerPage, {
-        handleFail: (err) =>
-          toast.error(err.response.data.message || 'server error'),
-      })
+      getRawMaterials(
+        { page: page + 1, limit: rowsPerPage, search },
+        {
+          handleFail: (err) =>
+            toast.error(err.response.data.message || 'server error'),
+        }
+      )
     );
     return () => dispatch(resetState('rawMaterials'));
-  }, [dispatch, page, rowsPerPage]);
+  }, [dispatch, page, rowsPerPage, search]);
   const emptyRows = rowsPerPage - rows.length;
 
   // const handleChangeRowsPerPage = (event) => {
@@ -50,8 +56,9 @@ export default function RawMaterialsTable() {
                 type='text'
                 className='px-4 py-2 w-80'
                 placeholder='Search Raw Materials...'
+                onChange={handleSearchChange}
               />
-              <button className='flex items-center justify-center px-4 border-l bg-white'>
+              <div className='flex items-center justify-center px-4 border-l bg-white'>
                 <svg
                   className='w-6 h-6 text-gray-600'
                   fill='currentColor'
@@ -59,7 +66,7 @@ export default function RawMaterialsTable() {
                 >
                   <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
                 </svg>
-              </button>
+              </div>
             </div>
           </div>
 
@@ -136,7 +143,6 @@ const EditModal = ({ toggleModal, initialValues }) => {
       <Formik
         initialValues={initialValuesRef.current}
         onSubmit={(values) => {
-          console.log(values);
           dispatch(
             editRawMaterial(values, {
               handleSuccess: () =>

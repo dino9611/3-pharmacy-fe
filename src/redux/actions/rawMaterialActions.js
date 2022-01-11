@@ -44,15 +44,20 @@ export const addRawMaterial = (input, handleResult = {}) => {
 
 // ! READ
 let getRawMaterials_timeoutID;
-export const getRawMaterials = (page, limit, handleResult = {}) => {
+export const getRawMaterials = (request, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
     const { handleSuccess, handleFail, handleFinally } = handleResult;
+    if (request !== undefined) {
+      dispatch(setState('request', request));
+    }
+    const { page, limit, search } = getState().rawMaterialReducers.request;
     clearTimeout(getRawMaterials_timeoutID);
 
     getRawMaterials_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          API_URL + `/raw_material/?page=${page}&limit=${limit}`,
+          API_URL +
+            `/raw_material/?page=${page}&limit=${limit}&search=${search}`,
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),

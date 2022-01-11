@@ -82,6 +82,7 @@ function App() {
         <Route path={'/change'} element={<ChangePassword />} />
         <Route path={'/profile'} element={<Userprofile />} />
         <Route path={'/products'} element={<Products />} />
+        <Route path={'/prescriptions'} element={<Products />} />
         <Route path={'/cart'} element={<Cart />} />
         <Route path={'/checkout'} element={<CheckOut />} />
         <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
