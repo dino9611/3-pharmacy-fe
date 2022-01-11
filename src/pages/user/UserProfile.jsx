@@ -130,8 +130,8 @@ const Userprofile = () => {
     gender: "",
   })
   const authState = useSelector(state => state.auth)
-  // const id = authState.id
-  const id = 32
+  const id = authState.id
+  // const id = 32
     
   const fetchData = async() => {
     try {

@@ -16,6 +16,7 @@ import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import CloseIcon from '@mui/icons-material/Close';
+import UserCustomModal from '../components/UserCustomModal';
 
 // Modal style
 const style = {
@@ -43,6 +44,17 @@ const Products = () => {
     const handleChange = (event, value) => {
         setPage(value);
     };
+
+    // Modal Custom ORDER
+    const [openCustom, setopenCustom] = useState(false)
+    const handleopenCustom = () => {
+        if (authState.id && authState.username){
+            setopenCustom(!openCustom)
+        }else {
+            alert("Please Login to use this Feature")
+        }
+    };
+    const handlecloseCustom = () => setopenCustom(false)
 
     // get produk hasil paginasi
     const [paginatedProducts, setPaginatedProducts] = useState([])
@@ -272,6 +284,7 @@ const Products = () => {
     return (
         <div>
             <Header />
+            <UserCustomModal openCustom={openCustom} handleClose={handlecloseCustom} />
             {productDetails()}
             <Snackbar
                 open={snackbar}
@@ -321,7 +334,7 @@ const Products = () => {
                     </FormControl>
                 </div>
                 <div className="text-center mb-16">
-                    <label htmlFor="contained-button-file">
+                    {/* <label htmlFor="contained-button-file">
                         <Input accept="image/*" id="contained-button-file" multiple type="file" />
                         <Button variant="contained" component="span" style={{ backgroundColor: "#66806a" }}>
                             Upload Prescription
@@ -329,7 +342,10 @@ const Products = () => {
                     </label>
                     <label htmlFor="icon-button-file">
                         <Input accept="image/*" id="icon-button-file" type="file" />
-                    </label>
+                    </label> */}
+                    <Button variant="contained" onClick={handleopenCustom} style={{ backgroundColor: "#66806a" }}>
+                            Upload Prescription
+                    </Button>
                 </div>
                 <div hidden={spinner} className="text-center mb-10">
                     <CircularProgress sx={{ color: "#66806a" }} />

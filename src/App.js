@@ -15,6 +15,7 @@ import Products from './pages/Products';
 import AdminHome from './pages/admin/AdminHome';
 import AdminMenu from './pages/admin/AdminMenu';
 import Cart from './pages/user/Cart';
+import UserPrescription from './pages/user/UserPrescription';
 import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
@@ -68,6 +69,7 @@ function App() {
         <Route path={'/products'} element={<Products />} />
         <Route path={'/adminhome'} element={<AdminHome />} />
         <Route path={'/cart'} element={<Cart />} />
+        <Route path={'/prescription'} element={<UserPrescription />} />
       </Routes>
       <ToastContainer />
     </div>
