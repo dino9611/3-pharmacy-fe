@@ -13,10 +13,14 @@ import { capitalize } from '../../helpers/capitalize';
 
 const style = {
     position: 'absolute',
-    top: '50%',
+    top: {
+        xs: '50%', md: '50%'
+    },
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 500,
+    width: {
+        xs: 300, md: 500
+    },
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
@@ -61,7 +65,7 @@ const ProductTransactionHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='px-5 py-2 phone:px-3 phone:py-1 phone:text-xs mr-2 bg-primary1 border-2 border-primary1 rounded-full text-sm font-bold text-white poppins'
+                        className='px-5 py-2 phone:px-3 phone:py-1 phone:text-xs phone:whitespace-nowrap phone:max-w-full mr-2 bg-primary1 border-2 border-primary1 rounded-full text-sm font-bold text-white poppins'
                     >
                         {val.status}
                     </button>
@@ -71,7 +75,7 @@ const ProductTransactionHistory = () => {
                     <button
                         key={index + 1}
                         onClick={() => pickFilter(val.value)}
-                        className='bg-white px-5 py-2 phone:px-3 phone:py-1 phone:text-xs mr-2 border-solid border-2 border-primary1 rounded-full text-sm font-bold text-primary1 poppins'
+                        className='bg-white px-5 py-2 phone:px-3 phone:py-1 phone:text-xs phone:whitespace-nowrap mr-2 border-solid border-2 border-primary1 rounded-full text-sm font-bold text-primary1 poppins'
                     >
                         {val.status}
                     </button>
@@ -103,7 +107,8 @@ const ProductTransactionHistory = () => {
                 })
             }
         } catch (error) {
-            alert(error.response.data.message)
+            console.log(error);
+            alert(error.response?.data.message)
         }
     }
 
@@ -134,14 +139,14 @@ const ProductTransactionHistory = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <p className='font-poppins font-bold text-xl text-center mb-5'>
+                    <p className='font-poppins font-bold text-xl text-center mb-5 phone:text-lg'>
                         Transaction Details
                     </p>
-                    <div className='font-poppins flex justify-between mb-2'>
-                        <p className='text-sm font-bold'>
+                    <div className='font-poppins flex justify-between mb-2 text-sm phone:text-xs'>
+                        <p className='font-bold'>
                             Status
                         </p>
-                        <p className='text-sm' >
+                        <p>
                             {history?.status === 'checkout' && !history?.paymentProof ? 'Waiting for payment' : ''}
                             {history?.status === 'checkout' && history?.paymentProof ? 'Waiting for confirmation' : ''}
                             {history?.status === 'paymentAcc' ? 'Accepted' : ''}
@@ -151,27 +156,27 @@ const ProductTransactionHistory = () => {
                             {history?.status === 'paymentRej' ? 'Rejected' : ''}
                         </p>
                     </div>
-                    <div className='font-poppins flex justify-between mb-2'>
-                        <p className='text-sm font-bold'>
+                    <div className='font-poppins flex justify-between mb-2 text-sm phone:text-xs'>
+                        <p className='font-bold'>
                             Check Out Time
                         </p>
-                        <p className='text-sm'>
+                        <p>
                             {historyNoExist ? '' : parseDate(history?.checkedOutAt)}
                         </p>
                     </div>
-                    <div className='font-poppins flex justify-between'>
-                        <p className='text-sm font-bold'>
+                    <div className='font-poppins flex justify-between text-sm phone:text-xs'>
+                        <p className='font-bold'>
                             Payment Method
                         </p>
-                        <p className='text-sm'>
+                        <p>
                             {historyNoExist ? '' : history?.bank}
                         </p>
                     </div>
                     <hr className='my-4' />
-                    <p className='font-poppins text-sm font-bold mb-2'>Recipient :
+                    <p className='font-poppins text-sm phone:text-xs font-bold mb-2'>Recipient :
                         <span className='font-normal'> {history?.username}</span>
                     </p>
-                    <p className='font-poppins text-sm font-bold'>
+                    <p className='font-poppins text-sm phone:text-xs font-bold'>
                         Address :
                         <span className='font-normal'> {history?.address}</span>
                     </p>
@@ -180,27 +185,27 @@ const ProductTransactionHistory = () => {
                         <div key={index + 1} className='font-poppins mb-1 flex items-center shadow-md p-2 rounded'>
                             <img
                                 src={API_URL + val.imagePath} alt={val.productName}
-                                className='w-16 h-16 mr-5'
+                                className='w-16 h-16 phone:w-12 phone:h-12 mr-5'
                             />
                             <div>
-                                <p className='font-bold text-sm'>{boughtNoExist ? '' : capitalize(val.productName)}</p>
-                                <p className='text-sm'>{boughtNoExist ? '' : toRupiah(val.productPriceRp)}</p>
-                                <p className='text-sm'>{val.qty} x</p>
+                                <p className='font-bold text-sm phone:text-xs'>{boughtNoExist ? '' : capitalize(val.productName)}</p>
+                                <p className='text-sm phone:text-xs'>{boughtNoExist ? '' : toRupiah(val.productPriceRp)}</p>
+                                <p className='text-sm phone:text-xs'>{val.qty} x</p>
                             </div>
                         </div>
                     ))}
                     <hr className='my-4' />
-                    <div className='font-poppins flex justify-between mb-2'>
-                        <p className='text-sm font-bold'>Total Price</p>
-                        <p className='text-sm'>{historyNoExist ? '' : toRupiah(history?.totalPrice)}</p>
+                    <div className='font-poppins flex justify-between mb-2 text-sm phone:text-xs'>
+                        <p className='font-bold'>Total Price</p>
+                        <p>{historyNoExist ? '' : toRupiah(history?.totalPrice)}</p>
                     </div>
-                    <div className='font-poppins flex justify-between mb-2'>
-                        <p className='text-sm font-bold'>Shipping Cost</p>
-                        <p className='text-sm'>{historyNoExist ? '' : toRupiah(history?.shippingCost)}</p>
+                    <div className='font-poppins flex justify-between mb-2 text-sm phone:text-xs'>
+                        <p className='font-bold'>Shipping Cost</p>
+                        <p>{historyNoExist ? '' : toRupiah(history?.shippingCost)}</p>
                     </div>
-                    <div className='font-poppins flex justify-between mb-2'>
-                        <p className='text-sm font-bold'>Grand Total</p>
-                        <p className='text-sm font-bold'>{historyNoExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
+                    <div className='font-poppins flex justify-between mb-2 text-sm phone:text-xs'>
+                        <p className='font-bold'>Grand Total</p>
+                        <p className='font-bold'>{historyNoExist ? '' : toRupiah(history?.shippingCost + history?.totalPrice)}</p>
                     </div>
                 </Box>
             </Modal>
@@ -227,7 +232,7 @@ const ProductTransactionHistory = () => {
                     </button>
                 </div>
                 <hr className='mb-5' />
-                {JSON.parse(val.product_list).map((val, index) => (
+                {!val.product_list ? "" : val.product_list.map((val, index) => (
                     <div key={index + 1} className=' mb-1 flex items-center shadow-md p-2 rounded'>
                         <img
                             src={API_URL + val.imagePath} alt={val.productName}
@@ -346,7 +351,7 @@ const ProductTransactionHistory = () => {
                 <div class="pt-5 phone:pt-2">
                     <select
                         onChange={onRangeChange}
-                        class="w-1/4 mt-1 py-2 px-3 phone:text-xs border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-green-dark phone:w-full"
+                        class="w-1/4 mt-1 py-2 px-3 phone:text-xs bg-white rounded-md shadow-md focus:outline-none focus:border-primary1 phone:w-full"
                     >
                         <option value=''>All time</option>
                         <option value='week'>Last 7 days</option>

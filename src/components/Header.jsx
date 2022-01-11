@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import {
-  IconButton,
   Typography,
   Menu,
-  Avatar,
-  Button,
   Tooltip,
   MenuItem,
-  Badge,
   Box,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -18,9 +14,6 @@ import { useDispatch } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
 import ForgetPass from './ForgetPassword';
-import { styled } from '@mui/material/styles';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import HistoryIcon from '@mui/icons-material/History';
 import { API_URL } from '../constants/api';
 
 const Header = () => {
@@ -28,19 +21,14 @@ const Header = () => {
   const cartState = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(false);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+    setAnchorElUser(false);
   };
 
   const onLogout = () => {
@@ -48,16 +36,7 @@ const Header = () => {
     navigate('/')
     localStorage.removeItem('token');
   };
-  // Button Signup
-  const ColorButton = styled(Button)(({ theme }) => ({
-    borderRadius: 16,
-    color: 'black',
-    backgroundColor: '#FFC286',
-    '&:hover': {
-      backgroundColor: '#66806A',
-      color: 'white',
-    },
-  }));
+
   // Modal login
   const [openLogin, setOpenLogin] = useState(false);
   const handleOpenLogin = () => setOpenLogin(true);
@@ -118,9 +97,9 @@ const Header = () => {
               <Link to='/order-list'>
                 <Tooltip title='Orders'>
                   <div className='hover:bg-black hover:bg-opacity-10 rounded-full w-12 h-12 phone:w-8 phone:h-8 flex'>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 phone:w-6 phone:h-6 text-white self-center mx-auto" viewBox="0 0 20 20" fill="currentColor">
+                    <svg className="h-8 w-8 phone:w-6 phone:h-6 text-white self-center mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                       <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                      <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                     </svg>
                   </div>
                 </Tooltip>
@@ -152,12 +131,12 @@ const Header = () => {
                     <p
                       className='w-10 h-10 phone:w-7 phone:h-7 bg-white rounded-full flex items-center justify-center text-lg font-semibold text-primary1'
                     >
-                      {authState.username.charAt(0).toUpperCase()}
+                      {authState.username.charAt(0)}
                     </p>
                   ) : (
                     <img
                       src={API_URL + authState.avatar}
-                      alt={authState.username.charAt(0).toUpperCase()}
+                      alt={authState.username.charAt(0)}
                       className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
                     />
                   )}
@@ -175,7 +154,7 @@ const Header = () => {
                     vertical: 'top',
                     horizontal: 'right',
                   }}
-                  open={Boolean(anchorElUser)}
+                  open={anchorElUser}
                   onClose={handleCloseUserMenu}
                 >
                   {authState.role === 'admin' && (
