@@ -1,7 +1,9 @@
 import { actionTypes } from '../action-types';
 
 const initialState = {
+  request: {},
   products: [],
+  productDetails: {},
   categories: [],
 };
 

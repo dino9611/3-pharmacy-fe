@@ -416,7 +416,7 @@ const CreateModal = ({ toggleModal }) => {
               type='submit'
               className='btn btn-green uppercase w-full mx-1'
             >
-              confirm edit
+              confirm add
             </button>
           </div>
         </Form>

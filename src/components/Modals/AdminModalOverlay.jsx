@@ -8,7 +8,8 @@ export default function AdminModalOverlay({ children, isOpen, toggleModal }) {
     if (isOpen) {
       const body = document.getElementsByTagName('body')[0];
       overlay.className =
-        'bg-black bg-opacity-20 fixed top-0 left-0 right-0 bottom-0 z-40 flex justify-center items-center overflow-y-scroll';
+        // 'bg-black bg-opacity-20 fixed top-0 left-0 right-0 bottom-0 z-40 flex justify-center items-center overflow-y-scroll';
+        'bg-black bg-opacity-20 fixed w-screen h-screen z-40 flex justify-center items-center overflow-y-auto';
       overlay.onclick = (e) => {
         if (e.currentTarget === e.target) toggleModal();
       };

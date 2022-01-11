@@ -11,8 +11,9 @@ import RawMaterialsRecord from './RawMaterialsRecord';
 
 // * manage
 import ManageRawMaterials from './ManageRawMaterials';
+import ManageProducts from './ManageProducts';
 // import ManageProducts from './ManageProducts';
-import AdminProducts from './AdminProducts';
+// import AdminProducts from './AdminProducts';
 import AdminProdTransHistory from './AdminProdTransHistory';
 
 export default function AdminMenu() {
@@ -27,7 +28,8 @@ export default function AdminMenu() {
         <Route path={'history/*'} element={<History />} />
 
         <Route path={'raw_materials'} element={<ManageRawMaterials />} />
-        <Route path={'products'} element={<AdminProducts />} />
+        {/* <Route path={'products'} element={<AdminProducts />} /> */}
+        <Route path={'products'} element={<ManageProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
         <Route path={'order'} element={<AdminProdTransHistory />} />
       </Routes>
