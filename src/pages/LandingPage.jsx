@@ -20,7 +20,7 @@ const LandingPage = () => {
                 </div>
                 <img src={Logo1} alt="Default" className="w-96 phone:w-3/6 phone:mx-auto" />
             </div>
-            <div className="font-poppins bg-secondary1 flex phone:flex-col justify-evenly items-center py-6">
+            <div className="font-poppins bg-lightblue flex phone:flex-col justify-evenly items-center py-6">
                 <img src={Logo2} alt="Default" className="w-96 phone:w-3/6" />
                 <div className="phone:mx-10 phone:mt-4">
                     <p className="max-w-md text-3xl font-bold phone:text-lg text-primary1 mb-4 phone:mb-1">Lorem ipsum dolor </p>

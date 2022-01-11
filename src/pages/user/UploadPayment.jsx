@@ -71,7 +71,7 @@ const UploadPayment = () => {
     return (
         <div>
             <Header />
-            <div className='font-poppins text-center h-screen pt-16 phone:pt-2 phone:px-2 bg-secondary1'>
+            <div className='font-poppins text-center h-screen pt-16 phone:pt-2 phone:px-2 bg-lightblue'>
                 <div className='flex w-max mx-auto'>
                     <Alert icon={false} severity="info">{`${checkout[0]?.bank} - ${checkout[0]?.accountNumber}`}</Alert>
                 </div>

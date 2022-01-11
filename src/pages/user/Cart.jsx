@@ -118,7 +118,7 @@ const Cart = () => {
     }
 
     return (
-        <div className='bg-secondary1 min-h-screen'>
+        <div className='bg-lightblue min-h-screen'>
             <Header />
             <Snackbar
                 open={snackbar}

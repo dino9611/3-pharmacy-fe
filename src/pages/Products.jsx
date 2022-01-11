@@ -72,7 +72,7 @@ const Products = () => {
                                 {capitalize(val.productName)}
                             </p>
                             <svg
-                                className="w-6 h-6 phone:w-4 phone:h-4 text-primary1 hover:text-secondary1 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                className="w-6 h-6 phone:w-4 phone:h-4 text-primary1 hover:text-lightblue cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                 onClick={() => productDetailsHandler(val.id)}
                             >
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -91,7 +91,7 @@ const Products = () => {
                     </div>
                     <hr className='my-4 phone:my-2 border' />
                     <button
-                        className='text-primary1 text-base font-bold hover:text-secondary1 flex items-center phone:text-xs'
+                        className='text-primary1 text-base font-bold hover:text-lightblue flex items-center phone:text-xs'
                         onClick={() => addToCart(index)}
                     >
                         <svg className="w-5 h-5 phone:w-4 phone:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -310,7 +310,7 @@ const Products = () => {
                 message="Added to cart!"
                 action={action}
             />
-            <div className="pt-6 phone:pt-2 font-poppins bg-secondary1">
+            <div className="pt-6 phone:pt-2 font-poppins bg-lightblue">
                 <div className="flex justify-center mb-4 phone:flex-col">
                     <input
                         className="h-14 shadow-md phone:h-10 phone:text-xs border-gray-300 border-solid focus:outline-none px-4 rounded-md mr-2 phone:w-11/12 phone:mx-auto phone:mb-2"

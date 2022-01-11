@@ -225,7 +225,7 @@ const ProductTransactionHistory = () => {
                 <div className='flex items-center justify-between mb-2'>
                     <p className=' text-sm phone:text-xs'>{parseDate(val.checkedOutAt)}</p>
                     <button
-                        className=' text-sm phone:text-xs text-primary1 font-bold hover:text-secondary1'
+                        className=' text-sm phone:text-xs text-primary1 font-bold hover:text-lightblue'
                         onClick={() => modalHandler(val.id)}
                     >
                         Detail
@@ -250,7 +250,7 @@ const ProductTransactionHistory = () => {
                     {val.status === 'checkout' && !val.paymentProof ? (
                         <Link to={`/uploadpayment/${val.id}`}>
                             <button
-                                className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
+                                className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-lightblue px-3 py-2 rounded-lg'
                             >
                                 Upload Payment
                             </button>
@@ -266,7 +266,7 @@ const ProductTransactionHistory = () => {
                     {val.status === 'paymentRej' ? (
                         <Link to={`/uploadpayment/${val.id}`}>
                             <button
-                                className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-secondary1 px-2 py-2 rounded-lg'
+                                className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-lightblue px-2 py-2 rounded-lg'
                             >
                                 Resent Payment Proof
                             </button>
@@ -293,7 +293,7 @@ const ProductTransactionHistory = () => {
 
                     {val.status === 'otw' ? (
                         <button
-                            className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-secondary1 px-3 py-2 rounded-lg'
+                            className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-lightblue px-3 py-2 rounded-lg'
                             onClick={() => onDelivered(val.id)}
                         >
                             Confirm Delivery
@@ -346,7 +346,7 @@ const ProductTransactionHistory = () => {
     return (
         <div>
             <Header />
-            <div className='bg-secondary1 font-poppins px-20 phone:px-2 min-h-screen'>
+            <div className='bg-lightblue font-poppins px-20 phone:px-2 min-h-screen'>
                 {modalDetail()}
                 <div class="pt-5 phone:pt-2">
                     <select

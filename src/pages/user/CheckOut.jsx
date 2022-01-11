@@ -96,7 +96,7 @@ const CheckOut = () => {
     return (
         <div>
             <Header />
-            <div className='font-poppins bg-secondary1 flex phone:flex-col px-20 phone:px-2 py-5 phone:py-2 h-screen'>
+            <div className='font-poppins bg-lightblue flex phone:flex-col px-20 phone:px-2 py-5 phone:py-2 h-screen'>
                 <div className='bg-white shadow-md w-1/2 mr-5 phone:mr-0 phone:w-full phone:h-5/6 p-5 phone:mb-2 rounded-lg overflow-x-hidden overflow-y-auto'>
                     <p className='font-bold text-center text-2xl phone:text-base mb-2'>Products</p>
                     <hr className='border' />
