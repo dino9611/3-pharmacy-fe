@@ -14,6 +14,7 @@ import LandingPage from './pages/LandingPage';
 import Products from './pages/Products';
 import AdminMenu from './pages/admin/AdminMenu';
 import Cart from './pages/user/Cart';
+import UserPrescription from './pages/user/UserPrescription';
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckOut from './pages/user/CheckOut';
 import Swal from 'sweetalert2';
@@ -83,6 +84,7 @@ function App() {
         <Route path={'/profile'} element={<Userprofile />} />
         <Route path={'/products'} element={<Products />} />
         <Route path={'/cart'} element={<Cart />} />
+        <Route path={'/prescription'} element={<UserPrescription />} />
         <Route path={'/checkout'} element={<CheckOut />} />
         <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
         <Route path={'/order-list'} element={<ProductTransactionHistory />} />

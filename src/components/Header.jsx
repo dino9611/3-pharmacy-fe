@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   Typography,
   Menu,
@@ -14,14 +14,34 @@ import { useDispatch } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
 import ForgetPass from './ForgetPassword';
+import { styled } from '@mui/material/styles';
+import axios from 'axios';
 import { API_URL } from '../constants/api';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);
   const cartState = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
-  const [anchorElUser, setAnchorElUser] = useState(false);
+    //? Fetch prescription data
+    const [customData, setcustomData] = useState([])
+    const id = authState.id
+    const getCustom = async () => {
+        try {
+            let results = await axios.get(`${API_URL}/custom/usercustom`, {params : {id}})
+            setcustomData(results.data)
+        } catch (error) {
+            alert(error);
+        }
+    }
+    useEffect(() => {
+        getCustom()
+    }, [])
+
+    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = React.useState(false);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -121,6 +141,17 @@ const Header = () => {
                     </span>
                   )}
                 </span>
+              </Link>
+              <Link to="/prescription">
+                <IconButton
+                    size="large"
+                    aria-label="show 17 new notifications"
+                    sx={{ marginRight: 2 }}
+                >
+                    <Badge badgeContent={customData.length} color="error">
+                        <DescriptionOutlinedIcon sx={{ color: "white", fontSize: "2rem" }} />
+                    </Badge>
+                </IconButton>
               </Link>
               <p className='text-light-light cursor-pointer mr-2 phone:hidden'>
                 {authState.username}
