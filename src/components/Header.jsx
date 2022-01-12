@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, Menu, Tooltip, MenuItem, Box } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import { useSelector } from 'react-redux';
 import './styles/Header.css';
 import { Link } from 'react-router-dom';
@@ -53,9 +54,6 @@ const Header = () => {
 
   // Navigate
   const navigate = useNavigate();
-  const toProfile = () => {
-    navigate('/profile');
-  };
 
   return (
     <div>
@@ -159,11 +157,19 @@ const Header = () => {
                       {authState.username.charAt(0)}
                     </p>
                   ) : (
-                    <img
+                    <Avatar
                       src={API_URL + authState.avatar}
-                      alt={authState.username.charAt(0)}
                       className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
                     />
+                    // <img
+                    //   src={API_URL + authState.avatar}
+                    //   alt={authState.username.charAt(0)}
+                    //   onError={(e) => {
+                    //     e.currentTarget.src = '/default_profile_pic.jpg';
+                    //     e.currentTarget.onerror = null;
+                    //   }}
+                    //   className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
+                    // />
                   )}
                 </button>
                 <Menu
@@ -187,7 +193,7 @@ const Header = () => {
                       <Typography textAlign='center'>Admin</Typography>
                     </MenuItem>
                   )}
-                  <MenuItem onClick={toProfile}>
+                  <MenuItem onClick={() => navigate('/user_profile')}>
                     <Typography textAlign='center'>My profile</Typography>
                   </MenuItem>
                   <MenuItem onClick={onLogout}>
@@ -206,7 +212,7 @@ const Header = () => {
               </button>
               <button
                 variant='contained'
-                className='bg-peach-light hover:bg-peach-dark px-3 py-1 rounded phone:text-sm phone:px-2'
+                className='btn btn-blue px-3 py-1 rounded phone:text-sm phone:px-2'
                 onClick={handleOpen}
               >
                 Sign up

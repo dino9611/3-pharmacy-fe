@@ -32,6 +32,8 @@ export default function AdminMenu() {
         <Route path={'products'} element={<ManageProducts />} />
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
         <Route path={'order'} element={<AdminProdTransHistory />} />
+
+        <Route path={'*'} element={<Navigate to={'/404'} />} />
       </Routes>
       {/* </div> */}
     </>
