@@ -44,7 +44,7 @@ const Cart = () => {
                 );
                 dispatch({ type: 'setcart', payload: res.data });
             } catch (error) {
-                alert(error);
+                alert(error.response.data.message);
             }
         };
         getCart();
@@ -58,7 +58,7 @@ const Cart = () => {
             dispatch({ type: 'setcart', payload: res.data });
             openSnackbar();
         } catch (error) {
-            alert(error);
+            alert(error.response.data.message);
         }
     };
 
@@ -79,7 +79,7 @@ const Cart = () => {
             );
             dispatch({ type: 'setcart', payload: res.data });
         } catch (error) {
-            alert(error);
+            alert(error.response.data.message);
         }
     };
 

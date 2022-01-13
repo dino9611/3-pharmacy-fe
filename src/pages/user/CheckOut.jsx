@@ -63,7 +63,8 @@ const CheckOut = () => {
                 title: 'Oops...',
                 text: 'Fill all fields',
                 timer: 1500,
-                timerProgressBar: true
+                timerProgressBar: true,
+                confirmButtonColor: '#22577A'
             })
             return
         }
@@ -86,7 +87,7 @@ const CheckOut = () => {
                 let res = await axios.get(`${API_URL}/transaction/getcart/${authState.id}`)
                 dispatch({ type: "setcart", payload: res.data })
             } catch (error) {
-                alert(error)
+                alert(error.response.data.message)
             }
         }
         getCart()

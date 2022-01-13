@@ -50,6 +50,7 @@ function App() {
             text: 'Your session is over, please re-login!',
             timer: 1500,
             timerProgressBar: true,
+            confirmButtonColor: '#22577A'
           });
           localStorage.removeItem('token');
           navigate('/');
