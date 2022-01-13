@@ -1,4 +1,4 @@
-import { Alert, Button } from '@mui/material';
+import { Alert } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
@@ -29,6 +29,7 @@ const UploadPayment = () => {
         text: 'No image uploaded',
         timer: 1500,
         timerProgressBar: true,
+        confirmButtonColor: '#22577A',
       });
     }
     const formData = new FormData();
@@ -49,6 +50,7 @@ const UploadPayment = () => {
         text: 'Upload image success',
         timer: 1500,
         timerProgressBar: true,
+        confirmButtonColor: '#22577A',
       });
     } catch (error) {
       alert(error.response.data.message);
@@ -63,12 +65,12 @@ const UploadPayment = () => {
         );
         setCheckout(res.data);
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
     };
     getCheckout();
     setFile(file);
-  }, [file]);
+  }, [file]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

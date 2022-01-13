@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Button,
   CircularProgress,
   Pagination,
   Box,
@@ -11,7 +10,6 @@ import {
 import axios from 'axios';
 import { API_URL } from '../constants/api';
 import './styles/Products.css';
-import { styled } from '@mui/material/styles';
 import { toRupiah } from '../helpers/toRupiah';
 import Footer from '../components/Footer';
 import EmptyProducts from './Asset/empty-products.svg';
@@ -156,7 +154,6 @@ const Products = () => {
       </IconButton>
     </React.Fragment>
   );
-
   // add to cart
   const addToCart = async (index) => {
     if (!authState.isLogin) {
@@ -166,6 +163,7 @@ const Products = () => {
         text: 'You need to login first!',
         timer: 1500,
         timerProgressBar: true,
+        confirmButtonColor: '#22577A',
       });
       return;
     }
@@ -176,6 +174,7 @@ const Products = () => {
         text: 'Out of stock!',
         timer: 1500,
         timerProgressBar: true,
+        confirmButtonColor: '#22577A',
       });
       return;
     }
@@ -207,9 +206,9 @@ const Products = () => {
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
   };
-  const Input = styled('input')({
-    display: 'none',
-  });
+  // const Input = styled('input')({
+  //   display: 'none',
+  // });
 
   // data kategoriii
   const [dataKategori, setDataKategori] = useState([]);
@@ -233,7 +232,7 @@ const Products = () => {
       setDataDeskripsi(res.data);
       setOpen(!open);
     } catch (error) {
-      alert(error);
+      alert(error.response.data.message);
     }
   };
 
@@ -299,9 +298,9 @@ const Products = () => {
         let res = await axios.get(
           `${API_URL}/product/getproducts?search=${debouncedSearch}&kategori=${kategori}`
         );
-        setProducts(res.data[0].product_length);
+        getProducts(res.data[0].product_length);
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
     };
     getProducts();
@@ -312,7 +311,7 @@ const Products = () => {
         let res = await axios.get(`${API_URL}/product/getcategories`);
         setDataKategori(res.data);
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
     };
     getCategories();
@@ -335,7 +334,7 @@ const Products = () => {
         );
         setPaginatedProducts(res.data);
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       } finally {
         setSpinner(true);
         setHideProductlist(false);
@@ -403,13 +402,29 @@ const Products = () => {
                     <label htmlFor="icon-button-file">
                         <Input accept="image/*" id="icon-button-file" type="file" />
                     </label> */}
-          <Button
-            variant='contained'
+          {/* <Button variant="contained" onClick={handleopenCustom} style={{ backgroundColor: "#66806a" }}>
+                        Upload Prescription
+                    </Button> */}
+          <button
+            className='flex bg-primary1 text-white px-4 py-2 mx-auto rounded hover:opacity-75'
             onClick={handleopenCustom}
-            style={{ backgroundColor: '#66806a' }}
           >
+            <svg
+              className='w-5 h-5 mr-1'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
+              />
+            </svg>
             Upload Prescription
-          </Button>
+          </button>
         </div>
         <div hidden={spinner} className='text-center mb-10'>
           <CircularProgress sx={{ color: 'white' }} />

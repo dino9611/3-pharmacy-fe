@@ -92,6 +92,7 @@ const CheckOut = () => {
         text: 'Fill all fields',
         timer: 1500,
         timerProgressBar: true,
+        confirmButtonColor: '#22577A',
       });
       return;
     }
@@ -119,12 +120,12 @@ const CheckOut = () => {
         );
         dispatch({ type: 'setcart', payload: res.data });
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
     };
     getCart();
     setForm(form);
-  }, [form]);
+  }, [form]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

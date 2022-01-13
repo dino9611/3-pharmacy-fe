@@ -45,6 +45,7 @@ export default function App() {
             text: 'Your session is over, please re-login!',
             timer: 1500,
             timerProgressBar: true,
+            confirmButtonColor: '#22577A',
           });
           localStorage.removeItem('token');
           navigate('/');
@@ -67,7 +68,7 @@ export default function App() {
   }
 
   return (
-    <div>
+    <div className='bg-lightblue'>
       <Routes>
         <Route path={'/*'} element={<UserMenu />} />
         {authReducer.role === 'admin' && (
