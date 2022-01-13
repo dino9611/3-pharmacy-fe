@@ -199,7 +199,7 @@ const AdminProducts = () => {
           })
         setProducts(res.data[0].product_length)
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
     };
     getProducts();
@@ -225,7 +225,7 @@ const AdminProducts = () => {
         );
         setPaginatedProducts(res.data);
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
     };
     paginate();

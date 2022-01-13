@@ -29,7 +29,8 @@ const UploadPayment = () => {
                 title: 'Oops...',
                 text: 'No image uploaded',
                 timer: 1500,
-                timerProgressBar: true
+                timerProgressBar: true,
+                confirmButtonColor: '#22577A'
             })
         }
         const formData = new FormData();
@@ -48,7 +49,8 @@ const UploadPayment = () => {
                 title: 'Yay!',
                 text: 'Upload image success',
                 timer: 1500,
-                timerProgressBar: true
+                timerProgressBar: true,
+                confirmButtonColor: '#22577A'
             })
         } catch (error) {
             alert(error.response.data.message)
@@ -61,7 +63,7 @@ const UploadPayment = () => {
                 let res = await axios.get(`${API_URL}/transaction/getcheckout/${order_id}`)
                 setCheckout(res.data)
             } catch (error) {
-                alert(error)
+                alert(error.response.data.message)
             }
         }
         getCheckout()

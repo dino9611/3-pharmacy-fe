@@ -91,7 +91,8 @@ const ProductTransactionHistory = () => {
                 showCancelButton: true,
                 confirmButtonColor: '#687',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
+                confirmButtonText: 'Yes!',
+                confirmButtonColor: '#22577A'
             })
             if (result.isConfirmed) {
                 let res = await axios.patch(`${API_URL}/transaction/transactionreq/${orderId}`, {
@@ -103,12 +104,12 @@ const ProductTransactionHistory = () => {
                     icon: 'success',
                     title: 'Confirmed!',
                     timer: 1500,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    confirmButtonColor: '#22577A'
                 })
             }
         } catch (error) {
-            console.log(error);
-            alert(error.response?.data.message)
+            alert(error.response.data.message)
         }
     }
 

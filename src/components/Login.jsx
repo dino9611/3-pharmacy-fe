@@ -83,13 +83,14 @@ const Login = ({ open, handleClose }) => {
         text: 'Log in success',
         timer: 1500,
         timerProgressBar: true,
+        confirmButtonColor: '#22577A'
       });
       setInputLogin({
         usernamemail: '',
         password: '',
       });
     } catch (error) {
-      alert(error.message);
+      alert(error.response.data.message);
     } finally {
       setDisableButton(false);
     }

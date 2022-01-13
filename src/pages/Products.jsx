@@ -56,9 +56,9 @@ const Products = () => {
     // Modal Custom ORDER
     const [openCustom, setopenCustom] = useState(false)
     const handleopenCustom = () => {
-        if (authState.id && authState.username){
+        if (authState.id && authState.username) {
             setopenCustom(!openCustom)
-        }else {
+        } else {
             alert("Please Login to use this Feature")
         }
     };
@@ -140,7 +140,8 @@ const Products = () => {
                 title: 'Oops...',
                 text: 'You need to login first!',
                 timer: 1500,
-                timerProgressBar: true
+                timerProgressBar: true,
+                confirmButtonColor: '#22577A'
             })
             return
         }
@@ -150,7 +151,8 @@ const Products = () => {
                 title: 'Oops...',
                 text: 'Out of stock!',
                 timer: 1500,
-                timerProgressBar: true
+                timerProgressBar: true,
+                confirmButtonColor: '#22577A'
             })
             return
         }
@@ -205,7 +207,7 @@ const Products = () => {
             setDataDeskripsi(res.data)
             setOpen(!open)
         } catch (error) {
-            alert(error)
+            alert(error.response.data.message)
         }
     }
 
@@ -270,7 +272,7 @@ const Products = () => {
                 let res = await axios.get(`${API_URL}/product/getproducts?search=${debouncedSearch}&kategori=${kategori}`)
                 setProducts(res.data[0].product_length)
             } catch (error) {
-                alert(error);
+                alert(error.response.data.message);
             }
         }
         getProducts()
@@ -281,7 +283,7 @@ const Products = () => {
                 let res = await axios.get(`${API_URL}/product/getcategories`)
                 setDataKategori(res.data)
             } catch (error) {
-                alert(error);
+                alert(error.response.data.message);
             }
         }
         getCategories()
@@ -302,7 +304,7 @@ const Products = () => {
                 let res = await axios.get(`${API_URL}/product/gethomepagination/${offset}?search=${debouncedSearch}&filter=${filter}&kategori=${kategori}`)
                 setPaginatedProducts(res.data)
             } catch (error) {
-                alert(error);
+                alert(error.response.data.message);
             } finally {
                 setSpinner(true)
                 setHideProductlist(false)
@@ -366,9 +368,18 @@ const Products = () => {
                     <label htmlFor="icon-button-file">
                         <Input accept="image/*" id="icon-button-file" type="file" />
                     </label> */}
-                    <Button variant="contained" onClick={handleopenCustom} style={{ backgroundColor: "#66806a" }}>
-                            Upload Prescription
-                    </Button>
+                    {/* <Button variant="contained" onClick={handleopenCustom} style={{ backgroundColor: "#66806a" }}>
+                        Upload Prescription
+                    </Button> */}
+                    <button
+                        className='flex bg-primary1 text-white px-4 py-2 mx-auto rounded hover:opacity-75'
+                        onClick={handleopenCustom}
+                    >
+                        <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        Upload Prescription
+                    </button>
                 </div>
                 <div hidden={spinner} className="text-center mb-10">
                     <CircularProgress sx={{ color: "white" }} />
