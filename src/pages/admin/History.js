@@ -36,6 +36,8 @@ export default function History() {
         <Route path={'raw_materials'} element={<RawMaterialsRecord />} />
         <Route path={'orders'} element={<RawMaterialsRecord />} />
         <Route path={'prescriptions'} element={<RawMaterialsRecord />} />
+
+        <Route path={'*'} element={<Navigate to={'/404'} />} />
       </Routes>
     </div>
   );

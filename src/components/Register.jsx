@@ -113,54 +113,54 @@ const Register = ({ open, handleClose, setOpen, handleopenDialog }) => {
     }
     return '';
   };
-    
-    const passwordChecker = () => {
-        let {username,email,password, retype, firstName} = addAccount
-        // Intinya password Minimal ada 6 Character, Capital,Lowercase,Number dan TIDAK BOLEH ada spasi
-        //! Email harus ada @
-        //! error akan dipush ke array
-        let arr = []
-        if (password && retype){
-            if (checkpass(password)){
-                arr[0] = checkpass(password)
-                setmistakePassword(true)
-            }
-        }else {
-            arr[0] = "Please fill Password & Retype Password"
-            setmistakePassword(true)
-        }
-        if(password !== retype){
-            arr[0] = "Password Are Not the Same"
-            setmistakePassword(true)
-        }
-        if (username){
-            if (!regexChar.test(username)){
-                arr[1] = "6 Character Minimum"
-                setmistakeName(true)
-            }
-        }else {
-            arr[1] = "Please fill Username"
-            setmistakeName(true)
-        }
-        if (email){
-            if (!regexEmail.test(email)){
-                arr[2] = "Email Isnt Correct"
-                setmistakeEmail(true)
-            }
-        }else {
-            arr[2] = "Please fill Email"
-            setmistakeEmail(true)
-        }
-        if (!firstName){
-            arr[3] = "Please fill Username"
-        }
-        if (!arr.length){
-            registerHandler()
-        }else {
-            setErrors([...arr])
-            console.log(arr)
-        }
-    };
+
+  const passwordChecker = () => {
+    let { username, email, password, retype, firstName } = addAccount;
+    // Intinya password Minimal ada 6 Character, Capital,Lowercase,Number dan TIDAK BOLEH ada spasi
+    //! Email harus ada @
+    //! error akan dipush ke array
+    let arr = [];
+    if (password && retype) {
+      if (checkpass(password)) {
+        arr[0] = checkpass(password);
+        setmistakePassword(true);
+      }
+    } else {
+      arr[0] = 'Please fill Password & Retype Password';
+      setmistakePassword(true);
+    }
+    if (password !== retype) {
+      arr[0] = 'Password Are Not the Same';
+      setmistakePassword(true);
+    }
+    if (username) {
+      if (!regexChar.test(username)) {
+        arr[1] = '6 Character Minimum';
+        setmistakeName(true);
+      }
+    } else {
+      arr[1] = 'Please fill Username';
+      setmistakeName(true);
+    }
+    if (email) {
+      if (!regexEmail.test(email)) {
+        arr[2] = 'Email Isnt Correct';
+        setmistakeEmail(true);
+      }
+    } else {
+      arr[2] = 'Please fill Email';
+      setmistakeEmail(true);
+    }
+    if (!firstName) {
+      arr[3] = 'Please fill Username';
+    }
+    if (!arr.length) {
+      registerHandler();
+    } else {
+      setErrors([...arr]);
+      console.log(arr);
+    }
+  };
   const registerClick = (e) => {
     // let {username,email,password,retype,firstName} = addAccount
     e.preventDefault();
@@ -353,4 +353,4 @@ const Register = ({ open, handleClose, setOpen, handleopenDialog }) => {
   );
 };
 
-export default Register
+export default Register;
