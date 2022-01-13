@@ -121,7 +121,7 @@ const Input = styled('input')({
 const Userprofile = () => {
   const [date, setDate] = useState();
   const [user, setuser] = useState();
-  const [file, setFile] = useState(null);
+  const [, setFile] = useState(null);
   const [editMode, seteditMode] = useState(false);
   const [editAccount, seteditAccount] = useState({
     firstName: '',
@@ -143,7 +143,7 @@ const Userprofile = () => {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const inputHandler = (e) => {
     seteditAccount({ ...editAccount, [e.target.name]: e.target.value });

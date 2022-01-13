@@ -11,6 +11,7 @@ import Verified from './pages/user/verifyPage';
 import ChangePassword from './pages/user/Changepass';
 import UserMenu from './pages/UserMenu';
 import AdminMenu from './pages/admin/AdminMenu';
+import UserPrescription from './pages/user/UserPrescription';
 import CircularProgress from '@mui/material/CircularProgress';
 import Swal from 'sweetalert2';
 import UploadPayment from './pages/user/UploadPayment';
@@ -75,6 +76,13 @@ export default function App() {
 
         <Route path={'/verified'} element={<Verified />} />
         <Route path={'/change'} element={<ChangePassword />} />
+
+        {/* <Route path={'/profile'} element={<Userprofile />} />
+        <Route path={'/products'} element={<Products />} />
+        <Route path={'/cart'} element={<Cart />} /> */}
+        <Route path={'/prescription'} element={<UserPrescription />} />
+        {/* <Route path={'/checkout'} element={<CheckOut />} /> */}
+
         <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
 
         <Route path={'/404'} element={<NotFound />} />

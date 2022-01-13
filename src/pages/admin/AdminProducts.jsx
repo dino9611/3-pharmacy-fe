@@ -237,7 +237,7 @@ const AdminProducts = () => {
     console.log(productIndex.id);
     try {
       Swal.fire({
-        title: 'Do you want to save the changes?',
+        title: `Do you want to delete ${productIndex.productName}?`,
         showDenyButton: true,
         confirmButtonText: 'Delete!',
         denyButtonText: `Cancel`,

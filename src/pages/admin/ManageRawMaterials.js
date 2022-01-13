@@ -91,7 +91,10 @@ export default function RawMaterialsTable() {
               {
                 label: 'Unit Per Bottle',
                 className: '',
-                format: (row) => `${row.unitPerBottle} ${row.unit} per bottle`,
+                format: (row) =>
+                  `${row.unitPerBottle.toLocaleString('en-US', {
+                    maximumFractionDigits: 2,
+                  })} ${row.unit} per bottle`,
               },
               {
                 label: 'Price Per Bottle',
@@ -248,6 +251,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
             name='unit'
             as='select'
           >
+            <option value={'mg'}>mg</option>
             <option value={'ml'}>ml</option>
             <option value={'gr'}>gr</option>
           </Field>
@@ -403,6 +407,7 @@ const CreateModal = ({ toggleModal }) => {
             name='unit'
             as='select'
           >
+            <option value={'mg'}>mg</option>
             <option value={'ml'}>ml</option>
             <option value={'gr'}>gr</option>
           </Field>

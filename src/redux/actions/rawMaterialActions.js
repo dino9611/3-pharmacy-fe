@@ -33,6 +33,7 @@ export const addRawMaterial = (input, handleResult = {}) => {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         });
+        dispatch(getRawMaterials());
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
         handleFail !== undefined && handleFail(error);
@@ -48,6 +49,7 @@ export const getRawMaterials = (request, handleResult = {}) => {
   return (dispatch, getState, API_URL) => {
     const { handleSuccess, handleFail, handleFinally } = handleResult;
     if (request !== undefined) {
+      if (request.search === undefined) request.search = '';
       dispatch(setState('request', request));
     }
     const { page, limit, search } = getState().rawMaterialReducers.request;

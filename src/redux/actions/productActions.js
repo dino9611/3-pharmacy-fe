@@ -38,6 +38,7 @@ export const addProduct = (input, handleResult = {}) => {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         });
+        dispatch(getProducts());
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
         handleFail !== undefined && handleFail(error);

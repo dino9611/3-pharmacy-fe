@@ -19,6 +19,7 @@ import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import CloseIcon from '@mui/icons-material/Close';
+import UserCustomModal from '../components/UserCustomModal';
 import { capitalize } from '../helpers/capitalize';
 
 // Modal style
@@ -58,6 +59,17 @@ const Products = () => {
   const handleChange = (event, value) => {
     setPage(value);
   };
+
+  // Modal Custom ORDER
+  const [openCustom, setopenCustom] = useState(false);
+  const handleopenCustom = () => {
+    if (authState.id && authState.username) {
+      setopenCustom(!openCustom);
+    } else {
+      alert('Please Login to use this Feature');
+    }
+  };
+  const handlecloseCustom = () => setopenCustom(false);
 
   // get produk hasil paginasi
   const [paginatedProducts, setPaginatedProducts] = useState([]);
@@ -334,6 +346,10 @@ const Products = () => {
 
   return (
     <div>
+      <UserCustomModal
+        openCustom={openCustom}
+        handleClose={handlecloseCustom}
+      />
       {productDetails()}
       <Snackbar
         open={snackbar}
@@ -372,39 +388,28 @@ const Products = () => {
             ))}
           </select>
         </div>
-        <div className='text-center mb-16 phone:mb-4'>
-          <label htmlFor='contained-button-file'>
-            <Input
-              accept='image/*'
-              id='contained-button-file'
-              multiple
-              type='file'
-            />
-            <Button
-              variant='contained'
-              component='span'
-              style={{ backgroundColor: '#22577A' }}
-            >
-              <svg
-                className='w-5 h-5 mr-1'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
-                />
-              </svg>
-              Upload Prescription
-            </Button>
-          </label>
-          <label htmlFor='icon-button-file'>
-            <Input accept='image/*' id='icon-button-file' type='file' />
-          </label>
+        <div className='text-center mb-16'>
+          {/* <label htmlFor="contained-button-file">
+                <div className="text-center mb-16 phone:mb-4">
+                    <label htmlFor="contained-button-file">
+                        <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                        <Button variant="contained" component="span" style={{ backgroundColor: "#22577A" }}>
+                            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                            Upload Prescription
+                        </Button>
+                    </label>
+                    <label htmlFor="icon-button-file">
+                        <Input accept="image/*" id="icon-button-file" type="file" />
+                    </label> */}
+          <Button
+            variant='contained'
+            onClick={handleopenCustom}
+            style={{ backgroundColor: '#66806a' }}
+          >
+            Upload Prescription
+          </Button>
         </div>
         <div hidden={spinner} className='text-center mb-10'>
           <CircularProgress sx={{ color: 'white' }} />
