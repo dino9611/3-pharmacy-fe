@@ -7,7 +7,6 @@ import AdminSidebar from '../../components/AdminSidebar';
 // * view
 import Dashboard from './Dashboard';
 import History from './History';
-import RawMaterialsRecord from './RawMaterialsRecord';
 
 // * manage
 import ManageRawMaterials from './ManageRawMaterials';

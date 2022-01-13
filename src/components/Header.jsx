@@ -19,6 +19,8 @@ import axios from 'axios';
 import { API_URL } from '../constants/api';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);
