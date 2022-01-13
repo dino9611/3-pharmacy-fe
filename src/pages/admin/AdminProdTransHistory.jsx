@@ -57,7 +57,7 @@ const AdminProdTransHistory = () => {
           <button
             key={index + 1}
             onClick={() => pickFilter(val.value)}
-            className='px-5 py-2 mr-2 bg-green-dark border-2 border-green-dark rounded-full text-xs font-bold text-white poppins'
+            className='px-5 py-2 mr-2 bg-primary1 border-2 border-primary1 rounded-full text-xs font-bold text-white poppins'
           >
             {val.status}
           </button>
@@ -67,7 +67,7 @@ const AdminProdTransHistory = () => {
           <button
             key={index + 1}
             onClick={() => pickFilter(val.value)}
-            className='px-5 py-2 mr-2 border-solid border-2 border-green-dark rounded-full text-xs font-bold text-green-dark poppins'
+            className='px-5 py-2 mr-2 border-solid border-2 border-primary1 bg-white rounded-full text-xs font-bold text-primary1 poppins'
           >
             {val.status}
           </button>
@@ -411,7 +411,7 @@ const AdminProdTransHistory = () => {
         (
           <TableContainer component={Paper} sx={{ width: "100%" }} className=" my-5">
             <Table aria-label="simple table">
-              <TableHead sx={{ backgroundColor: "#66806a" }}>
+              <TableHead sx={{ backgroundColor: "#22577A" }}>
                 <TableRow>
                   <TableCell sx={{ color: "white" }} align="left">ID Order</TableCell>
                   <TableCell sx={{ color: "white" }} align="left">Check Out Time</TableCell>
@@ -434,7 +434,7 @@ const AdminProdTransHistory = () => {
               onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
-              sx={{ color: 'white', backgroundColor: "#66806a" }}
+              sx={{ color: 'white', backgroundColor: "#22577A" }}
             />
           </TableContainer>
         )
