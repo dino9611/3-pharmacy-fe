@@ -22,6 +22,7 @@ import AdminTable from '../../components/Tables/AdminTable';
 
 import { toast } from 'react-toastify';
 import { API_URL } from '../../constants/api';
+import { useDebounce } from '../../hooks';
 
 export default function RawMaterialsTable() {
   const dispatch = useDispatch();
@@ -31,11 +32,13 @@ export default function RawMaterialsTable() {
   // const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const rowsPerPage = 8;
 
+  const [search, setsearch] = React.useState('');
+  const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 500);
   // * modal states
   React.useEffect(() => {
     dispatch(
       getProducts(
-        { page: page + 1, limit: rowsPerPage },
+        { page: page + 1, limit: rowsPerPage, search },
         {
           handleFail: (err) =>
             toast.error(err.response?.data.message || 'server error'),
@@ -43,7 +46,7 @@ export default function RawMaterialsTable() {
       )
     );
     return () => dispatch(resetStateProduct('products'));
-  }, [dispatch, page, rowsPerPage]);
+  }, [dispatch, page, rowsPerPage, search]);
   const emptyRows = rowsPerPage - rows.length;
 
   // const handleChangeRowsPerPage = (event) => {
@@ -55,7 +58,25 @@ export default function RawMaterialsTable() {
     <>
       <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
         <div className='flex flex-col h-full justify-between'>
-          <div className='flex m-3'></div>
+          <div className='flex m-3'>
+            <div className='flex border-2 rounded'>
+              <input
+                type='text'
+                className='px-4 py-2 w-80'
+                placeholder='Search Products...'
+                onChange={handleSearchChange}
+              />
+              <div className='flex items-center justify-center px-4 border-l bg-white'>
+                <svg
+                  className='w-6 h-6 text-gray-600'
+                  fill='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
+                </svg>
+              </div>
+            </div>
+          </div>
 
           <AdminTable
             name='Products'
@@ -122,7 +143,6 @@ const DeleteModal = ({ toggleModal, initialValues }) => {
       <button
         className='btn btn-red flex m-1'
         onClick={() => {
-          // console.log(initialValues);
           dispatch(
             deleteProduct(initialValues.id, {
               handleSuccess: () =>
@@ -167,7 +187,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
 
   React.useEffect(() => {
     dispatch(getProductCategories());
-    dispatch(getRawMaterials(1, 40));
+    dispatch(getRawMaterials({ page: 1, limit: 40 }));
     return () => {
       dispatch(resetStateProduct('categories'));
       dispatch(resetStateRawMaterial('rawMaterials'));
@@ -208,13 +228,16 @@ const EditModal = ({ toggleModal, initialValues }) => {
         }}
         validate={(values) => {
           const errors = {};
+          if (!values.compositions.length) errors.compositions = 'required';
           if (
             new Set(values.compositions.map((el) => parseInt(el.id))).size !==
               values.compositions.length ||
-            values.compositions.some((el) => el === undefined)
+            values.compositions.some((el) => el.id === undefined)
           ) {
             errors.compositions = 'no duplicates allowed';
           }
+
+          if (!values.categories.length) errors.categories = 'required';
           if (
             new Set(values.categories.map((el) => parseInt(el))).size !==
               values.categories.length ||
@@ -315,10 +338,9 @@ const EditModal = ({ toggleModal, initialValues }) => {
                   const { compositions } = values;
 
                   const renderErr = () => {
-                    if (errors.compositions === 'no duplicates allowed') {
-                      return errors.compositions;
-                    }
                     if (errors.compositions === undefined) return '';
+                    if (!Array.isArray(errors.compositions))
+                      return errors.compositions;
                     for (let i = 0; i < errors.compositions.length; i++) {
                       if (errors.compositions[i]?.amountInUnit === undefined)
                         continue;
@@ -343,7 +365,9 @@ const EditModal = ({ toggleModal, initialValues }) => {
                             ) {
                               const el = compositionOptions[i];
                               if (
-                                !compositions.some((el2) => el.id === el2.id)
+                                !compositions.some(
+                                  (el2) => el.id === parseInt(el2.id)
+                                )
                               ) {
                                 id = el.id;
                                 break;
@@ -422,9 +446,9 @@ const EditModal = ({ toggleModal, initialValues }) => {
                   const { categories } = values;
 
                   const renderErr = () => {
-                    if (errors.categories === 'no duplicates allowed') {
+                    if (errors.categories === undefined) return '';
+                    if (!Array.isArray(errors.categories))
                       return errors.categories;
-                    }
                     return '';
                   };
 
@@ -569,7 +593,7 @@ const CreateModal = ({ toggleModal }) => {
 
   React.useEffect(() => {
     dispatch(getProductCategories());
-    dispatch(getRawMaterials(1, 40));
+    dispatch(getRawMaterials({ page: 1, limit: 40 }));
     return () => {
       dispatch(resetStateProduct('categories'));
       dispatch(resetStateRawMaterial('rawMaterials'));
@@ -586,8 +610,8 @@ const CreateModal = ({ toggleModal }) => {
           productName: '',
           stock: 0,
           description: '',
-          compositions: [{ id: 1, amountInUnit: 0 }],
-          categories: [1],
+          compositions: [],
+          categories: [],
           file: null,
         }}
         onSubmit={(values) => {
@@ -603,13 +627,16 @@ const CreateModal = ({ toggleModal }) => {
         }}
         validate={(values) => {
           const errors = {};
+          if (!values.compositions.length) errors.compositions = 'required';
           if (
             new Set(values.compositions.map((el) => parseInt(el.id))).size !==
               values.compositions.length ||
-            values.compositions.some((el) => el === undefined)
+            values.compositions.some((el) => el.id === undefined)
           ) {
             errors.compositions = 'no duplicates allowed';
           }
+
+          if (!values.categories.length) errors.categories = 'required';
           if (
             new Set(values.categories.map((el) => parseInt(el))).size !==
               values.categories.length ||
@@ -709,10 +736,9 @@ const CreateModal = ({ toggleModal }) => {
                   const { compositions } = values;
 
                   const renderErr = () => {
-                    if (errors.compositions === 'no duplicates allowed') {
-                      return errors.compositions;
-                    }
                     if (errors.compositions === undefined) return '';
+                    if (!Array.isArray(errors.compositions))
+                      return errors.compositions;
                     for (let i = 0; i < errors.compositions.length; i++) {
                       if (errors.compositions[i]?.amountInUnit === undefined)
                         continue;
@@ -737,12 +763,15 @@ const CreateModal = ({ toggleModal }) => {
                             ) {
                               const el = compositionOptions[i];
                               if (
-                                !compositions.some((el2) => el.id === el2.id)
+                                !compositions.some(
+                                  (el2) => el.id === parseInt(el2.id)
+                                )
                               ) {
                                 id = el.id;
                                 break;
                               }
                             }
+                            console.log(compositions);
                             push({ id, amountInUnit: 0 });
                           }}
                           className='w-1/2'
@@ -779,7 +808,7 @@ const CreateModal = ({ toggleModal }) => {
                           >
                             {compositionOptions.map((el) => (
                               <option key={el.id} value={el.id}>
-                                {el.materialName}
+                                {`${el.materialName} (${el.unit})`}
                               </option>
                             ))}
                           </Field>
@@ -816,9 +845,9 @@ const CreateModal = ({ toggleModal }) => {
                   const { categories } = values;
 
                   const renderErr = () => {
-                    if (errors.categories === 'no duplicates allowed') {
+                    if (errors.categories === undefined) return '';
+                    if (!Array.isArray(errors.categories))
                       return errors.categories;
-                    }
                     return '';
                   };
 
@@ -970,291 +999,3 @@ const CreateModal = ({ toggleModal }) => {
     </div>
   );
 };
-
-// const DetailsModal = ({ toggleModal, initialValues }) => {
-//   const dispatch = useDispatch();
-//   const compositionOptions = useSelector(
-//     (state) => state.rawMaterialReducers.rawMaterials
-//   );
-//   React.useState(compositionOptions);
-//   const categoryOptions = useSelector(
-//     (state) => state.productReducers.categories
-//   );
-//   const productDetails = useSelector(
-//     (state) => state.productReducers.productDetails
-//   );
-
-//   React.useEffect(() => {}, [dispatch]);
-
-//   const [file, setfile] = React.useState(null);
-//   const fileInput = React.useRef(null);
-
-//   // const [formValues, setformValues] = React.useState()
-//   React.useEffect(() => {
-//     dispatch(getProductDetails(initialValues.id));
-//     return () => dispatch(resetStateProduct('productDetails'));
-//   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-//   const defaultValues = {
-//     productName: '',
-//     stock: 0,
-//     description: '',
-//     compositions: [{ id: 1, amountInUnit: 0 }],
-//     categories: [1],
-//     file: null,
-//   };
-
-//   return (
-//     <div className='z-50 bg-gray-100 w-10/12 h-auto rounded-lg p-5'>
-//       <Formik
-//         initialValues={{ ...defaultValues, ...productDetails }}
-//         enableReinitialize
-//       >
-//         {(props) => {
-//           const { setFieldValue } = props;
-//           return (
-//             <Form className='grid grid-cols-12 tems-center font-poppins gap-2'>
-//               <h1 className=' text-2xl font-bold self-start mb-10 col-span-full'>
-//                 Product <span className='bg-blue-200'>De</span>
-//                 tails
-//               </h1>
-
-//               <div className='flex flex-col col-span-3 bg-gray-200 rounded-lg'>
-//                 <label
-//                   className='block text-gray-700 text-sm font-bold mb-2 self-start'
-//                   htmlFor='productName'
-//                 >
-//                   Product Name
-//                 </label>
-//                 <Field
-//                   className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-//                   id='productName'
-//                   name='productName'
-//                   type='text'
-//                   placeholder='Name of Product'
-//                 />
-//                 <p className='text-red-500 text-sm h-6 self-start'>
-//                   <ErrorMessage name='productName' />
-//                 </p>
-
-//                 <label
-//                   className='block text-gray-700 text-sm font-bold mb-2 self-start'
-//                   htmlFor='stock'
-//                 >
-//                   Stock
-//                 </label>
-//                 <Field
-//                   className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-//                   id='stock'
-//                   name='stock'
-//                   type='number'
-//                   placeholder='# of products in stock'
-//                 />
-//                 <p className='text-red-500 text-sm h-6 self-start'>
-//                   <ErrorMessage name='stock' />
-//                 </p>
-
-//                 <label
-//                   className='block text-gray-700 text-sm font-bold mb-2 self-start'
-//                   htmlFor='description'
-//                 >
-//                   Description
-//                 </label>
-//                 <Field
-//                   className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none'
-//                   id='description'
-//                   name='description'
-//                   type='text'
-//                   as='textarea'
-//                   rows='5'
-//                   placeholder='product description'
-//                 />
-//                 <p className='text-red-500 text-sm h-6 self-start'>
-//                   <ErrorMessage name='description' />
-//                 </p>
-//               </div>
-
-//               <FieldArray name='compositions'>
-//                 {(props) => {
-//                   const { push, remove, form } = props;
-//                   const { values, errors } = form;
-//                   const { compositions } = values;
-
-//                   const renderErr = () => {
-//                     if (errors.compositions === undefined) return '';
-//                     for (let i = 0; i < errors.compositions.length; i++) {
-//                       if (errors.compositions[i]?.amountInUnit === undefined)
-//                         continue;
-//                       return errors.compositions[i]?.amountInUnit;
-//                     }
-//                     return '';
-//                   };
-//                   return (
-//                     <div className='flex flex-col justify-start col-span-3 bg-gray-200 rounded-lg'>
-//                       <div className='flex mb-1'>
-//                         <label className='text-gray-700 text-sm font-bold w-1/2'>
-//                           Compositions
-//                         </label>
-//                         <button
-//                           type='button'
-//                           onClick={() => push({ id: 1, amountInUnit: 0 })}
-//                           className='w-1/2'
-//                         >
-//                           <svg
-//                             className='w-6 h-6'
-//                             data-darkreader-inline-fill=''
-//                             fill='currentColor'
-//                             viewBox='0 0 20 20'
-//                           >
-//                             <path
-//                               fillRule='evenodd'
-//                               d='M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z'
-//                               clipRule='evenodd'
-//                             />
-//                           </svg>
-//                         </button>
-//                       </div>
-//                       <p className='text-red-500 text-sm self-start'>
-//                         {renderErr()}
-//                       </p>
-
-//                       {compositions.map((el, i) => (
-//                         <div key={i} className='flex'>
-//                           <Field
-//                             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-//                             type='number'
-//                             name={`compositions[${i}].amountInUnit`}
-//                           />
-//                           <Field
-//                             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-//                             as='select'
-//                             name={`compositions[${i}].id`}
-//                           >
-//                             {compositionOptions.map((el) => (
-//                               <option key={el.id} value={el.id}>
-//                                 {el.materialName}
-//                               </option>
-//                             ))}
-//                           </Field>
-//                           <button
-//                             disabled={compositions.length <= 1}
-//                             type='button'
-//                             onClick={() => remove(i)}
-//                             className='mx-1'
-//                           >
-//                             <svg
-//                               className='w-4 h-4'
-//                               data-darkreader-inline-fill=''
-//                               fill='currentColor'
-//                               viewBox='0 0 20 20'
-//                             >
-//                               <path
-//                                 fillRule='evenodd'
-//                                 d='M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
-//                                 clipRule='evenodd'
-//                               />
-//                             </svg>
-//                           </button>
-//                         </div>
-//                       ))}
-//                     </div>
-//                   );
-//                 }}
-//               </FieldArray>
-
-//               <FieldArray name='categories'>
-//                 {(props) => {
-//                   const { push, remove, form } = props;
-//                   const { values } = form;
-//                   const { categories } = values;
-
-//                   return (
-//                     <div className='flex flex-col justify-start col-span-2 bg-gray-200 rounded-lg'>
-//                       <div className='flex mb-1'>
-//                         <label className='text-gray-700 text-sm font-bold w-1/2'>
-//                           Categories
-//                         </label>
-//                         <button
-//                           type='button'
-//                           onClick={() => push(1)}
-//                           className='w-1/2'
-//                         >
-//                           <svg
-//                             className='w-6 h-6'
-//                             data-darkreader-inline-fill=''
-//                             fill='currentColor'
-//                             viewBox='0 0 20 20'
-//                           >
-//                             <path
-//                               fillRule='evenodd'
-//                               d='M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z'
-//                               clipRule='evenodd'
-//                             />
-//                           </svg>
-//                         </button>
-//                       </div>
-
-//                       {categories.map((_, i) => (
-//                         <div key={i} className='flex'>
-//                           <Field
-//                             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-//                             as='select'
-//                             name={`categories[${i}]`}
-//                           >
-//                             {categoryOptions.map((el) => (
-//                               <option key={el.id} value={el.id}>
-//                                 {el.categoryName}
-//                               </option>
-//                             ))}
-//                           </Field>
-//                           <button
-//                             disabled={categories.length <= 1}
-//                             type='button'
-//                             onClick={() => remove(i)}
-//                             className='mx-1'
-//                           >
-//                             <svg
-//                               className='w-4 h-4'
-//                               data-darkreader-inline-fill=''
-//                               fill='currentColor'
-//                               viewBox='0 0 20 20'
-//                             >
-//                               <path
-//                                 fillRule='evenodd'
-//                                 d='M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
-//                                 clipRule='evenodd'
-//                               />
-//                             </svg>
-//                           </button>
-//                         </div>
-//                       ))}
-//                     </div>
-//                   );
-//                 }}
-//               </FieldArray>
-
-//               <input
-//                 ref={fileInput}
-//                 type='file'
-//                 className='hidden'
-//                 onChange={(e) => {
-//                   if (e.target.files[0]) {
-//                     setfile(e.target.files[0]);
-//                     setFieldValue('file', e.target.files[0]);
-//                   } else {
-//                     setfile(null);
-//                     setFieldValue('file', null);
-//                   }
-//                 }}
-//               />
-//               <img
-//                 className='object-contain h-96 w-full col-span-4 bg-gray-300 rounded-lg flex justify-center items-center text-gray-600 cursor-pointer'
-//                 src={API_URL + productDetails.imagePath}
-//                 alt={file}
-//               />
-//             </Form>
-//           );
-//         }}
-//       </Formik>
-//     </div>
-//   );
-// };
