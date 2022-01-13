@@ -9,20 +9,15 @@ import 'tailwindcss/tailwind.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Verified from './pages/user/verifyPage';
 import ChangePassword from './pages/user/Changepass';
-import Userprofile from './pages/user/UserProfile';
-import LandingPage from './pages/LandingPage';
-import Products from './pages/Products';
+import UserMenu from './pages/UserMenu';
 import AdminMenu from './pages/admin/AdminMenu';
-import Cart from './pages/user/Cart';
 import UserPrescription from './pages/user/UserPrescription';
 import CircularProgress from '@mui/material/CircularProgress';
-import CheckOut from './pages/user/CheckOut';
 import Swal from 'sweetalert2';
 import UploadPayment from './pages/user/UploadPayment';
-import ProductTransactionHistory from './pages/user/ProductTransactionHistory';
 import { useNavigate } from 'react-router';
 
-function App() {
+export default function App() {
   // Redux
   const dispatch = useDispatch();
   const authReducer = useSelector((state) => state.auth);
@@ -50,7 +45,7 @@ function App() {
             text: 'Your session is over, please re-login!',
             timer: 1500,
             timerProgressBar: true,
-            confirmButtonColor: '#22577A'
+            confirmButtonColor: '#22577A',
           });
           localStorage.removeItem('token');
           navigate('/');
@@ -62,7 +57,7 @@ function App() {
     } else {
       setLoading(false);
     }
-  }, [dispatch]);
+  }, [dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (
@@ -73,31 +68,65 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='bg-lightblue'>
       <Routes>
-        <Route path={'/'} element={<LandingPage />} />
+        <Route path={'/*'} element={<UserMenu />} />
         {authReducer.role === 'admin' && (
           <Route path={'/admin/*'} element={<AdminMenu />} />
         )}
-        : null
+
         <Route path={'/verified'} element={<Verified />} />
         <Route path={'/change'} element={<ChangePassword />} />
-        <Route path={'/profile'} element={<Userprofile />} />
+
+        {/* <Route path={'/profile'} element={<Userprofile />} />
         <Route path={'/products'} element={<Products />} />
-        <Route path={'/cart'} element={<Cart />} />
+        <Route path={'/cart'} element={<Cart />} /> */}
         <Route path={'/prescription'} element={<UserPrescription />} />
-        <Route path={'/checkout'} element={<CheckOut />} />
+        {/* <Route path={'/checkout'} element={<CheckOut />} /> */}
+
         <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
-        <Route path={'/order-list'} element={<ProductTransactionHistory />} />
-        <Route path={'/*'} element={<NotFound />} />
+
+        <Route path={'/404'} element={<NotFound />} />
       </Routes>
       <ToastContainer />
     </div>
   );
 }
 
-export default App;
-
 function NotFound() {
-  return <h1>Not Found</h1>;
+  return (
+    <div
+      class='
+    flex
+    items-center
+    justify-center
+    w-screen
+    h-screen
+    bg-gradient-to-r
+    from-indigo-600
+    to-blue-400
+  '
+    >
+      <div class='px-40 py-20 bg-white rounded-md shadow-xl'>
+        <div class='flex flex-col items-center'>
+          <h1 class='font-bold text-blue-600 text-9xl'>404</h1>
+
+          <h6 class='mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl'>
+            <span class='text-red-500'>Oops!</span> Page not found
+          </h6>
+
+          <p class='mb-8 text-center text-gray-500 md:text-lg'>
+            The page you’re looking for doesn’t exist.
+          </p>
+
+          <a
+            href='/'
+            class='px-6 py-2 text-sm font-semibold text-blue-800 bg-blue-100'
+          >
+            Go home
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 }

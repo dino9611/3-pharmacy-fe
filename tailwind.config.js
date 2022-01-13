@@ -18,22 +18,6 @@ module.exports = {
         third2: '#1597E5',
         fourth2: '#69DADB',
 
-        primary: {
-          100: '#5A745E',
-          200: '#4E6852',
-          300: '#425C46',
-          400: '#36503A',
-          450: '#66806A', // root color
-          500: '#A2BCA6',
-          600: '#AEC8B2',
-          700: '#BAD4BE',
-          800: '#C6E0CA',
-          900: '#D2ECD6',
-        },
-        secondary: '#B4C6AA',
-        third: '#FFC286',
-        fourth: '#FFF1AF',
-
         green: {
           light: '#b4c4a6',
           dark: '#66806a',

@@ -1,6 +1,7 @@
 import { actionTypes } from '../action-types';
 
 const initialState = {
+  request: {},
   rawMaterials: [],
   rawMaterialsRecord: [],
 };
