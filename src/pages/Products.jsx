@@ -158,14 +158,20 @@ const Products = () => {
         }
         try {
             let res = await axios.post(`${API_URL}/transaction/addtocart/${authState.id}`, {
-                price: paginatedProducts[index].productPriceRp,
                 qty: 1,
                 product_id: paginatedProducts[index].id
             })
             dispatch({ type: "setcart", payload: res.data })
             openSnackbar()
         } catch (error) {
-            alert(error.response.data.message)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.response?.data.message,
+                timer: 1500,
+                timerProgressBar: true,
+                confirmButtonColor: '#22577A'
+            })
         }
     }
 

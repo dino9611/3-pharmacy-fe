@@ -54,8 +54,6 @@ const CheckOut = () => {
     }
 
     const onCheckout = async () => {
-        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
-        var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
         const { address, bank_id } = form
         if (!address || !bank_id) {
             Swal.fire({
@@ -70,10 +68,8 @@ const CheckOut = () => {
         }
         try {
             let res = await axios.patch(`${API_URL}/transaction/checkout/${authState.id}`, {
-                checkedOutAt: localISOTime,
                 address: form.address,
-                bank_id: parseInt(form.bank_id),
-                shippingCost: 9000
+                bank_id: parseInt(form.bank_id)
             })
             dispatch({ type: "setcart", payload: res.data })
         } catch (error) {
