@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../constants/api';
 import { capitalize } from '../../helpers/capitalize';
@@ -11,6 +11,7 @@ const CheckOut = () => {
     const cartState = useSelector((state) => state.cart);
     const authState = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const [form, setForm] = useState({
         address: authState.address,
@@ -118,8 +119,19 @@ const CheckOut = () => {
     }, [form]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <div>
-            <div className='font-poppins bg-lightblue flex phone:flex-col px-20 phone:px-2 py-5 phone:py-2 h-screen'>
+        <div className='font-poppins'>
+            <span
+                className='flex text-xl phone:text-base items-center px-20 phone:px-2 text-primary1 font-bold py-5 phone:py-2 hover:opacity-80 cursor-pointer'
+                onClick={() => navigate('/cart')}
+            >
+                <svg
+                    className="w-8 h-8 phone:w-6 phone:h-6 mr-2 phone:mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clipRule="evenodd" />
+                </svg>
+                Back to Cart
+            </span>
+            <div className='font-poppins bg-lightblue flex phone:flex-col px-20 phone:px-2 h-screen'>
                 <div className='bg-white shadow-md w-1/2 mr-5 phone:mr-0 phone:w-full phone:h-5/6 p-5 phone:mb-2 rounded-lg overflow-x-hidden overflow-y-auto'>
                     <p className='font-bold text-center text-2xl phone:text-base mb-2'>
                         Products
@@ -162,7 +174,7 @@ const CheckOut = () => {
                     ) : (
                         <Link to={`/uploadpayment/${cartState[0].order_id}`}>
                             <button
-                                className='bg-primary1 hover:bg-peach-dark w-full h-14 rounded-b-lg text-white hover:text-black phone:text-sm'
+                                className='bg-primary1 hover:bg-secondary1 w-full h-14 rounded-b-lg text-white phone:text-sm'
                                 onClick={onCheckout}
                             >
                                 Next

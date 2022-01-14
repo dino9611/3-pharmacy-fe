@@ -11,6 +11,7 @@ import Register from './Register';
 import ForgetPass from './ForgetPassword';
 import { API_URL } from '../constants/api';
 import { useLocation } from 'react-router-dom';
+import MenuBar from './MenuBar';
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);
@@ -55,9 +56,17 @@ const Header = () => {
   // Navigate
   const navigate = useNavigate();
 
+  const [show, setShow] = useState(true);
+  const handleShowMenu = () => setShow(false);
+  const handleCloseMenu = () => setShow(true);
+
   return (
     <div>
-      <Login open={openLogin} handleClose={handleCloseLogin} />
+      <Login
+        open={openLogin}
+        handleClose={handleCloseLogin}
+        closeMenu={handleCloseUserMenu}
+      />
       <Register
         open={open}
         handleClose={handleClose}
@@ -70,8 +79,22 @@ const Header = () => {
         handlecloseDialog={handlecloseDialog}
         handleopenDialog={handleopenDialog}
       />
+      <MenuBar open={show} close={handleCloseMenu} />
       <div className='flex justify-between items-center bg-primary1 h-24 phone:h-16 px-6 phone:px-4 font-poppins'>
-        <div className='flex'>
+        <div className='flex items-center'>
+          <svg
+            className='text-white phone:w-7 phone:h-7 phone:mr-2 hidden phone:block'
+            fill='currentColor'
+            viewBox='0 0 20 20'
+            xmlns='http://www.w3.org/2000/svg'
+            onClick={handleShowMenu}
+          >
+            <path
+              fillRule='evenodd'
+              d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
+              clipRule='evenodd'
+            />
+          </svg>
           <p
             onClick={() => navigate('/')}
             className='header-font-style hover:text-gray-200 text-3xl phone:text-xl cursor-pointer'
@@ -79,12 +102,11 @@ const Header = () => {
             Tokobat
           </p>
           <button
-            // className='text-white py-1 px-3 rounded hover:bg-peach-light hover:shadow-md ml-4 phone:text-xs phone:ml-1'
             onClick={() => navigate('/products')}
             className={
-              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg ' +
+              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('products')
-                ? 'text-gray-800 bg-fourth2'
+                ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
             }
           >
@@ -92,9 +114,9 @@ const Header = () => {
           </button>
           <button
             className={
-              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg ' +
+              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('prescriptions')
-                ? 'text-gray-800 bg-fourth2'
+                ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
             }
             onClick={() => navigate('/prescriptions')}
@@ -124,7 +146,6 @@ const Header = () => {
                   </div>
                 </Tooltip>
               </Link>
-
               <Link to='/cart'>
                 <span className='relative inline-block mr-4 phone:mr-2'>
                   <Tooltip title='Cart'>
@@ -153,25 +174,10 @@ const Header = () => {
               </p>
               <Box sx={{ flexGrow: 0 }}>
                 <button onClick={handleOpenUserMenu}>
-                  {!authState.avatar ? (
-                    <p className='w-10 h-10 phone:w-7 phone:h-7 bg-white rounded-full flex items-center justify-center text-lg font-semibold text-primary1'>
-                      {authState.username.charAt(0)}
-                    </p>
-                  ) : (
-                    <Avatar
-                      src={API_URL + authState.avatar}
-                      className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
-                    />
-                    // <img
-                    //   src={API_URL + authState.avatar}
-                    //   alt={authState.username.charAt(0)}
-                    //   onError={(e) => {
-                    //     e.currentTarget.src = '/default_profile_pic.jpg';
-                    //     e.currentTarget.onerror = null;
-                    //   }}
-                    //   className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
-                    // />
-                  )}
+                  <Avatar
+                    src={API_URL + authState.avatar}
+                    className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
+                  />
                 </button>
                 <Menu
                   sx={{ mt: '45px' }}

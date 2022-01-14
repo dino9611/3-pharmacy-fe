@@ -84,7 +84,7 @@ export default function App() {
         <Route path={'/prescription'} element={<UserPrescription />} />
         {/* <Route path={'/checkout'} element={<CheckOut />} /> */}
 
-        <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
+        {/* <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} /> */}
 
         <Route path={'/404'} element={<NotFound />} />
       </Routes>

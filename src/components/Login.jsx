@@ -25,7 +25,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const Login = ({ open, handleClose }) => {
+const Login = ({ open, handleClose, closeMenu }) => {
   const dispatch = useDispatch();
 
   // Input Data Login
@@ -75,6 +75,7 @@ const Login = ({ open, handleClose }) => {
       localStorage.setItem('token', res.headers['access-token']);
       dispatch({ type: 'login', payload: res.data[0] });
       handleClose();
+      closeMenu()
       setFillAlert(true);
       setAccAlert(true);
       Swal.fire({
