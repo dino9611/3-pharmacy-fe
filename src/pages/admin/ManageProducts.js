@@ -204,6 +204,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const defaultValues = {
     productName: '',
+    productProfitRp: 0,
     stock: 0,
     description: '',
     compositions: [{ id: 1, amountInUnit: 0 }],
@@ -249,6 +250,10 @@ const EditModal = ({ toggleModal, initialValues }) => {
         }}
         validationSchema={yup.object({
           productName: yup.string().required(),
+          productProfitRp: yup
+            .number()
+            .integer('must be integer')
+            .moreThan(0, 'has to be greater than 0'),
           stock: yup
             .number()
             .integer('must be integer')
@@ -292,6 +297,23 @@ const EditModal = ({ toggleModal, initialValues }) => {
                 />
                 <p className='text-red-500 text-sm h-6 self-start'>
                   <ErrorMessage name='productName' />
+                </p>
+
+                <label
+                  className='block text-gray-700 text-sm font-bold mb-2 self-start'
+                  htmlFor='productProfitRp'
+                >
+                  Profit
+                </label>
+                <Field
+                  className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                  id='productProfitRp'
+                  name='productProfitRp'
+                  type='number'
+                  placeholder='profit of product in Rupiah'
+                />
+                <p className='text-red-500 text-sm h-6 self-start'>
+                  <ErrorMessage name='productProfitRp' />
                 </p>
 
                 <label
@@ -608,6 +630,7 @@ const CreateModal = ({ toggleModal }) => {
       <Formik
         initialValues={{
           productName: '',
+          productProfitRp: '',
           stock: 0,
           description: '',
           compositions: [],
@@ -648,6 +671,10 @@ const CreateModal = ({ toggleModal }) => {
         }}
         validationSchema={yup.object({
           productName: yup.string().required(),
+          productProfitRp: yup
+            .number()
+            .integer('must be integer')
+            .moreThan(0, 'has to be greater than 0'),
           stock: yup
             .number()
             .integer('must be integer')
@@ -695,6 +722,23 @@ const CreateModal = ({ toggleModal }) => {
 
                 <label
                   className='block text-gray-700 text-sm font-bold mb-2 self-start'
+                  htmlFor='productProfitRp'
+                >
+                  Profit
+                </label>
+                <Field
+                  className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                  id='productProfitRp'
+                  name='productProfitRp'
+                  type='number'
+                  placeholder='profit of product in Rupiah'
+                />
+                <p className='text-red-500 text-sm h-6 self-start'>
+                  <ErrorMessage name='productprofitrp' />
+                </p>
+
+                <label
+                  className='block text-gray-700 text-sm font-bold mb-2 self-start'
                   htmlFor='stock'
                 >
                   Stock
@@ -720,7 +764,7 @@ const CreateModal = ({ toggleModal }) => {
                   className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none'
                   id='description'
                   name='description'
-                  rows='5'
+                  rows='3'
                   as='textarea'
                   placeholder='product description'
                 />

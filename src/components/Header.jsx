@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Typography,
-  Menu,
-  Tooltip,
-  MenuItem,
-  Box,
-  IconButton,
-  Badge,
-} from '@mui/material';
+import React, { useState } from 'react';
+import { Typography, Menu, Tooltip, MenuItem, Box } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { useSelector } from 'react-redux';
 import './styles/Header.css';
@@ -17,11 +9,8 @@ import { useDispatch } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
 import ForgetPass from './ForgetPassword';
-import axios from 'axios';
 import { API_URL } from '../constants/api';
 import { useLocation } from 'react-router-dom';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import MenuBar from './MenuBar';
 
 const Header = () => {
@@ -29,23 +18,6 @@ const Header = () => {
   const cartState = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const location = useLocation();
-
-  //? Fetch prescription data
-  const [customData, setcustomData] = useState([]);
-  const id = authState.id;
-  const getCustom = async () => {
-    try {
-      let results = await axios.get(`${API_URL}/custom/usercustom`, {
-        params: { id },
-      });
-      setcustomData(results.data);
-    } catch (error) {
-      alert(error);
-    }
-  };
-  useEffect(() => {
-    getCustom();
-  }, []);
 
   const [anchorElUser, setAnchorElUser] = React.useState(false);
 
@@ -84,13 +56,17 @@ const Header = () => {
   // Navigate
   const navigate = useNavigate();
 
-  const [show, setShow] = useState(true)
-  const handleShowMenu = () => setShow(false)
-  const handleCloseMenu = () => setShow(true)
+  const [show, setShow] = useState(true);
+  const handleShowMenu = () => setShow(false);
+  const handleCloseMenu = () => setShow(true);
 
   return (
     <div>
-      <Login open={openLogin} handleClose={handleCloseLogin} closeMenu={handleCloseUserMenu} />
+      <Login
+        open={openLogin}
+        handleClose={handleCloseLogin}
+        closeMenu={handleCloseUserMenu}
+      />
       <Register
         open={open}
         handleClose={handleClose}
@@ -107,10 +83,17 @@ const Header = () => {
       <div className='flex justify-between items-center bg-primary1 h-24 phone:h-16 px-6 phone:px-4 font-poppins'>
         <div className='flex items-center'>
           <svg
-            className="text-white phone:w-7 phone:h-7 phone:mr-2 hidden phone:block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+            className='text-white phone:w-7 phone:h-7 phone:mr-2 hidden phone:block'
+            fill='currentColor'
+            viewBox='0 0 20 20'
+            xmlns='http://www.w3.org/2000/svg'
             onClick={handleShowMenu}
           >
-            <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+            <path
+              fillRule='evenodd'
+              d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
+              clipRule='evenodd'
+            />
           </svg>
           <p
             onClick={() => navigate('/')}
@@ -191,25 +174,10 @@ const Header = () => {
               </p>
               <Box sx={{ flexGrow: 0 }}>
                 <button onClick={handleOpenUserMenu}>
-                  {!authState.avatar ? (
-                    <p className='w-10 h-10 phone:w-7 phone:h-7 bg-white rounded-full flex items-center justify-center text-lg font-semibold text-primary1'>
-                      {authState.username.charAt(0)}
-                    </p>
-                  ) : (
-                    <Avatar
-                      src={API_URL + authState.avatar}
-                      className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
-                    />
-                    // <img
-                    //   src={API_URL + authState.avatar}
-                    //   alt={authState.username.charAt(0)}
-                    //   onError={(e) => {
-                    //     e.currentTarget.src = '/default_profile_pic.jpg';
-                    //     e.currentTarget.onerror = null;
-                    //   }}
-                    //   className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
-                    // />
-                  )}
+                  <Avatar
+                    src={API_URL + authState.avatar}
+                    className='w-10 h-10 phone:w-8 phone:h-8 overflow-hidden rounded-full'
+                  />
                 </button>
                 <Menu
                   sx={{ mt: '45px' }}
