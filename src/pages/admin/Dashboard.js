@@ -151,7 +151,7 @@ export default function Revenue() {
     datasets: [
       {
         label: 'Sales',
-        data: statsReducers.revenue.map((el) => el.cost + el.profit),
+        data: statsReducers.salesByCategory.map((el) => el.cost + el.profit),
         borderColor: 'rgb(100, 44, 152)',
         backgroundColor: 'rgb(100, 44, 152, 0.5)',
         // borderColor: 'rgb(255, 99, 132)',

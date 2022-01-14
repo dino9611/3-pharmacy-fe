@@ -152,7 +152,7 @@ const Header = () => {
                   </div>
                 </Tooltip>
               </Link>
-              <Link to='/prescription'>
+              {/* <Link to='/prescription'>
                 <span class='relative inline-block'>
                   <Tooltip title='Prescription'>
                     <div className='hover:bg-black hover:bg-opacity-10 rounded-full w-12 h-12 phone:w-8 phone:h-8 phone:mt-1 flex'>
@@ -178,7 +178,7 @@ const Header = () => {
                     </span>
                   )}
                 </span>
-              </Link>
+              </Link> */}
               <Link to='/cart'>
                 <span className='relative inline-block mr-4 phone:mr-2'>
                   <Tooltip title='Cart'>

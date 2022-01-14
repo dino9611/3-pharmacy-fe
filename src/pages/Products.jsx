@@ -298,7 +298,7 @@ const Products = () => {
         let res = await axios.get(
           `${API_URL}/product/getproducts?search=${debouncedSearch}&kategori=${kategori}`
         );
-        getProducts(res.data[0].product_length);
+        setProducts(res.data[0].product_length);
       } catch (error) {
         alert(error.response.data.message);
       }
@@ -334,7 +334,7 @@ const Products = () => {
         );
         setPaginatedProducts(res.data);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       } finally {
         setSpinner(true);
         setHideProductlist(false);

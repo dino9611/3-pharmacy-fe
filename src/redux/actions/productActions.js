@@ -97,7 +97,9 @@ export const getProductDetails = (id, handleResult = {}) => {
         });
         const { result } = res.data;
 
-        for (const key in result) if (!result[key]) delete result[key];
+        for (const key in result)
+          if (result[key] === undefined || result[key] === null)
+            delete result[key];
 
         try {
           result.compositions = result.compositions.split(',');
