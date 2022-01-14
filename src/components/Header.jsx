@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Typography,
-  Menu,
-  Tooltip,
-  MenuItem,
-  Box,
-  IconButton,
-  Badge,
-} from '@mui/material';
+import React, { useState } from 'react';
+import { Typography, Menu, Tooltip, MenuItem, Box } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { useSelector } from 'react-redux';
 import './styles/Header.css';
@@ -17,34 +9,14 @@ import { useDispatch } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
 import ForgetPass from './ForgetPassword';
-import axios from 'axios';
 import { API_URL } from '../constants/api';
 import { useLocation } from 'react-router-dom';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);
   const cartState = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const location = useLocation();
-
-  //? Fetch prescription data
-  const [customData, setcustomData] = useState([]);
-  const id = authState.id;
-  const getCustom = async () => {
-    try {
-      let results = await axios.get(`${API_URL}/custom/usercustom`, {
-        params: { id },
-      });
-      setcustomData(results.data);
-    } catch (error) {
-      alert(error);
-    }
-  };
-  useEffect(() => {
-    getCustom();
-  }, []);
 
   const [anchorElUser, setAnchorElUser] = React.useState(false);
 
@@ -152,33 +124,7 @@ const Header = () => {
                   </div>
                 </Tooltip>
               </Link>
-              {/* <Link to='/prescription'>
-                <span class='relative inline-block'>
-                  <Tooltip title='Prescription'>
-                    <div className='hover:bg-black hover:bg-opacity-10 rounded-full w-12 h-12 phone:w-8 phone:h-8 phone:mt-1 flex'>
-                      <svg
-                        className='w-8 h-8 phone:w-6 phone:h-6 text-white self-center mx-auto'
-                        fill='currentColor'
-                        viewBox='0 0 20 20'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    </div>
-                  </Tooltip>
-                  {!customData.length ? (
-                    ''
-                  ) : (
-                    <span class='absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 phone:w-4 phone:h-4 text-xs font-bold leading-none text-red-100 transform translate-x-1 bg-red-600 rounded-full'>
-                      {customData.length}
-                    </span>
-                  )}
-                </span>
-              </Link> */}
+
               <Link to='/cart'>
                 <span className='relative inline-block mr-4 phone:mr-2'>
                   <Tooltip title='Cart'>

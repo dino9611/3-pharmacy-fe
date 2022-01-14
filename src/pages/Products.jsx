@@ -154,6 +154,7 @@ const Products = () => {
       </IconButton>
     </React.Fragment>
   );
+
   // add to cart
   const addToCart = async (index) => {
     if (!authState.isLogin) {
@@ -182,7 +183,6 @@ const Products = () => {
       let res = await axios.post(
         `${API_URL}/transaction/addtocart/${authState.id}`,
         {
-          price: paginatedProducts[index].productPriceRp,
           qty: 1,
           product_id: paginatedProducts[index].id,
         }
@@ -190,7 +190,14 @@ const Products = () => {
       dispatch({ type: 'setcart', payload: res.data });
       openSnackbar();
     } catch (error) {
-      alert(error.response.data.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error.response?.data.message,
+        timer: 1500,
+        timerProgressBar: true,
+        confirmButtonColor: '#22577A',
+      });
     }
   };
 
@@ -334,7 +341,7 @@ const Products = () => {
         );
         setPaginatedProducts(res.data);
       } catch (error) {
-        alert(error.response?.data.message);
+        alert(error.response.data.message);
       } finally {
         setSpinner(true);
         setHideProductlist(false);
