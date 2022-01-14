@@ -17,7 +17,6 @@ import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import CloseIcon from '@mui/icons-material/Close';
-import UserCustomModal from '../components/UserCustomModal';
 import { capitalize } from '../helpers/capitalize';
 
 // Modal style
@@ -57,17 +56,6 @@ const Products = () => {
   const handleChange = (event, value) => {
     setPage(value);
   };
-
-  // Modal Custom ORDER
-  const [openCustom, setopenCustom] = useState(false);
-  const handleopenCustom = () => {
-    if (authState.id && authState.username) {
-      setopenCustom(!openCustom);
-    } else {
-      alert('Please Login to use this Feature');
-    }
-  };
-  const handlecloseCustom = () => setopenCustom(false);
 
   // get produk hasil paginasi
   const [paginatedProducts, setPaginatedProducts] = useState([]);
@@ -298,7 +286,7 @@ const Products = () => {
         let res = await axios.get(
           `${API_URL}/product/getproducts?search=${debouncedSearch}&kategori=${kategori}`
         );
-        getProducts(res.data[0].product_length);
+        setProducts(res.data[0].product_length);
       } catch (error) {
         alert(error.response.data.message);
       }
@@ -345,10 +333,6 @@ const Products = () => {
 
   return (
     <div>
-      <UserCustomModal
-        openCustom={openCustom}
-        handleClose={handlecloseCustom}
-      />
       {productDetails()}
       <Snackbar
         open={snackbar}
@@ -405,26 +389,6 @@ const Products = () => {
           {/* <Button variant="contained" onClick={handleopenCustom} style={{ backgroundColor: "#66806a" }}>
                         Upload Prescription
                     </Button> */}
-          <button
-            className='flex bg-primary1 text-white px-4 py-2 mx-auto rounded hover:opacity-75'
-            onClick={handleopenCustom}
-          >
-            <svg
-              className='w-5 h-5 mr-1'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
-              />
-            </svg>
-            Upload Prescription
-          </button>
         </div>
         <div hidden={spinner} className='text-center mb-10'>
           <CircularProgress sx={{ color: 'white' }} />

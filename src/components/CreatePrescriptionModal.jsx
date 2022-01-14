@@ -14,7 +14,7 @@ import {
   resetState as resetStateRawMaterial,
 } from '../redux/actions/rawMaterialActions';
 import CompositionSelect from './ProductCompSelect';
-import StatusSelect from './StatusSelect';
+import {toast} from 'react-toastify'
 
 const style = {
   position: 'absolute',
@@ -99,7 +99,7 @@ const CreatePrescription = ({
     setdataPrescription(initialInputVal);
   };
 
-  const onConfirm = async () => {
+  const onConfirm = async() => {
     if (
       !(
         dataPrescription.medicineName &&
@@ -119,7 +119,11 @@ const CreatePrescription = ({
     console.log(inputPrescription.compositions);
     try {
       await axios.post(`${API_URL}/custom/create`, inputPrescription);
-      alert('Medicine Add Success');
+      toast.success("Add Medicine Success", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      })
+      setdataPrescription(initialInputVal);
       handleClosetest();
     } catch (error) {
       console.log(error);

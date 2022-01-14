@@ -21,7 +21,7 @@ const style = {
   borderRadius: 7
 };
 
-const UserCustomModal = ({openCustom, handleClose}) => {
+const UserCustomModal = ({openCustom, handleClose, getPrescription}) => {
     const authState = useSelector(state => state.auth)
     const [file, setfile] = useState(null);
     const fileInput = React.useRef(null);
@@ -60,6 +60,7 @@ const UserCustomModal = ({openCustom, handleClose}) => {
                 `Please wait for our Admin review the Prescription!`,
                 `success`
             );
+            getPrescription()
             console.log(results)
         } catch (error) {
             console.log(error)

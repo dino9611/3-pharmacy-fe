@@ -25,7 +25,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const Login = ({ open, handleClose }) => {
+const Login = ({ open, handleClose, handleopenDialog }) => {
   const dispatch = useDispatch();
 
   // Input Data Login
@@ -149,6 +149,7 @@ const Login = ({ open, handleClose }) => {
             </div>
             <Link
               to='/'
+              onClick={handleopenDialog}
               className='text-indigo-500 hover:underline'
               style={{ color: '#0000EE' }}
             >

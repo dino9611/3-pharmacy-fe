@@ -81,6 +81,7 @@ const AdminPrescriptions = () => {
     //! handleCloseCreate dipake karena di createprescrip modal setelah obat ditambahkan terjadi error empty array
     const handleCloseCreate = () => {
         setopenCreate(!openCreate)
+        setindexProduct(-1)
     }
     // const [value, setValue] = useState(1);
     //! tabs Setting
@@ -283,6 +284,7 @@ const AdminPrescriptions = () => {
             let updateData = {id : customData[indexProduct].id, prescriptionName : customName}
             await axios.patch(`${API_URL}/custom/custname`, updateData)
             // console.log(updateData.customName)
+            getCustom()
             alert("berhasil")
             handlecloseDialog()
         } catch (error) {
