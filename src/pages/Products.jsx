@@ -11,7 +11,6 @@ import axios from 'axios';
 import { API_URL } from '../constants/api';
 import './styles/Products.css';
 import { toRupiah } from '../helpers/toRupiah';
-import Footer from '../components/Footer';
 import EmptyProducts from './Asset/empty-products.svg';
 import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
@@ -431,7 +430,6 @@ const Products = () => {
             onChange={handleChange}
           />
         </div>
-        <Footer />
       </div>
     </div>
   );

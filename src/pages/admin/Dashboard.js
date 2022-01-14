@@ -248,7 +248,9 @@ export default function Revenue() {
 
         <div className='flex lg:flex-col flex-row flex-wrap justify-between bg-white rounded-lg p-2 lg:row-span-2 row-span-2 lg:col-span-1 col-span-4 lg:order-none order-last'>
           <div className='lg:w-full w-1/2'>
-            <p className='font-semibold text-base rounded-lg'>Transactions</p>
+            <p className='font-semibold text-base rounded-lg'>
+              Product Transactions
+            </p>
             <Pie data={data2} />
           </div>
 
@@ -274,7 +276,7 @@ export default function Revenue() {
 
           <div className='lg:w-full w-1/2'>
             <p className='font-semibold text-base pt-2 rounded-lg'>
-              Carted Items
+              Prescription Transactions
             </p>
             <Pie data={data2} />
           </div>
