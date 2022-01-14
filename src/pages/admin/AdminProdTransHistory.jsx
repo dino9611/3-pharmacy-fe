@@ -88,7 +88,8 @@ const AdminProdTransHistory = () => {
       })
       if (result.isConfirmed) {
         let res = await axios.patch(`${API_URL}/transaction/transactionreq/${orderId}`, {
-          type: action
+          type: action,
+          limit: rowsPerPage,
         })
         dispatch({ type: 'setadminorder', payload: res.data })
         setFilter('')
@@ -268,7 +269,7 @@ const AdminProdTransHistory = () => {
             <TableCell align='left'>Processing</TableCell>
             <TableCell align='center'>
               <button
-                className='poppins text-green-dark font-bold hover:bg-green-light px-2 py-1 rounded-sm'
+                className='poppins text-primary1 font-bold hover:bg-primary1 hover:bg-opacity-30 px-2 py-1 rounded-sm'
                 onClick={() => actionClick('deliver', val.id)}
               >
                 Deliver
@@ -284,7 +285,7 @@ const AdminProdTransHistory = () => {
             <TableCell align='left'>Payment Accepted</TableCell>
             <TableCell align='center'>
               <button
-                className='poppins text-green-dark font-bold hover:bg-green-light px-2 py-1 rounded-sm'
+                className='poppins text-primary1 font-bold hover:bg-primary1 hover:bg-opacity-30 px-2 py-1 rounded-sm'
                 onClick={() => actionClick('process', val.id)}
               >
                 Process
@@ -311,7 +312,7 @@ const AdminProdTransHistory = () => {
             <TableCell align='left'>Checked Out</TableCell>
             <TableCell align='center'>
               <button
-                className='poppins text-green-dark font-bold hover:bg-green-light px-2 py-1 rounded-sm mr-2'
+                className='poppins text-primary1 font-bold hover:bg-primary1 hover:bg-opacity-30 px-2 py-1 rounded-sm mr-2'
                 onClick={() => actionClick('accept', val.id)}
               >
                 Accept
@@ -330,7 +331,7 @@ const AdminProdTransHistory = () => {
 
         <TableCell align='center'>
           <button
-            className='poppins text-green-dark font-bold hover:bg-green-light px-2 py-1 rounded-sm'
+            className='poppins text-primary1 font-bold hover:bg-primary1 hover:bg-opacity-30 px-2 py-1 rounded-sm'
             onClick={() => modalHandler(val.id)}
           >
             Detail
@@ -392,7 +393,7 @@ const AdminProdTransHistory = () => {
   }, [filter, rowsPerPage, page, timeRange])
 
   return (
-    <div className='ml-64 px-8'>
+    <div className='ml-64 px-8 min-h-screen'>
       {modalDetail()}
       <div class="poppins pt-5">
         <select

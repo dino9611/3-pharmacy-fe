@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import EmptyCart from './assets/empty-cart.svg';
 import { capitalize } from '../../helpers/capitalize';
+import Swal from 'sweetalert2';
 
 const Cart = () => {
   // global states
@@ -51,11 +52,23 @@ const Cart = () => {
 
   const deleteFromCart = async (index) => {
     try {
-      let res = await axios.delete(
-        `${API_URL}/transaction/deletefromcart/${authState.id}/${cartState[index].product_id}`
-      );
-      dispatch({ type: 'setcart', payload: res.data });
-      openSnackbar();
+      let dialog = await Swal.fire({
+        title: 'Remove Item',
+        text: `Remove ${cartState[index].productName} from your cart?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#22577A',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      })
+      if (dialog.isConfirmed) {
+        let res = await axios.delete(
+          `${API_URL}/transaction/deletefromcart/${authState.id}/${cartState[index].product_id}`
+        );
+        dispatch({ type: 'setcart', payload: res.data });
+        openSnackbar();
+      }
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -92,16 +105,16 @@ const Cart = () => {
           <img
             src={API_URL + val.imagePath}
             alt={val.productName}
-            className='bg-gray-200 w-40 phone:w-20 h-full object-contain rounded-lg mr-8 phone:mr-2'
+            className='bg-gray-200 w-40 phone:w-20 h-full object-contain rounded-lg mr-8 phone:mr-4'
           />
-          <div className='flex items-center phone:flex-col'>
-            <p className='mr-8 phone:mr-0 phone:mb-1 phone:order-1 phone:text-xs font-bold'>
+          <div className='flex items-center phone:flex-col phone:justify-start'>
+            <p className='mr-8 phone:mr-auto phone:mb-1 phone:order-1 phone:text-xs font-bold'>
               {capitalize(val.productName)}
             </p>
             <p className='mr-8 phone:mr-0 phone:hidden'>
               {toRupiah(val.productPriceRp)}
             </p>
-            <div className='mr-8 phone:mr-0 phone:flex phone:items-center phone:order-3'>
+            <div className='mr-8 phone:mr-auto phone:flex phone:items-center phone:order-3'>
               {val.qty >= val.stock ? (
                 <button
                   disabled
@@ -144,10 +157,10 @@ const Cart = () => {
           </div>
         </div>
         <button
-          className='bg-primary1 hover:bg-peach-light hover:text-black w-1/12 phone:w-3/12 text-white phone:text-xs'
+          className='bg-primary1 hover:bg-secondary1 w-1/12 phone:w-3/12 text-white phone:text-xs'
           onClick={() => deleteFromCart(index)}
         >
-          Delete
+          Remove
         </button>
       </div>
     ));
@@ -159,7 +172,7 @@ const Cart = () => {
         open={snackbar}
         autoHideDuration={3000}
         onClose={closeSnackbar}
-        message='Deleted from cart!'
+        message='Removed from cart!'
         action={action}
       />
       {cartState.length ? (

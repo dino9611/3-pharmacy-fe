@@ -22,6 +22,7 @@ import { API_URL } from '../constants/api';
 import { useLocation } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import MenuBar from './MenuBar';
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);
@@ -83,9 +84,13 @@ const Header = () => {
   // Navigate
   const navigate = useNavigate();
 
+  const [show, setShow] = useState(true)
+  const handleShowMenu = () => setShow(false)
+  const handleCloseMenu = () => setShow(true)
+
   return (
     <div>
-      <Login open={openLogin} handleClose={handleCloseLogin} />
+      <Login open={openLogin} handleClose={handleCloseLogin} closeMenu={handleCloseUserMenu} />
       <Register
         open={open}
         handleClose={handleClose}
@@ -98,8 +103,15 @@ const Header = () => {
         handlecloseDialog={handlecloseDialog}
         handleopenDialog={handleopenDialog}
       />
+      <MenuBar open={show} close={handleCloseMenu} />
       <div className='flex justify-between items-center bg-primary1 h-24 phone:h-16 px-6 phone:px-4 font-poppins'>
-        <div className='flex'>
+        <div className='flex items-center'>
+          <svg
+            className="text-white phone:w-7 phone:h-7 phone:mr-2 hidden phone:block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+            onClick={handleShowMenu}
+          >
+            <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+          </svg>
           <p
             onClick={() => navigate('/')}
             className='header-font-style hover:text-gray-200 text-3xl phone:text-xl cursor-pointer'
@@ -107,12 +119,11 @@ const Header = () => {
             Tokobat
           </p>
           <button
-            // className='text-white py-1 px-3 rounded hover:bg-peach-light hover:shadow-md ml-4 phone:text-xs phone:ml-1'
             onClick={() => navigate('/products')}
             className={
-              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg ' +
+              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('products')
-                ? 'text-gray-800 bg-fourth2'
+                ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
             }
           >
@@ -120,9 +131,9 @@ const Header = () => {
           </button>
           <button
             className={
-              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg ' +
+              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('prescriptions')
-                ? 'text-gray-800 bg-fourth2'
+                ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
             }
             onClick={() => navigate('/prescriptions')}
@@ -151,33 +162,6 @@ const Header = () => {
                     </svg>
                   </div>
                 </Tooltip>
-              </Link>
-              <Link to='/prescription'>
-                <span class='relative inline-block'>
-                  <Tooltip title='Prescription'>
-                    <div className='hover:bg-black hover:bg-opacity-10 rounded-full w-12 h-12 phone:w-8 phone:h-8 phone:mt-1 flex'>
-                      <svg
-                        className='w-8 h-8 phone:w-6 phone:h-6 text-white self-center mx-auto'
-                        fill='currentColor'
-                        viewBox='0 0 20 20'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    </div>
-                  </Tooltip>
-                  {!customData.length ? (
-                    ''
-                  ) : (
-                    <span class='absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 phone:w-4 phone:h-4 text-xs font-bold leading-none text-red-100 transform translate-x-1 bg-red-600 rounded-full'>
-                      {customData.length}
-                    </span>
-                  )}
-                </span>
               </Link>
               <Link to='/cart'>
                 <span className='relative inline-block mr-4 phone:mr-2'>

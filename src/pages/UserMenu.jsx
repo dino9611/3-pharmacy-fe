@@ -13,6 +13,7 @@ import Cart from './user/Cart';
 import ProductTransactionHistory from './user/ProductTransactionHistory';
 import UserPrescription from './user/UserPrescription';
 import CheckOut from './user/CheckOut';
+import UploadPayment from './user/UploadPayment';
 
 const UserMenu = () => {
   return (
@@ -30,6 +31,8 @@ const UserMenu = () => {
         <Route path={'/order-list'} element={<ProductTransactionHistory />} />
 
         <Route path={'/checkout'} element={<CheckOut />} />
+
+        <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
 
         <Route path={'*'} element={<Navigate to={'/404'} />} />
       </Routes>
@@ -67,7 +70,7 @@ const LandingPage = () => {
             Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin
           </p>
           <Link to='/products'>
-            <button className='bg-primary1 hover:bg-peach-light text-white rounded-md px-4 py-2 phone:w-full phone:text-sm mt-4'>
+            <button className='bg-primary1 hover:bg-secondary1 text-white rounded-md px-4 py-2 phone:w-full phone:text-sm mt-4'>
               Shop Now!
             </button>
           </Link>
