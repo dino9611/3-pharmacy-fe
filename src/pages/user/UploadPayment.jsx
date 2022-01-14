@@ -97,7 +97,7 @@ const UploadPayment = () => {
             ></img>
             <Link to='/order-list'>
               <button
-                className='bg-primary1 phone:px-3 phone:text-xs text-white px-5 py-2 rounded mr-4 hover:bg-peach-light'
+                className='bg-primary1 phone:px-3 phone:text-xs text-white px-5 py-2 rounded mr-4 hover:bg-secondary1'
                 onClick={onUpload}
               >
                 Upload
@@ -113,7 +113,7 @@ const UploadPayment = () => {
               <p className='text-primary1 font-medium text-lg'>No image</p>
             </div>
             <button
-              className='bg-primary1 text-white px-5 py-2 phone:px-3 phone:text-xs rounded mr-4 hover:bg-peach-light hover:text-black'
+              className='bg-primary1 text-white px-5 py-2 phone:px-3 phone:text-xs rounded mr-4 hover:bg-secondary1 hover:text-black'
               onClick={onUpload}
             >
               Upload

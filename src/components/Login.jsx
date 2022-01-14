@@ -25,7 +25,11 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+<<<<<<< HEAD
 const Login = ({ open, handleClose, handleopenDialog }) => {
+=======
+const Login = ({ open, handleClose, closeMenu }) => {
+>>>>>>> develop-fe
   const dispatch = useDispatch();
 
   // Input Data Login
@@ -75,6 +79,7 @@ const Login = ({ open, handleClose, handleopenDialog }) => {
       localStorage.setItem('token', res.headers['access-token']);
       dispatch({ type: 'login', payload: res.data[0] });
       handleClose();
+      closeMenu()
       setFillAlert(true);
       setAccAlert(true);
       Swal.fire({

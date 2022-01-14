@@ -53,6 +53,9 @@ const UserPrescription = () => {
     try {
       let results = await axios.get(`${API_URL}/custom/usercustom`, {
         params: { id },
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
       });
       setdataCust(results.data);
     } catch (error) {
@@ -96,6 +99,7 @@ const UserPrescription = () => {
         console.log(formData);
         let config = {
           headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
             'Content-Type': 'multipart/form-data',
           },
         };
@@ -108,7 +112,11 @@ const UserPrescription = () => {
           id: idPrescription,
           nextStatus: 'waitpaymentApproval',
         };
-        await axios.patch(`${API_URL}/custom/nextstatus`, updateStatus);
+        await axios.patch(`${API_URL}/custom/nextstatus`, updateStatus, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        });
         toast.success('Upload Success', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,
@@ -144,7 +152,12 @@ const UserPrescription = () => {
     setindexProduct(index);
     try {
       let results = await axios.get(
-        `${API_URL}/custom/details/${dataCust[index]?.id}`
+        `${API_URL}/custom/details/${dataCust[index]?.id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setdetailData(results.data);
       setopenDialog(!openDialog);

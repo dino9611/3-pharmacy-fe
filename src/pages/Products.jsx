@@ -74,26 +74,12 @@ const Products = () => {
             className='object-contain w-48 h-48 phone:w-full phone:h-24 mx-auto bg-gray-200 rounded-md mb-4'
           />
           <div>
-            <div className='flex justify-between items-center mb-4 phone:mb-1'>
-              <p className='poppins text-primary1 font-bold text-lg phone:text-sm'>
-                {capitalize(val.productName)}
-              </p>
-              <svg
-                className='w-6 h-6 phone:w-4 phone:h-4 text-primary1 hover:text-lightblue cursor-pointer'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-                xmlns='http://www.w3.org/2000/svg'
-                onClick={() => productDetailsHandler(val.id)}
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-                />
-              </svg>
-            </div>
+            <p
+              className='poppins text-primary1 font-bold text-lg phone:text-sm hover:text-lightblue cursor-pointer mb-4 phone:mb-1'
+              onClick={() => productDetailsHandler(val.id)}
+            >
+              {capitalize(val.productName)}
+            </p>
             <p className='poppins text-gray-600 font-bold text-sm mb-2 phone:mb-1 phone:text-xs'>
               {toRupiah(val.productPriceRp)}
             </p>
@@ -142,6 +128,7 @@ const Products = () => {
       </IconButton>
     </React.Fragment>
   );
+
   // add to cart
   const addToCart = async (index) => {
     if (!authState.isLogin) {
@@ -170,7 +157,6 @@ const Products = () => {
       let res = await axios.post(
         `${API_URL}/transaction/addtocart/${authState.id}`,
         {
-          price: paginatedProducts[index].productPriceRp,
           qty: 1,
           product_id: paginatedProducts[index].id,
         }
@@ -178,7 +164,14 @@ const Products = () => {
       dispatch({ type: 'setcart', payload: res.data });
       openSnackbar();
     } catch (error) {
-      alert(error.response.data.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error.response?.data.message,
+        timer: 1500,
+        timerProgressBar: true,
+        confirmButtonColor: '#22577A',
+      });
     }
   };
 
@@ -284,7 +277,7 @@ const Products = () => {
     const getProducts = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/product/getproducts?search=${debouncedSearch}&kategori=${kategori}`
+          `${API_URL}/product/getproducts?search=${search}&kategori=${kategori}`
         );
         setProducts(res.data[0].product_length);
       } catch (error) {
@@ -309,6 +302,7 @@ const Products = () => {
     const offset = (page - 1) * 8;
 
     // filter
+    setSearch(debouncedSearch);
     setFilter(filter);
     setKategori(kategori);
 
@@ -318,7 +312,7 @@ const Products = () => {
       setHideProductlist(true);
       try {
         let res = await axios.get(
-          `${API_URL}/product/gethomepagination/${offset}?search=${debouncedSearch}&filter=${filter}&kategori=${kategori}`
+          `${API_URL}/product/gethomepagination/${offset}?search=${search}&filter=${filter}&kategori=${kategori}`
         );
         setPaginatedProducts(res.data);
       } catch (error) {
@@ -329,7 +323,7 @@ const Products = () => {
       }
     };
     paginated();
-  }, [page, debouncedSearch, filter, kategori]);
+  }, [page, debouncedSearch, filter, kategori]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
@@ -371,6 +365,7 @@ const Products = () => {
             ))}
           </select>
         </div>
+<<<<<<< HEAD
         <div className='text-center mb-16'>
           {/* <label htmlFor="contained-button-file">
                 <div className="text-center mb-16 phone:mb-4">
@@ -389,6 +384,29 @@ const Products = () => {
           {/* <Button variant="contained" onClick={handleopenCustom} style={{ backgroundColor: "#66806a" }}>
                         Upload Prescription
                     </Button> */}
+=======
+        <div className='text-center mb-12 phone:mb-4'>
+          <button
+            className='flex bg-primary1 text-white px-4 py-2 mx-auto rounded hover:opacity-75 phone:text-sm'
+            onClick={handleopenCustom}
+          >
+            <svg
+              className='w-5 h-5 mr-1'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
+              />
+            </svg>
+            Upload Prescription
+          </button>
+>>>>>>> develop-fe
         </div>
         <div hidden={spinner} className='text-center mb-10'>
           <CircularProgress sx={{ color: 'white' }} />
