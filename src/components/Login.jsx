@@ -25,7 +25,10 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const Login = ({ open, handleClose, closeMenu }) => {
+
+//* Handleopendialog untuk ngebuka forgetpassword
+
+const Login = ({ open, handleClose, closeMenu, handleopenDialog }) => {
   const dispatch = useDispatch();
 
   // Input Data Login
@@ -150,6 +153,7 @@ const Login = ({ open, handleClose, closeMenu }) => {
             </div>
             <Link
               to='/'
+              onClick={handleopenDialog}
               className='text-indigo-500 hover:underline'
               style={{ color: '#0000EE' }}
             >

@@ -220,6 +220,32 @@ const Register = ({ open, handleClose, setOpen, handleopenDialog }) => {
             Register an Account
           </Typography>
           <CssTextField
+            name='firstName'
+            value={addAccount.firstName}
+            onChange={inputHandler}
+            fullWidth
+            label='First Name'
+            id='custom-css-outlined-input'
+            sx={{ mt: 1 }}
+          />
+          <Typography
+            display={mistakeFirst ? 'block' : 'none'}
+            color='error'
+            sx={{ fontSize: 12, mt: 0.5, justifyContent: 'center' }}
+          >
+            <ErrorIcon sx={{ fontSize: 'medium', mr: 0.5 }} />
+            First Name Harap diisi
+          </Typography>
+          <CssTextField
+            name='lastName'
+            value={addAccount.lastName}
+            onChange={inputHandler}
+            fullWidth
+            label='Last Name'
+            id='custom-css-outlined-input'
+            sx={{ mt: 1 }}
+          />
+          <CssTextField
             name='username'
             value={addAccount.username}
             onChange={inputHandler}
@@ -299,45 +325,6 @@ const Register = ({ open, handleClose, setOpen, handleopenDialog }) => {
             <ErrorIcon sx={{ fontSize: 'medium', mr: 0.5 }} />
             {errors[0]}
           </Typography>
-          <CssTextField
-            name='firstName'
-            value={addAccount.firstName}
-            onChange={inputHandler}
-            fullWidth
-            label='First Name'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <Typography
-            display={mistakeFirst ? 'block' : 'none'}
-            color='error'
-            sx={{ fontSize: 12, mt: 0.5, justifyContent: 'center' }}
-          >
-            <ErrorIcon sx={{ fontSize: 'medium', mr: 0.5 }} />
-            First Name Harap diisi
-          </Typography>
-          <CssTextField
-            name='lastName'
-            value={addAccount.lastName}
-            onChange={inputHandler}
-            fullWidth
-            label='Last Name'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <div className='Forgot-Register'>
-            <Link
-              underline='hover'
-              component='button'
-              variant='body2'
-              onClick={handleopenDialog}
-              sx={{
-                color: '#66806A',
-              }}
-            >
-              Forget Password?
-            </Link>
-          </div>
           <ColorButton
             fullWidth
             variant='contained'

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { API_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -21,6 +22,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import UserCustomModal from '../../components/UserCustomModal';
 
 const dataStatus = [
   //! disini adalah URUTAN STATUS
@@ -71,6 +73,19 @@ const UserPrescription = () => {
     console.log(dataCust);
     console.log(dataCust[index].id);
   };
+
+  // Modal Custom ORDER
+  const [openCustom, setopenCustom] = useState(false);
+  const handleopenCustom = () => {
+    if (authState.id && authState.username) {
+      setopenCustom(!openCustom);
+    } else {
+      alert('Please Login to use this Feature');
+    }
+  };
+  const handlecloseCustom = () => setopenCustom(false);
+
+
   //!Upload Handler
   const [idPrescription, setidPrescription] = useState(0);
   const uploadClick = (index) => {
@@ -107,6 +122,7 @@ const UserPrescription = () => {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,
         });
+        getPrescription()
       } catch (error) {
         console.log(error.response.data.message, 'dari sini');
         toast.error(error.response.data.message || 'Server Error', {
@@ -199,8 +215,12 @@ const UserPrescription = () => {
               })}
               <Divider sx={{ mt: 2 }} />
               <div className='flex justify-between mt-4'>
-                <div>Grand Total</div>
-                <div className='mr-7'>Rp {totalPrice}</div>
+                <div>Total Product</div>
+                <div className='mr-7'>Rp {dataProduct?.totalPriceRp}</div>
+              </div>
+              <div className='flex justify-between mt-4'>
+                <div>Custom PrescriptionFee</div>
+                <div className='mr-7'>Rp {dataProduct?.profitRp}</div>
               </div>
               <div className=' mt-12 text-yellow-500'>
                 Please contact the admin if you see anything suspicious
@@ -225,7 +245,7 @@ const UserPrescription = () => {
           const isStepFailed = (step) => {
             if (val.status === 'imgRej') {
               return step === 0;
-            } else if (val.status === 'paymentRej') {
+            } else if (val.status === 'paymentRej' || val.status === 'rejected') {
               return step === 2;
             } else {
               // console.log(index, "ini dari data status mapping")
@@ -245,8 +265,7 @@ const UserPrescription = () => {
                     // activeStep={dataStatus.findIndex(val => val.status === "delivered")}
                     activeStep={
                       val.status === 'delivered'
-                        ? dataStatus.findIndex((x) => x.status === val.status) +
-                          1
+                        ? dataStatus.findIndex((x) => x.status === val.status) + 1
                         : dataStatus.findIndex((x) => x.status === val.status)
                     }
                     alternativeLabel
@@ -304,9 +323,25 @@ const UserPrescription = () => {
   };
 
   return (
-    <div className='bg-dCol h-screen'>
+    <div >
       {dialogDetails()}
-      <div className='p-3'>{renderCard()}</div>
+      <UserCustomModal
+        getPrescription = {getPrescription}
+        openCustom={openCustom}
+        handleClose={handlecloseCustom}
+      />
+      <Divider sx={{pt : 2}} variant='middle'>
+        <Button
+          startIcon={<FileUploadOutlinedIcon />}
+          size='medium'
+          variant='outlined'
+          component='span'
+          onClick={handleopenCustom}
+        >
+          Upload Prescription
+        </Button>
+      </Divider>
+      <div className='p-3 mt-2'>{renderCard()}</div>
     </div>
   );
 };

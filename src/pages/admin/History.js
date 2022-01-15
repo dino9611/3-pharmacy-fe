@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
 
 import RawMaterialsRecord from './RawMaterialsRecord';
+import PrescriptionHistory from './PrescriptionHistory';
 
 export default function History() {
   // const loc = useLocation();
@@ -35,7 +36,7 @@ export default function History() {
         />
         <Route path={'raw_materials'} element={<RawMaterialsRecord />} />
         <Route path={'orders'} element={<RawMaterialsRecord />} />
-        <Route path={'prescriptions'} element={<RawMaterialsRecord />} />
+        <Route path={'prescriptions'} element={<PrescriptionHistory />} />
 
         <Route path={'*'} element={<Navigate to={'/404'} />} />
       </Routes>

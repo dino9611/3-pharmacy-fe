@@ -43,7 +43,7 @@ const Header = () => {
   //Ini Modal Dialog Forget Password
   const [openDialog, setopenDialog] = useState(false);
   const handleopenDialog = () => {
-    setOpen(false);
+    setOpenLogin(false);
     setopenDialog(true);
   };
   const handlecloseDialog = () => setopenDialog(false);
@@ -66,6 +66,7 @@ const Header = () => {
         open={openLogin}
         handleClose={handleCloseLogin}
         closeMenu={handleCloseUserMenu}
+        handleopenDialog={handleopenDialog}
       />
       <Register
         open={open}
