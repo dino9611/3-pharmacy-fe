@@ -25,11 +25,10 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-<<<<<<< HEAD
-const Login = ({ open, handleClose, handleopenDialog }) => {
-=======
-const Login = ({ open, handleClose, closeMenu }) => {
->>>>>>> develop-fe
+
+//* Handleopendialog untuk ngebuka forgetpassword
+
+const Login = ({ open, handleClose, closeMenu, handleopenDialog }) => {
   const dispatch = useDispatch();
 
   // Input Data Login

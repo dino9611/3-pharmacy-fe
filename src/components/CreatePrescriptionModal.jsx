@@ -119,21 +119,15 @@ const CreatePrescription = ({
     // console.log(inputPrescription.compositions);
     console.log('inputPrescription', inputPrescription);
     try {
-<<<<<<< HEAD
-      await axios.post(`${API_URL}/custom/create`, inputPrescription);
-      toast.success("Add Medicine Success", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 5000,
-      })
-      setdataPrescription(initialInputVal);
-=======
       await axios.post(`${API_URL}/custom/create`, inputPrescription, {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       });
-      alert('Medicine Add Success');
->>>>>>> develop-fe
+      toast.success("Add Medicine Success", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      })
       handleClosetest();
     } catch (error) {
       console.log(error);

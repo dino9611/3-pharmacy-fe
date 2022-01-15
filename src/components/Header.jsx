@@ -62,15 +62,12 @@ const Header = () => {
 
   return (
     <div>
-<<<<<<< HEAD
-      <Login open={openLogin} handleClose={handleCloseLogin} handleopenDialog={handleopenDialog} />
-=======
       <Login
         open={openLogin}
         handleClose={handleCloseLogin}
         closeMenu={handleCloseUserMenu}
+        handleopenDialog={handleopenDialog}
       />
->>>>>>> develop-fe
       <Register
         open={open}
         handleClose={handleClose}
@@ -116,22 +113,6 @@ const Header = () => {
           >
             Products
           </button>
-<<<<<<< HEAD
-          <Badge badgeContent={customData.length} color="error">
-            <button
-              className={
-                'text-xs uppercase mx-2 p-2 font-bold block rounded-lg ' +
-                (location.pathname.includes('prescriptions')
-                  ? 'text-gray-800 bg-fourth2'
-                  : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
-              }
-              onClick={() => navigate('/prescriptions')}
-
-            >
-              Prescriptions
-            </button>
-          </Badge>
-=======
           <button
             className={
               'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
@@ -143,7 +124,6 @@ const Header = () => {
           >
             Prescriptions
           </button>
->>>>>>> develop-fe
         </div>
         <div className='flex items-center'>
           {authState.isLogin ? (

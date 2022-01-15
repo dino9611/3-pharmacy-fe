@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { API_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -214,8 +215,12 @@ const UserPrescription = () => {
               })}
               <Divider sx={{ mt: 2 }} />
               <div className='flex justify-between mt-4'>
-                <div>Grand Total</div>
-                <div className='mr-7'>Rp {totalPrice}</div>
+                <div>Total Product</div>
+                <div className='mr-7'>Rp {dataProduct?.totalPriceRp}</div>
+              </div>
+              <div className='flex justify-between mt-4'>
+                <div>Custom PrescriptionFee</div>
+                <div className='mr-7'>Rp {dataProduct?.profitRp}</div>
               </div>
               <div className=' mt-12 text-yellow-500'>
                 Please contact the admin if you see anything suspicious
@@ -325,7 +330,7 @@ const UserPrescription = () => {
         openCustom={openCustom}
         handleClose={handlecloseCustom}
       />
-      <Divider sx={{mt : 2}} variant='middle'>
+      <Divider sx={{pt : 2}} variant='middle'>
         <Button
           startIcon={<FileUploadOutlinedIcon />}
           size='medium'
