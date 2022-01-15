@@ -54,6 +54,7 @@ const dataStatus = [
     { id: 0, status: 'imgRej', display: 'Image Rejected' },
     { id: 1, status: 'rejected', display: 'Rejected' },
     { id: 2, status: 'paymentRej', display: 'Payment Rejected' },
+    { id: 3, status: 'delivered', display: 'Delivered' },
 ];
 const PrescriptionHistory = () => {
     const [customData, setcustomData] = useState([]);
@@ -229,6 +230,7 @@ const PrescriptionHistory = () => {
                     <StyledTab value={0} label='Image Rejected' />
                     <StyledTab value={1} label='Rejected' />
                     <StyledTab value={2} label='Payment Rejected'/>
+                    <StyledTab value={3} label='Delivered'/>
                 </StyledTabs>
             </Box>
             <TableContainer component={Paper} sx={{ mt: 3 }}>
