@@ -56,6 +56,7 @@ const UserPrescription = () => {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       });
+      console.log(results.data);
       setdataCust(results.data);
     } catch (error) {
       alert(error);
@@ -144,6 +145,7 @@ const UserPrescription = () => {
           },
         }
       );
+      console.log(results.data);
       setdetailData(results.data);
       setopenDialog(!openDialog);
       //? looping grandtotal

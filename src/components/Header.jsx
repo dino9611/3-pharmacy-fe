@@ -115,6 +115,17 @@ const Header = () => {
           <button
             className={
               'text-xs uppercase mx-2 p-2 py-3 font-bold block rounded-lg phone:hidden ' +
+              (location.pathname.includes('prescriptions_new')
+                ? 'text-white bg-secondary1'
+                : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
+            }
+            onClick={() => navigate('/prescriptions_new')}
+          >
+            Prescriptions New
+          </button>
+          <button
+            className={
+              'text-xs uppercase mx-2 p-2 py-3 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('prescriptions')
                 ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
