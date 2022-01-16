@@ -17,6 +17,7 @@ import RawMaterialsRecord from './RawMaterialsRecord';
 import AdminPrescriptions from './AdminPrescriptions';
 // import AdminProducts from './AdminProducts';
 import AdminProdTransHistory from './AdminProdTransHistory';
+import UserList from './UserList';
 
 export default function AdminMenu() {
   return (
@@ -35,6 +36,7 @@ export default function AdminMenu() {
         <Route path={'raw_materials_record'} element={<RawMaterialsRecord />} />
         <Route path={'prescriptions'} element={<AdminPrescriptions />} />
         <Route path={'order'} element={<AdminProdTransHistory />} />
+        <Route path={'users'} element={<UserList />} />
 
         <Route path={'*'} element={<Navigate to={'/404'} />} />
       </Routes>
