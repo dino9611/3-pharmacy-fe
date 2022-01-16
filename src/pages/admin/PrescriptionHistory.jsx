@@ -217,9 +217,9 @@ const PrescriptionHistory = () => {
     };
 
     return (
-        <div>
+        <div className='relative flex flex-col min-w-0 break-words w-full shadow-lg rounded bg-white my-1'>
             {dialogUpdate()}
-            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper' }} >
                 <StyledTabs
                 value={indexTab}
                 onChange={handleChange}
