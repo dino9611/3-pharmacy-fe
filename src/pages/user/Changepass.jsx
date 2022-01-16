@@ -20,9 +20,9 @@ const TypoNotif = styled(Typography)(({theme}) => ({
 const ColorButton = styled(Button)(({ theme }) => ({
     borderRadius: 10,
     color: 'black',
-    backgroundColor: '#FFC286',
+    backgroundColor: '#ceeaeb',
     '&:hover': {
-      backgroundColor: '#66806A',
+      backgroundColor: '#38A3A5',
       color: 'white'
     },
 }));
@@ -147,7 +147,7 @@ const ChangePassword = () => {
   }
 
   return (
-      <div className="container change-cont h-screen bg-bCol flex justify-center items-center">
+      <div className="container change-cont h-screen bg-primary1 flex justify-center items-center">
           <div className="neu-change p-5 w-2/5">
               <div className="text-center text-white tracking-wider text-xl font-medium ">Change Password</div>
               {/* <Divider sx={{color: 'white', borderColor: 'white'}}  >Change Pass</Divider> */}
