@@ -99,7 +99,7 @@ export default function RawMaterialsRecordTable() {
         </div>
       </div>
       <AdminTable
-        name='Raw Materials Changes'
+        name='Inventory Changes'
         page={page}
         maxPage={5}
         cols={[
@@ -112,7 +112,7 @@ export default function RawMaterialsRecordTable() {
             label: 'Inventory Change',
             className: '',
             format: (row) =>
-              `${
+              `${row.inventoryChange < 0 ? '' : '+'}${
                 row.inventoryChange < 0
                   ? Math.ceil(row.inventoryChange / row.unitPerBottle)
                   : Math.floor(row.inventoryChange / row.unitPerBottle)

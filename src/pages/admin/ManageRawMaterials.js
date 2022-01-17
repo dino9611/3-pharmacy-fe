@@ -41,11 +41,6 @@ export default function RawMaterialsTable() {
   }, [dispatch, page, rowsPerPage, search]);
   const emptyRows = rowsPerPage - rows.length;
 
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRowsPerPage(parseInt(event.target.value, 10));
-  //   setPage(0);
-  // };
-
   return (
     <>
       <div className='bg-lightblue flex flex-col h-full lg:w-4/5 px-4 w-full absolute right-0 font-poppins'>
@@ -172,9 +167,9 @@ const EditModal = ({ toggleModal, initialValues }) => {
         })}
       >
         <Form className='flex flex-col items-center font-poppins'>
-          <h1 className=' text-2xl font-bold self-start mb-10'>
+          <h1 className=' text-xl font-bold self-start mb-10'>
             <span className='bg-blue-200'>Ed</span>
-            it
+            it Raw Material
           </h1>
           <label
             className='block text-gray-700 text-sm font-bold mb-2 self-start'
@@ -327,9 +322,9 @@ const CreateModal = ({ toggleModal }) => {
         })}
       >
         <Form className='flex flex-col items-center font-poppins'>
-          <h1 className=' text-2xl font-bold self-start mb-10'>
+          <h1 className=' text-xl font-bold self-start mb-10'>
             <span className='bg-blue-200'>Cr</span>
-            eate
+            eate New Raw Material
           </h1>
           <label
             className='block text-gray-700 text-sm font-bold mb-2 self-start'
