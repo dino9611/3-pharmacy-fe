@@ -92,7 +92,9 @@ export default function RawMaterialsTable() {
                 label: 'Price',
                 className: '',
                 format: (row) =>
-                  `Rp ${row.productPriceRp.toLocaleString('en-US', {
+                  `Rp ${(
+                    row.productProfitRp + row.productPriceRp
+                  ).toLocaleString('en-US', {
                     maximumFractionDigits: 2,
                   })}`,
               },
