@@ -82,10 +82,10 @@ export default function AdminTable({
         <div className='rounded-t mb-0 px-4 py-3 bg-primary1 text-white border-black border border-solid'>
           <div className='flex flex-wrap items-center'>
             <div className='relative w-full px-4 max-w-full flex justify-between'>
-              <h3 className='text-xl font-semibold self-center'>{name}</h3>
+              <h3 className='text-base font-semibold self-center'>{name}</h3>
               {CreateModal && (
                 <button
-                  className='btn btn-blue rounded-none flex'
+                  className='btn btn-blue rounded-none flex text-sm justify-center items-center'
                   onClick={toggleCreateModal}
                 >
                   <svg
@@ -100,7 +100,7 @@ export default function AdminTable({
                       clipRule='evenodd'
                     />
                   </svg>
-                  Create New {name}
+                  <p>Create New {name}</p>
                 </button>
               )}
             </div>
@@ -159,7 +159,7 @@ export default function AdminTable({
             <button
               onClick={() => setPage(page - 1)}
               className={`mx-4 ${
-                page < 1 ? 'text-gray-500 cursor-default' : 'text-white'
+                page < 1 ? 'text-gray-400 cursor-default' : 'text-white'
               }`}
               disabled={page < 1}
             >
@@ -178,7 +178,7 @@ export default function AdminTable({
               onClick={() => setPage(page + 1)}
               className={`mx-4 ${
                 emptyRows > 0 || page + 1 >= maxPage
-                  ? 'text-gray-500 cursor-default'
+                  ? 'text-gray-400 cursor-default'
                   : 'text-white'
               }`}
               disabled={emptyRows > 0 || page + 1 >= maxPage}

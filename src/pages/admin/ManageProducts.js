@@ -33,7 +33,7 @@ export default function RawMaterialsTable() {
   const rowsPerPage = 8;
 
   const [search, setsearch] = React.useState('');
-  const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 500);
+  const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 700);
   // * modal states
   React.useEffect(() => {
     dispatch(

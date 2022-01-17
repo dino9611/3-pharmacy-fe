@@ -43,15 +43,17 @@ export default function Prescriptions() {
   const [currentDetails, setcurrentDetails] = React.useState();
 
   React.useEffect(() => {
-    setisLoading(true);
-    dispatch(
-      getPrescriptions(
-        { page: 1, limit: 5 * count, filter, search },
-        {
-          handleFinally: () => setisLoading(false),
-        }
-      )
-    );
+    if (isLogin) {
+      setisLoading(true);
+      dispatch(
+        getPrescriptions(
+          { page: 1, limit: 5 * count, filter, search },
+          {
+            handleFinally: () => setisLoading(false),
+          }
+        )
+      );
+    } else setisLoading(false);
     return () => {
       dispatch(resetState('prescriptions'));
     };
@@ -134,21 +136,6 @@ export default function Prescriptions() {
               onChange={handleSearchChange}
             />
           </div>
-
-          {/* <div className='w-1/2 px-1'>
-            <h4 className='font-semibold'>Sort By</h4>
-            <select
-              value={sort}
-              // defaultValue='default'
-              onChange={(e) => setsort(e.target.value)}
-              className='h-14 shadow-md phone:h-10 phone:text-xs mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none w-full phone:mx-auto phone:mb-2'
-            >
-              <option value='most recent'>most recent</option>
-              <option value='oldest'>oldest</option>
-              <option value='lowest'>price: lowest to highest</option>
-              <option value='highest'>price: highest to lowest</option>
-            </select>
-          </div> */}
 
           <div className='w-1/2 px-1'>
             <h4 className='font-semibold'>Filter By Status</h4>

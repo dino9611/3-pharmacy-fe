@@ -103,15 +103,25 @@ export const getRawMaterial = (id, index, handleResult = {}) => {
 };
 
 let getRawMaterialsRecord_timeoutID;
-export const getRawMaterialsRecord = (page, limit, handleResult = {}) => {
+export const getRawMaterialsRecord = (
+  { page, limit, yearMonthStart, yearMonthEnd, search },
+  handleResult = {}
+) => {
   return (dispatch, getState, API_URL) => {
     const { handleSuccess, handleFail, handleFinally } = handleResult;
     clearTimeout(getRawMaterialsRecord_timeoutID);
 
     getRawMaterialsRecord_timeoutID = setTimeout(async () => {
       try {
+        // add one day
+        yearMonthStart.setDate(yearMonthStart.getDate() + 1);
+        yearMonthEnd.setDate(yearMonthEnd.getDate() + 1);
+        // turn date to ISO string
+        yearMonthStart = yearMonthStart.toISOString();
+        yearMonthEnd = yearMonthEnd.toISOString();
         const { data } = await axios.get(
-          API_URL + `/raw_material/record/?page=${page}&limit=${limit}`,
+          API_URL +
+            `/raw_material/record/?page=${page}&limit=${limit}&yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}&search=${search}`,
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),

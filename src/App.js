@@ -15,6 +15,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router';
 
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // console.log(error.response);
+    if (error.response.status === 401)
+      // document.location.reload();
+      window.location.reload();
+    return Promise.reject(error);
+  }
+);
+
 export default function App() {
   // Redux
   const dispatch = useDispatch();
