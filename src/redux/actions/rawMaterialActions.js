@@ -119,7 +119,7 @@ export const getRawMaterialsRecord = (
         // turn date to ISO string
         yearMonthStart = yearMonthStart.toISOString();
         yearMonthEnd = yearMonthEnd.toISOString();
-        const { data } = await axios.get(
+        var { data } = await axios.get(
           API_URL +
             `/raw_material/record/?page=${page}&limit=${limit}&yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}&search=${search}`,
           {
@@ -133,8 +133,9 @@ export const getRawMaterialsRecord = (
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
         handleFail !== undefined && handleFail(error);
+      } finally {
+        handleFinally !== undefined && handleFinally(data.result.length);
       }
-      handleFinally !== undefined && handleFinally();
     }, DEBOUNCE_DELAY);
   };
 };

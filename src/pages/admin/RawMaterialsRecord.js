@@ -49,6 +49,10 @@ export default function RawMaterialsRecordTable() {
         {
           handleFail: (err) =>
             toast.error(err.response?.data.message || 'server error'),
+          handleFinally: (rowLength) =>
+            !rowLength &&
+            !search &&
+            toast.error('no results', { autoClose: 2000 }),
         }
       )
     );
