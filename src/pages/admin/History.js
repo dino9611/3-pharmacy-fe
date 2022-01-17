@@ -11,7 +11,7 @@ export default function History() {
   //   loc.pathname.split('/').slice(0, -1).join('/')
   // );
   return (
-    <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins justify-between items-center'>
+    <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins  items-center'>
       <div className='bg-fourth2 flex w-11/12 h-10 rounded-full mt-2 justify-evenly border-black border-2'>
         <button className='flex-1 rounded-l-full font-semibold cursor-default'>
           <Link to='raw_materials' className='hover:text-white cursor-pointer'>
