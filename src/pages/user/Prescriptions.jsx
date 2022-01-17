@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { parseDate } from '../../helpers/parseDate';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  confirmDelivery,
   getPrescriptionDetails,
   getPrescriptions,
   resetState,
@@ -14,6 +15,7 @@ import {
 import EmptyPrescriptions from '../Asset/empty-products.svg';
 import ModalOverlay from '../../components/Modals/AdminModalOverlay';
 import { API_URL } from '../../constants/api';
+import { useDebounce } from '../../hooks';
 
 export default function Prescriptions() {
   const dispatch = useDispatch();
@@ -32,7 +34,9 @@ export default function Prescriptions() {
   const [file, setfile] = React.useState(null);
 
   const [filter, setfilter] = React.useState('initial');
-  const [sort, setsort] = React.useState('');
+  // const [sort, setsort] = React.useState('');
+  const [search, setsearch] = React.useState('');
+  const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 700);
 
   const [isLoading, setisLoading] = React.useState(true);
   const [detailsIsOpen, setdetailsIsOpen] = React.useState(false);
@@ -42,7 +46,7 @@ export default function Prescriptions() {
     setisLoading(true);
     dispatch(
       getPrescriptions(
-        { page: 1, limit: 5 * count, filter, sort },
+        { page: 1, limit: 5 * count, filter, search },
         {
           handleFinally: () => setisLoading(false),
         }
@@ -51,7 +55,7 @@ export default function Prescriptions() {
     return () => {
       dispatch(resetState('prescriptions'));
     };
-  }, [dispatch, filter, sort, isLogin]);
+  }, [dispatch, filter, search, isLogin]);
 
   const renderCurrItems = () => {
     let out = [];
@@ -69,11 +73,18 @@ export default function Prescriptions() {
           key={i}
           className='rounded bg-white h-20 p-4 my-2 flex items-center shadow-lg'
         >
-          <h3 className='text-md phone:text-sm text-black font-bold w-3/6'>
+          <h3
+            className={`text-md phone:text-sm text-black font-bold ${
+              filter === 'waitingPayment' ? 'w-1/6' : 'w-3/6'
+            }`}
+          >
             {el.prescriptionName ? el.prescriptionName : '...'}
           </h3>
+
           <p className='w-2/6'>{parseDate(el.createdAt)}</p>
-          {/* <p className='w-1/6'>{el.price}</p> */}
+          {filter === 'waitingPayment' && (
+            <p className='w-2/6'>{'expired at: ' + parseDate(el.expiredAt)}</p>
+          )}
           <button
             className='w-1/6 text-sm phone:text-xs text-primary1 font-bold hover:text-lightblue'
             onClick={() => {
@@ -119,8 +130,8 @@ export default function Prescriptions() {
             <input
               className='h-14 shadow-md phone:h-10 phone:text-xs border-gray-300 border-solid focus:outline-none px-4 rounded-md mr-2 w-full phone:mx-auto phone:mb-2'
               type='text'
-              placeholder='Prescription Name'
-              // onChange={searchHandler}
+              placeholder='Search by prescription name...'
+              onChange={handleSearchChange}
             />
           </div>
 
@@ -220,7 +231,8 @@ export default function Prescriptions() {
           {file ? (
             <button
               className='h-10 btn btn-primary flex'
-              onClick={() =>
+              onClick={() => {
+                if (!isLogin) toast.error('Login to upload prescription');
                 dispatch(
                   uploadPrescription(file, {
                     handleSuccess: () => {
@@ -230,10 +242,11 @@ export default function Prescriptions() {
                         `success`
                       );
                       setfile(null);
+                      dispatch(getPrescriptions());
                     },
                   })
-                )
-              }
+                );
+              }}
             >
               <svg
                 className='w-6 h-6'
@@ -282,10 +295,6 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
     if (!detailsIsOpen) dispatch(resetState('prescriptionDetails'));
   }, [dispatch, detailsIsOpen]);
   React.useEffect(() => {
-    console.log(status);
-    console.log(details);
-  }, [status, details]);
-  React.useEffect(() => {
     if (file !== null)
       dispatch(
         uploadPayment(
@@ -301,7 +310,10 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
                 position: toast.POSITION.TOP_CENTER,
                 autoClose: 5000,
               }),
-            handleFinally: () => dispatch(getPrescriptions()),
+            handleFinally: () => {
+              setdetailsIsOpen(false);
+              dispatch(getPrescriptions());
+            },
           }
         )
       );
@@ -348,13 +360,13 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
           src={API_URL + details.image}
           alt='prescription'
         />
-        {['initial'].includes(status) ? (
+        {status === 'initial' ? (
           <p className='text-center font-medium'>
             please wait for admin to approve the prescription
           </p>
         ) : (
           <div>
-            <div className=' flex text-center mb-4'>
+            <div className=' flex text-center mb-4 font-semibold'>
               <div className='flex-1'>Medicine</div>
               <div className='flex-1'>Quantity</div>
               <div className='flex-1'>Price</div>
@@ -370,24 +382,29 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
                 );
               })}
             <Divider sx={{ mt: 2 }} />
-            <div className='flex justify-between mt-4'>
-              <div>Grand Total</div>
-              <div className='mr-7'>
+            <div className='flex justify-between mt-4 mx-5'>
+              <div className='font-semibold'>Grand Total</div>
+              <div className='pr-6'>
                 Rp{' '}
                 {details.medicines.length &&
-                  details.medicines.reduce(
-                    (runningSum, el) => runningSum + el.priceRp * el.qty,
-                    0
-                  )}
+                  (
+                    (1 + 2 / 10) * // plus 20% profit
+                    details.medicines.reduce(
+                      (runningSum, el) => runningSum + el.priceRp * el.qty,
+                      0
+                    )
+                  ).toFixed(2)}
               </div>
             </div>
             {status !== 'failed' ? (
-              <div className=' mt-12 text-red-500 text-center'>
-                Please contact the admin if you see anything suspicious
+              <div className=' mt-12 text-red-500 text-center text-sm'>
+                Please contact an admin if you see anything suspicious
               </div>
             ) : (
               <div className=' mt-12 text-red-500 text-center'>
-                {details.status === 'imgRej' ? 'image rejected' : null}
+                {details.status === 'imgRej'
+                  ? 'image rejected'
+                  : details.status}
               </div>
             )}
             {status === 'waitingPayment' ? (
@@ -415,7 +432,19 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
               <div className='mt-2 w-full flex justify-center items-center'>
                 <button
                   className='h-10 btn btn-primary flex'
-                  // onClick={() => fileInput.current.click()}
+                  onClick={() =>
+                    dispatch(
+                      confirmDelivery(details.id, {
+                        handleSuccess: () =>
+                          toast.success('Delivery is confirmed!'),
+                        handleFail: (error) =>
+                          toast.error(
+                            error.response?.data.message || 'Server Error'
+                          ),
+                        handleFinally: () => setdetailsIsOpen(false),
+                      })
+                    )
+                  }
                 >
                   Confirm Delivery
                 </button>

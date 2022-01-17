@@ -31,28 +31,28 @@ const style = {
 const ColorButton = styled(Button)(({ theme }) => ({
   borderRadius: 10,
   color: 'black',
-  backgroundColor: '#FFC286',
+  backgroundColor: '#ceeaeb',
   '&:hover': {
-    backgroundColor: '#66806A',
+    backgroundColor: '#38A3A5',
     color: 'white',
   },
 }));
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#B4C6A6',
+    color: '#38A3A5',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#66806A',
+    borderBottomColor: '#ceeaeb',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      borderColor: '#66806A',
+      borderColor: '#ceeaeb',
     },
     '&:hover fieldset': {
-      borderColor: '#FFC286',
+      borderColor: '#38A3A5',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#B4C6A6',
+      borderColor: '#ceeaeb',
     },
   },
 });
@@ -220,6 +220,32 @@ const Register = ({ open, handleClose, setOpen, handleopenDialog }) => {
             Register an Account
           </Typography>
           <CssTextField
+            name='firstName'
+            value={addAccount.firstName}
+            onChange={inputHandler}
+            fullWidth
+            label='First Name'
+            id='custom-css-outlined-input'
+            sx={{ mt: 1 }}
+          />
+          <Typography
+            display={mistakeFirst ? 'block' : 'none'}
+            color='error'
+            sx={{ fontSize: 12, mt: 0.5, justifyContent: 'center' }}
+          >
+            <ErrorIcon sx={{ fontSize: 'medium', mr: 0.5 }} />
+            First Name Harap diisi
+          </Typography>
+          <CssTextField
+            name='lastName'
+            value={addAccount.lastName}
+            onChange={inputHandler}
+            fullWidth
+            label='Last Name'
+            id='custom-css-outlined-input'
+            sx={{ mt: 1 }}
+          />
+          <CssTextField
             name='username'
             value={addAccount.username}
             onChange={inputHandler}
@@ -299,45 +325,6 @@ const Register = ({ open, handleClose, setOpen, handleopenDialog }) => {
             <ErrorIcon sx={{ fontSize: 'medium', mr: 0.5 }} />
             {errors[0]}
           </Typography>
-          <CssTextField
-            name='firstName'
-            value={addAccount.firstName}
-            onChange={inputHandler}
-            fullWidth
-            label='First Name'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <Typography
-            display={mistakeFirst ? 'block' : 'none'}
-            color='error'
-            sx={{ fontSize: 12, mt: 0.5, justifyContent: 'center' }}
-          >
-            <ErrorIcon sx={{ fontSize: 'medium', mr: 0.5 }} />
-            First Name Harap diisi
-          </Typography>
-          <CssTextField
-            name='lastName'
-            value={addAccount.lastName}
-            onChange={inputHandler}
-            fullWidth
-            label='Last Name'
-            id='custom-css-outlined-input'
-            sx={{ mt: 1 }}
-          />
-          <div className='Forgot-Register'>
-            <Link
-              underline='hover'
-              component='button'
-              variant='body2'
-              onClick={handleopenDialog}
-              sx={{
-                color: '#66806A',
-              }}
-            >
-              Forget Password?
-            </Link>
-          </div>
           <ColorButton
             fullWidth
             variant='contained'

@@ -79,7 +79,7 @@ export default function AdminTable({
         </ModalOverlay>
       )}
       <div className='relative flex flex-col min-w-0 break-words w-full shadow-lg rounded bg-white my-1'>
-        <div className='rounded-t mb-0 px-4 py-3 bg-blue-200 border-black border border-solid'>
+        <div className='rounded-t mb-0 px-4 py-3 bg-primary1 text-white border-black border border-solid'>
           <div className='flex flex-wrap items-center'>
             <div className='relative w-full px-4 max-w-full flex justify-between'>
               <h3 className='text-xl font-semibold self-center'>{name}</h3>
@@ -108,7 +108,7 @@ export default function AdminTable({
             </thead>
             <tbody>
               {rows.map((row, index) => (
-                <tr key={index} className='h-12 bg-blue-300'>
+                <tr key={index} className='h-12 bg-white'>
                   {cols.map((col) =>
                     col.label ? (
                       <td
@@ -140,15 +140,15 @@ export default function AdminTable({
               {emptyRows > 0 && renderEmptyRows(emptyRows, cols)}
             </tbody>
           </table>
-          <div className='flex justify-end rounded-b mb-0 px-12 py-3 bg-blue-200 border-black border border-solid'>
+          <div className='flex justify-end rounded-b mb-0 px-12 py-3 bg-primary1 text-white border-black border border-solid'>
             <button
               onClick={() => setPage(page - 1)}
               className={`mx-4 ${
-                page < 1 ? 'text-gray-500 cursor-default' : 'text-black'
+                page < 1 ? 'text-gray-500 cursor-default' : 'text-white'
               }`}
               disabled={page < 1}
             >
-              <svg className='w-6 h-6' fill='currentColor' viewBox='0 0 20 20'>
+              <svg className='w-8 h-8' fill='currentColor' viewBox='0 0 20 20'>
                 <path
                   fillRule='evenodd'
                   d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
@@ -156,17 +156,19 @@ export default function AdminTable({
                 />
               </svg>
             </button>
-            {page + 1}
+            <div className='flex justify-center items-center'>
+              <p className='text-center font-semibold'>{page + 1}</p>
+            </div>
             <button
               onClick={() => setPage(page + 1)}
               className={`mx-4 ${
                 emptyRows > 0 || page + 1 >= maxPage
                   ? 'text-gray-500 cursor-default'
-                  : 'text-black'
+                  : 'text-white'
               }`}
               disabled={emptyRows > 0 || page + 1 >= maxPage}
             >
-              <svg className='w-6 h-6' fill='currentColor' viewBox='0 0 20 20'>
+              <svg className='w-8 h-8' fill='currentColor' viewBox='0 0 20 20'>
                 <path
                   fillRule='evenodd'
                   d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
@@ -185,7 +187,7 @@ const renderEmptyRows = (n, cols) => {
   let out = [];
   for (let i = 0; i < n; i++)
     out.push(
-      <tr key={i} className='h-12 bg-blue-300'>
+      <tr key={i} className='h-12 bg-white'>
         <td colSpan={cols.length}></td>
       </tr>
     );

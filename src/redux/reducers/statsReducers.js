@@ -14,6 +14,11 @@ const initialState = {
   // prescriptionSales: [],
   cartedItem: [],
   salesSuccessRate: [],
+  pieCharts: {
+    sales: [],
+    prescriptionTransactions: [],
+    productTransactions: [],
+  },
 };
 
 export const statsReducers = (state = initialState, action) => {

@@ -94,14 +94,14 @@ export const getPrescriptions = (request, handleResult = {}) => {
     if (request !== undefined) {
       dispatch(setState('request', request));
     }
-    const { page, limit, filter, sort } =
+    const { page, limit, filter, search } =
       getState().prescriptionReducers.request;
     clearTimeout(getPrescriptions_timeoutID);
 
     getPrescriptions_timeoutID = setTimeout(async () => {
       try {
         const { data } = await axios.get(
-          `${API_URL}/custom/usercustom/?page=${page}&limit=${limit}&filter=${filter}&sort=${sort}`,
+          `${API_URL}/custom/usercustom/?page=${page}&limit=${limit}&filter=${filter}&search=${search}`,
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -139,6 +139,36 @@ export const getPrescriptionDetails = (id, handleResult = {}) => {
         handleFail !== undefined && handleFail(error);
       }
       handleFinally !== undefined && handleFinally();
+    }, DEBOUNCE_DELAY);
+  };
+};
+
+// ! UPDATE
+let confirmDelivery_timeoutID;
+export const confirmDelivery = (id, handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(confirmDelivery_timeoutID);
+
+    confirmDelivery_timeoutID = setTimeout(async () => {
+      try {
+        await axios.post(
+          `${API_URL}/custom/confirm_delivery`,
+          { id },
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        );
+
+        dispatch(getPrescriptions());
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      } finally {
+        handleFinally !== undefined && handleFinally();
+      }
     }, DEBOUNCE_DELAY);
   };
 };

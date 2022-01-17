@@ -11,7 +11,7 @@ import Products from './Products';
 import UserProfile from './user/UserProfile';
 import Cart from './user/Cart';
 import ProductTransactionHistory from './user/ProductTransactionHistory';
-import UserPrescription from './user/UserPrescription';
+// import UserPrescription from './user/UserPrescription';
 import Prescriptions from './user/Prescriptions';
 import CheckOut from './user/CheckOut';
 import UploadPayment from './user/UploadPayment';
@@ -23,8 +23,8 @@ const UserMenu = () => {
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/products' element={<Products />} />
-        <Route path='/prescriptions_new' element={<Prescriptions />} />
-        <Route path='/prescriptions' element={<UserPrescription />} />
+        <Route path='/prescriptions' element={<Prescriptions />} />
+        {/* <Route path='/old_prescriptions' element={<UserPrescription />} /> */}
 
         <Route path='/user_profile' element={<UserProfile />} />
 

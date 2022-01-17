@@ -25,7 +25,7 @@ export default function RawMaterialsRecordTable() {
     dispatch(
       getRawMaterialsRecord(page + 1, rowsPerPage, {
         handleFail: (err) =>
-          toast.error(err.response.data.message || 'server error'),
+          toast.error(err.response?.data.message || 'server error'),
       })
     );
     return () => dispatch(resetState('rawMaterials'));
@@ -39,7 +39,7 @@ export default function RawMaterialsRecordTable() {
 
   return (
     <AdminTable
-      name='Raw Materials Record'
+      name='Raw Materials Changes'
       page={page}
       maxPage={5}
       cols={[
@@ -49,12 +49,16 @@ export default function RawMaterialsRecordTable() {
           format: (row) => row.materialName,
         },
         {
-          label: 'Inventory',
+          label: 'Inventory Change',
           className: '',
           format: (row) =>
-            `${Math.floor(row.inventoryChange / row.unitPerBottle)} bottles ${(
-              row.inventoryChange % row.unitPerBottle
-            ).toFixed(2)} ${row.unit}`,
+            `${
+              row.inventoryChange < 0
+                ? Math.ceil(row.inventoryChange / row.unitPerBottle)
+                : Math.floor(row.inventoryChange / row.unitPerBottle)
+            } bottles ${(row.inventoryChange % row.unitPerBottle).toFixed(2)} ${
+              row.unit
+            }`,
         },
         {
           label: 'Unit Per Bottle',

@@ -7,6 +7,8 @@ import { API_URL } from '../constants/api';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const style = {
   position: 'absolute',
@@ -21,21 +23,27 @@ const style = {
   borderRadius: 7,
 };
 
-const UserCustomModal = ({ openCustom, handleClose }) => {
+const UserCustomModal = ({ openCustom, handleClose, getPrescription }) => {
   const authState = useSelector((state) => state.auth);
   const [file, setfile] = useState(null);
   const fileInput = React.useRef(null);
+  const [commitProtect, setcommitProtect] = useState(true);
 
+  const protectHandler = () => {
+    setcommitProtect(!commitProtect);
+  };
   const onFileChange = (e) => {
     if (e.target.files[0]) {
       setfile(e.target.files[0]);
     } else {
       setfile(null);
+      setcommitProtect(true);
     }
   };
 
   const onCloseHandler = () => {
     setfile(null);
+    setcommitProtect(true);
     handleClose();
   };
 
@@ -52,8 +60,8 @@ const UserCustomModal = ({ openCustom, handleClose }) => {
         formData,
         {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
             'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         }
       );
@@ -63,6 +71,7 @@ const UserCustomModal = ({ openCustom, handleClose }) => {
         `Please wait for our Admin review the Prescription!`,
         `success`
       );
+      getPrescription();
       console.log(results);
     } catch (error) {
       console.log(error);
@@ -105,18 +114,24 @@ const UserCustomModal = ({ openCustom, handleClose }) => {
             ) : (
               <div className='h-64 w-96 bg-gray-200 rounded-lg' />
             )}
-            <Button
-              onClick={onConfirmHandler}
-              variant='contained'
-              style={{ backgroundColor: '#66806a' }}
-              sx={{ mt: 2 }}
-            >
-              Confirm
-            </Button>
           </div>
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
-            Ini nanti buat footer please take note
-          </Typography>
+          <FormControlLabel
+            sx={{ mt: 2, color: 'red', fontSize: 7 }}
+            onChange={protectHandler}
+            labelPlacement='end'
+            control={<Checkbox />}
+            label=' Please take note that once you upload and our admin has approved your prescription, the transaction cannot be undone!'
+          />
+          <Button
+            fullWidth
+            onClick={onConfirmHandler}
+            variant='contained'
+            style={{ backgroundColor: '#66806a' }}
+            disabled={commitProtect}
+            sx={{ mt: 2 }}
+          >
+            Confirm
+          </Button>
         </Box>
       </Modal>
     </div>
