@@ -56,7 +56,7 @@ export default function RawMaterialsTable() {
 
   return (
     <>
-      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
+      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 px-4 w-full absolute right-0 font-poppins'>
         <div className='flex flex-col h-full justify-between'>
           <div className='flex m-3'>
             <div className='flex border-2 rounded'>
