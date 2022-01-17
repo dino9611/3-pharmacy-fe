@@ -69,33 +69,31 @@ const AdminPrescriptions = () => {
   const [customData, setcustomData] = useState([]);
   const [indexProduct, setindexProduct] = useState(-1);
 
-    
-
-    //* Modal Custom ORDER
-    const [openCreate, setopenCreate] = useState(false)
-    const handleopenCreate = (index) => {
-        setindexProduct(index)
-        setopenCreate(!openCreate)
-    };
-    //! handleCloseCreate dipake karena di createprescrip modal setelah obat ditambahkan terjadi error empty array
-    const handleCloseCreate = () => {
-        setopenCreate(!openCreate)
-        setindexProduct(-1)
-    }
-    // const [value, setValue] = useState(1);
-    //! tabs Setting
-    //* status adalah tempat untuk menampung value dari tabs
-    const [status, setStatus] = useState("initial")
-    //* indextab adalah untuk menampung number agar bisa ditambahkan dan menyimpat string untuk next statusnya
-    const [indexTab, setindexTab] = useState(0)
-    //* next status adalah tempat untuk menyimpan status berikutnya dari status yang sekarang
-    const [nextStatus, setnextStatus] = useState(dataStatus[1].status)
-    const handleChange = (e, newValue) => {
-        console.log(dataStatus[newValue].id)
-        setindexTab(newValue)
-        setStatus(dataStatus[newValue].status);
-        setnextStatus(dataStatus[newValue + 1].status)
-    };
+  //* Modal Custom ORDER
+  const [openCreate, setopenCreate] = useState(false);
+  const handleopenCreate = (index) => {
+    setindexProduct(index);
+    setopenCreate(!openCreate);
+  };
+  //! handleCloseCreate dipake karena di createprescrip modal setelah obat ditambahkan terjadi error empty array
+  const handleCloseCreate = () => {
+    setopenCreate(!openCreate);
+    setindexProduct(-1);
+  };
+  // const [value, setValue] = useState(1);
+  //! tabs Setting
+  //* status adalah tempat untuk menampung value dari tabs
+  const [status, setStatus] = useState('initial');
+  //* indextab adalah untuk menampung number agar bisa ditambahkan dan menyimpat string untuk next statusnya
+  const [indexTab, setindexTab] = useState(0);
+  //* next status adalah tempat untuk menyimpan status berikutnya dari status yang sekarang
+  const [nextStatus, setnextStatus] = useState(dataStatus[1].status);
+  const handleChange = (e, newValue) => {
+    console.log(dataStatus[newValue].id);
+    setindexTab(newValue);
+    setStatus(dataStatus[newValue].status);
+    setnextStatus(dataStatus[newValue + 1].status);
+  };
 
   //? Fetch prescription data
   const getCustom = async () => {
@@ -160,7 +158,7 @@ const AdminPrescriptions = () => {
           nextStatus: statusReject,
         };
         axios
-          .patch(`${API_URL}/custom/nextStatus`, updateStatus, {
+          .patch(`${API_URL}/custom/nextstatus`, updateStatus, {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
@@ -186,7 +184,7 @@ const AdminPrescriptions = () => {
   const [commitProtect, setcommitProtect] = useState(true);
   const dummyButt = () => {
     console.log(totalPrice);
-    console.log(totalPrice * (20/100))
+    console.log(totalPrice * (20 / 100));
   };
   const acceptHandler = async (index) => {
     try {
@@ -237,14 +235,14 @@ const AdminPrescriptions = () => {
   };
   const commitHandler = async () => {
     try {
-      if (status === 'initial'){
-        let cost = totalPrice
-        let profit = totalPrice * (20/100)
+      if (status === 'initial') {
+        let cost = totalPrice;
+        let profit = totalPrice * (20 / 100);
         let updateCostProfit = {
           id: customData[indexProduct].id,
-          cost, 
-          profit
-        }
+          cost,
+          profit,
+        };
         await axios.patch(`${API_URL}/custom/costprofit`, updateCostProfit, {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -307,12 +305,14 @@ const AdminPrescriptions = () => {
               </div>
               <div className='flex justify-between mt-4'>
                 <div>Custom Prescription Fee</div>
-                <div className='mr-7'>Rp {totalPrice * (20/100)}</div>
+                <div className='mr-7'>Rp {totalPrice * (20 / 100)}</div>
               </div>
               <Divider sx={{ mt: 2 }} />
               <div className='flex justify-between mt-4'>
                 <div>Grand Total</div>
-                <div className='mr-7'>Rp {totalPrice + (totalPrice * (20/100))}</div>
+                <div className='mr-7'>
+                  Rp {totalPrice + totalPrice * (20 / 100)}
+                </div>
               </div>
               <FormControlLabel
                 sx={{ mt: 10, color: '#66806A', fontSize: 7 }}
@@ -360,7 +360,7 @@ const AdminPrescriptions = () => {
         },
       });
       // console.log(updateData.customName)
-      getCustom()
+      getCustom();
       alert('berhasil');
       handlecloseDialog();
     } catch (error) {
@@ -446,12 +446,14 @@ const AdminPrescriptions = () => {
               </div>
               <div className='flex justify-between mt-4'>
                 <div>Custom Prescription Fee</div>
-                <div className='mr-7'>Rp {totalPrice * (20/100)}</div>
+                <div className='mr-7'>Rp {totalPrice * (20 / 100)}</div>
               </div>
               <Divider sx={{ mt: 2 }} />
               <div className='flex justify-between mt-4'>
                 <div>Grand Total</div>
-                <div className='mr-7'>Rp {totalPrice + (totalPrice * (20/100))}</div>
+                <div className='mr-7'>
+                  Rp {totalPrice + totalPrice * (20 / 100)}
+                </div>
               </div>
               <div className='text-right mt-12 text-yellow-500'>
                 Please double check details product before you update status
@@ -479,7 +481,8 @@ const AdminPrescriptions = () => {
   //! Render Body/Row
   const renderBody = () => {
     return (
-      <TableBody sx={{ backgroundColor: '#ceeaeb' }}>
+      // <TableBody sx={{ backgroundColor: '#ceeaeb' }}>
+      <TableBody sx={{ backgroundColor: '#fff' }}>
         {customData.map((row, index) => (
           <TableRow
             key={index}
@@ -540,7 +543,7 @@ const AdminPrescriptions = () => {
   };
 
   return (
-    <div className='w-4/5 absolute right-0 p-2 bg-fourth2 min-h-full'>
+    <div className='w-4/5 absolute right-0 p-2 bg-lightblue min-h-full'>
       {dialogUpdate()}
       {dialogAccept()}
       <CreatePrescription
@@ -555,7 +558,8 @@ const AdminPrescriptions = () => {
           onChange={handleChange}
           variant='fullWidth'
           scrollButtons='auto'
-          sx={{backgroundColor: '#69dadb'}}
+          // sx={{ backgroundColor: '#69dadb' }}
+          sx={{ backgroundColor: '#ceeaeb' }}
         >
           <Tab value={0} label='Waiting Confirmation' />
           <Tab value={1} label='Waiting Payment' />
@@ -569,8 +573,10 @@ const AdminPrescriptions = () => {
       <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table sx={{ minWidth: 650 }} size='medium' aria-label='a dense table'>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#22577a'}}>
-              <TableCell  sx={{ width: '10vw', color: 'white' }}>Username</TableCell>
+            <TableRow sx={{ backgroundColor: '#22577a' }}>
+              <TableCell sx={{ width: '10vw', color: 'white' }}>
+                Username
+              </TableCell>
               <TableCell align='right' sx={{ width: '15vw', color: 'white' }}>
                 Prescription Name
               </TableCell>

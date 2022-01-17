@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Modal,
-  TextField,
-  Button,
-  Alert,
-} from '@mui/material';
+import { Box, Modal, TextField, Button, Alert } from '@mui/material';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { API_URL } from '../constants/api';
@@ -13,12 +7,14 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const style = {
+  textFamily: `'Poppins', sans-serif`,
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: {
-    xs: 300, md: 500
+    xs: 300,
+    md: 500,
   },
   bgcolor: 'background.paper',
   borderRadius: '15px',
@@ -78,7 +74,7 @@ const Login = ({ open, handleClose, closeMenu, handleopenDialog }) => {
       localStorage.setItem('token', res.headers['access-token']);
       dispatch({ type: 'login', payload: res.data[0] });
       handleClose();
-      closeMenu()
+      closeMenu();
       setFillAlert(true);
       setAccAlert(true);
       Swal.fire({
@@ -87,7 +83,7 @@ const Login = ({ open, handleClose, closeMenu, handleopenDialog }) => {
         text: 'Log in success',
         timer: 1500,
         timerProgressBar: true,
-        confirmButtonColor: '#22577A'
+        confirmButtonColor: '#22577A',
       });
       setInputLogin({
         usernamemail: '',
@@ -101,20 +97,17 @@ const Login = ({ open, handleClose, closeMenu, handleopenDialog }) => {
   };
 
   return (
-    <div>
+    <div className='font-poppins'>
       <Modal
         open={open}
         onClose={handleClose}
+        sx={{ textFamily: `'Poppins', sans-serif` }}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
         <Box sx={style} style={{ textAlign: 'center' }}>
           <div className='mb-8 phone:mb-4'>
-            <p
-              className='font-bold text-3xl phone:text-2xl'
-            >
-              Login
-            </p>
+            <p className='font-bold text-3xl phone:text-2xl'>Login</p>
           </div>
           <div className='mb-3'>
             <TextField

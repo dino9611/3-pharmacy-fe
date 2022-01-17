@@ -105,7 +105,7 @@ const Header = () => {
           <button
             onClick={() => navigate('/products')}
             className={
-              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
+              'text-xs uppercase mx-2 p-2 py-3 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('products')
                 ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
@@ -115,7 +115,7 @@ const Header = () => {
           </button>
           <button
             className={
-              'text-xs uppercase mx-2 p-2 font-bold block rounded-lg phone:hidden ' +
+              'text-xs uppercase mx-2 p-2 py-3 font-bold block rounded-lg phone:hidden ' +
               (location.pathname.includes('prescriptions')
                 ? 'text-white bg-secondary1'
                 : 'text-gray-300 hover:text-white hover:shadow-2xl hover:brightness-200')
@@ -213,14 +213,14 @@ const Header = () => {
           ) : (
             <>
               <button
-                className=' text-white mr-4 hover:text-gray-200 rounded phone:text-sm'
+                className='text-gray-300 hover:text-white mr-4 rounded phone:text-sm font-semibold'
                 onClick={handleOpenLogin}
               >
                 Login
               </button>
               <button
                 variant='contained'
-                className='btn btn-blue px-3 py-1 rounded phone:text-sm phone:px-2'
+                className='btn btn-secondary px-3 py-1 rounded phone:text-sm phone:px-2'
                 onClick={handleOpen}
               >
                 Sign up

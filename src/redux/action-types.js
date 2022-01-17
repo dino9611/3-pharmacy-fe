@@ -3,4 +3,5 @@ export const actionTypes = {
   product: { SET_STATE: 2, RESET_STATE: 3 },
   revenue: { SET_STATE: 4, RESET_STATE: 5 },
   portal: { SET_STATE: 6, RESET_STATE: 7 },
+  prescription: { SET_STATE: 8, RESET_STATE: 9 },
 };

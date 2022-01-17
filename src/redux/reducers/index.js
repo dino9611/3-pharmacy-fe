@@ -7,6 +7,7 @@ import { productReducers } from './productReducers';
 import { statsReducers } from './statsReducers';
 import { cartReducers } from './cartReducers';
 import { orderReducers } from './orderReducers';
+import { prescriptionReducers } from './prescriptionReducers';
 
 const reducers = combineReducers({
   auth: authReducers,
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   rawMaterialReducers,
   productReducers,
   statsReducers,
+  prescriptionReducers,
 });
 
 export default reducers;

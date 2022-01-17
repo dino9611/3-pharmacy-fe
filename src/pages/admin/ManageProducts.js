@@ -56,7 +56,7 @@ export default function RawMaterialsTable() {
 
   return (
     <>
-      <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
+      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
         <div className='flex flex-col h-full justify-between'>
           <div className='flex m-3'>
             <div className='flex border-2 rounded'>
@@ -213,7 +213,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
   };
 
   return (
-    <div className='z-50 bg-white w-10/12 h-auto rounded-lg p-5'>
+    <div className='z-50 bg-white w-10/12 max-h-screen rounded-lg p-5 overflow-y-auto'>
       <Formik
         initialValues={{ ...defaultValues, ...productDetails }}
         enableReinitialize
@@ -232,8 +232,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
           if (!values.compositions.length) errors.compositions = 'required';
           if (
             new Set(values.compositions.map((el) => parseInt(el.id))).size !==
-              values.compositions.length ||
-            values.compositions.some((el) => el.id === undefined)
+            values.compositions.length
           ) {
             errors.compositions = 'no duplicates allowed';
           }
@@ -241,8 +240,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
           if (!values.categories.length) errors.categories = 'required';
           if (
             new Set(values.categories.map((el) => parseInt(el))).size !==
-              values.categories.length ||
-            values.categories.some((el) => el === undefined)
+            values.categories.length
           ) {
             errors.categories = 'no duplicates allowed';
           }
@@ -395,6 +393,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
                                 break;
                               }
                             }
+                            if (id === undefined) id = compositionOptions[0].id;
                             push({ id, amountInUnit: 0 });
                           }}
                           className='w-1/2'
@@ -495,6 +494,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
                                 break;
                               }
                             }
+                            if (val === undefined) val = categoryOptions[0].id;
                             push(val);
                           }}
                           className='w-1/2'
@@ -626,7 +626,7 @@ const CreateModal = ({ toggleModal }) => {
   const fileInput = React.useRef(null);
 
   return (
-    <div className='z-50 bg-white w-10/12 h-auto rounded-lg p-5'>
+    <div className='z-50 bg-white w-10/12 max-h-screen rounded-lg p-5 overflow-y-auto'>
       <Formik
         initialValues={{
           productName: '',
@@ -653,8 +653,7 @@ const CreateModal = ({ toggleModal }) => {
           if (!values.compositions.length) errors.compositions = 'required';
           if (
             new Set(values.compositions.map((el) => parseInt(el.id))).size !==
-              values.compositions.length ||
-            values.compositions.some((el) => el.id === undefined)
+            values.compositions.length
           ) {
             errors.compositions = 'no duplicates allowed';
           }
@@ -662,8 +661,7 @@ const CreateModal = ({ toggleModal }) => {
           if (!values.categories.length) errors.categories = 'required';
           if (
             new Set(values.categories.map((el) => parseInt(el))).size !==
-              values.categories.length ||
-            values.categories.some((el) => el === undefined)
+            values.categories.length
           ) {
             errors.categories = 'no duplicates allowed';
           }
@@ -815,7 +813,7 @@ const CreateModal = ({ toggleModal }) => {
                                 break;
                               }
                             }
-                            console.log(compositions);
+                            if (id === undefined) id = compositionOptions[0].id;
                             push({ id, amountInUnit: 0 });
                           }}
                           className='w-1/2'
@@ -916,6 +914,7 @@ const CreateModal = ({ toggleModal }) => {
                                 break;
                               }
                             }
+                            if (val === undefined) val = categoryOptions[0].id;
                             push(val);
                           }}
                           className='w-1/2'

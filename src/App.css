@@ -10,3 +10,10 @@
 .btn-red {
   @apply text-white bg-red-400 hover:bg-red-700;
 }
+
+.btn-primary {
+  @apply text-white bg-primary1 hover:bg-secondary1;
+}
+.btn-secondary {
+  @apply text-gray-800 hover:text-white bg-fourth2 hover:bg-secondary1;
+}

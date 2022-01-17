@@ -58,6 +58,7 @@ const UserPrescription = () => {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       });
+      console.log(results.data);
       setdataCust(results.data);
     } catch (error) {
       alert(error);
@@ -84,7 +85,6 @@ const UserPrescription = () => {
     }
   };
   const handlecloseCustom = () => setopenCustom(false);
-
 
   //!Upload Handler
   const [idPrescription, setidPrescription] = useState(0);
@@ -122,7 +122,7 @@ const UserPrescription = () => {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,
         });
-        getPrescription()
+        getPrescription();
       } catch (error) {
         console.log(error.response.data.message, 'dari sini');
         toast.error(error.response.data.message || 'Server Error', {
@@ -160,6 +160,7 @@ const UserPrescription = () => {
           },
         }
       );
+      console.log(results.data);
       setdetailData(results.data);
       setopenDialog(!openDialog);
       //? looping grandtotal
@@ -245,7 +246,10 @@ const UserPrescription = () => {
           const isStepFailed = (step) => {
             if (val.status === 'imgRej') {
               return step === 0;
-            } else if (val.status === 'paymentRej' || val.status === 'rejected') {
+            } else if (
+              val.status === 'paymentRej' ||
+              val.status === 'rejected'
+            ) {
               return step === 2;
             } else {
               // console.log(index, "ini dari data status mapping")
@@ -265,7 +269,8 @@ const UserPrescription = () => {
                     // activeStep={dataStatus.findIndex(val => val.status === "delivered")}
                     activeStep={
                       val.status === 'delivered'
-                        ? dataStatus.findIndex((x) => x.status === val.status) + 1
+                        ? dataStatus.findIndex((x) => x.status === val.status) +
+                          1
                         : dataStatus.findIndex((x) => x.status === val.status)
                     }
                     alternativeLabel
@@ -323,14 +328,14 @@ const UserPrescription = () => {
   };
 
   return (
-    <div >
+    <div>
       {dialogDetails()}
       <UserCustomModal
-        getPrescription = {getPrescription}
+        getPrescription={getPrescription}
         openCustom={openCustom}
         handleClose={handlecloseCustom}
       />
-      <Divider sx={{pt : 2}} variant='middle'>
+      <Divider sx={{ pt: 2 }} variant='middle'>
         <Button
           startIcon={<FileUploadOutlinedIcon />}
           size='medium'

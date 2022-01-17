@@ -179,7 +179,7 @@ export default function AdminSideBar(props) {
                 }
               />
               <SidebarLink
-                name={'Order'}
+                name={'Orders'}
                 pathname={'/admin/order'}
                 location={location}
                 svgPath={

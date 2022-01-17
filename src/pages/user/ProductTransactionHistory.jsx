@@ -252,7 +252,7 @@ const ProductTransactionHistory = () => {
             className=' text-sm phone:text-xs text-primary1 font-bold hover:text-lightblue'
             onClick={() => modalHandler(val.id)}
           >
-            Detail
+            Details
           </button>
         </div>
         <hr className='mb-5' />

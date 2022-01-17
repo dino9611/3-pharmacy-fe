@@ -228,3 +228,54 @@ export const getRecentCartedItems = (handleResult = {}) => {
     }, DEBOUNCE_DELAY);
   };
 };
+
+let getPieCharts_timeoutID;
+export const getPieCharts = (params, handleResult = {}) => {
+  return (dispatch, getState, API_URL) => {
+    const { handleSuccess, handleFail, handleFinally } = handleResult;
+    clearTimeout(getPieCharts_timeoutID);
+
+    getPieCharts_timeoutID = setTimeout(async () => {
+      let { yearMonthStart, yearMonthEnd } = params;
+      try {
+        // add one day
+        yearMonthStart.setDate(yearMonthStart.getDate() + 1);
+        yearMonthEnd.setDate(yearMonthEnd.getDate() + 1);
+        // turn date to ISO string
+        yearMonthStart = yearMonthStart.toISOString();
+        yearMonthEnd = yearMonthEnd.toISOString();
+
+        const pieCharts = {};
+        const sales = await axios.get(
+          API_URL +
+            `/stats/sales_pie_chart?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        );
+        const transactions = await axios.get(
+          API_URL +
+            `/stats/transactions_pie_chart?yearMonthStart=${yearMonthStart}&yearMonthEnd=${yearMonthEnd}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        );
+
+        pieCharts.sales = [sales.data.prescriptionSales, sales.data.orderSales];
+        pieCharts.prescriptionTransactions = transactions.data.prescriptions;
+        pieCharts.productTransactions = transactions.data.orders;
+
+        dispatch(setState('pieCharts', pieCharts));
+        handleSuccess !== undefined && handleSuccess();
+      } catch (error) {
+        handleFail !== undefined && handleFail(error);
+      } finally {
+        handleFinally !== undefined && handleFinally();
+      }
+    }, DEBOUNCE_DELAY);
+  };
+};

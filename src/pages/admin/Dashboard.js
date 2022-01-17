@@ -30,9 +30,11 @@ import {
   getRecentNewUsers,
   getRecentPotentialRevenue,
   getRecentCartedItems,
+  getPieCharts,
 } from '../../redux/actions/statsActions';
 
 import { toast } from 'react-toastify';
+import { useDebounce } from '../../hooks';
 
 ChartJS.register(
   CategoryScale,
@@ -46,12 +48,6 @@ ChartJS.register(
   Legend
 );
 
-const handleResult = {
-  // handleSuccess: () => {},
-  handleFail: (err) =>
-    toast.error(err.response?.data.message || 'server error'),
-  // handleFinally: () => {},
-};
 const currYear = new Date().getFullYear();
 
 export default function Revenue() {
@@ -66,6 +62,12 @@ export default function Revenue() {
     // new Date(currYear, 11, 1)
     new Date()
   );
+  const handleFail = useDebounce(
+    (err) => toast.error(err.response?.data.message || 'server error'),
+    2000,
+    true
+  );
+  const handleResult = { handleFail };
 
   React.useEffect(() => {
     dispatch(getRevenue({ yearMonthStart, yearMonthEnd }, handleResult));
@@ -75,12 +77,14 @@ export default function Revenue() {
     dispatch(
       getSalesByCategory({ yearMonthStart, yearMonthEnd }, handleResult)
     );
+    dispatch(getPieCharts({ yearMonthStart, yearMonthEnd }, handleResult));
     return () => {
       dispatch(resetState('revenue'));
       dispatch(resetState('potentialRevenue'));
       dispatch(resetState('salesByCategory'));
+      dispatch(resetState('pieCharts'));
     };
-  }, [dispatch, yearMonthStart, yearMonthEnd]);
+  }, [yearMonthStart, yearMonthEnd]); // eslint-disable-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     dispatch(getRecentRevenue(handleResult));
     dispatch(getRecentPotentialRevenue(handleResult));
@@ -92,7 +96,7 @@ export default function Revenue() {
       dispatch(resetState('recentNewUsers'));
       dispatch(resetState('recentCartedItems'));
     };
-  }, [dispatch]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const data1 = {
     labels: statsReducers.revenue.map(
@@ -116,32 +120,6 @@ export default function Revenue() {
         data: statsReducers.potentialRevenue.map((el) => el.cost + el.profit),
         borderColor: 'rgb(99, 255, 132)',
         backgroundColor: 'rgba(99, 255, 132, 0.5)',
-      },
-    ],
-  };
-
-  const data2 = {
-    labels: ['waiting payment', 'rejected', 'success', 'expired'],
-    datasets: [
-      {
-        // label: '# of Votes',
-        data: [12, 19, 3, 5],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          // 'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          // 'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          // 'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          // 'rgba(255, 159, 64, 1)',
-        ],
       },
     ],
   };
@@ -248,18 +226,13 @@ export default function Revenue() {
 
         <div className='flex lg:flex-col flex-row flex-wrap justify-between bg-white rounded-lg p-2 lg:row-span-2 row-span-2 lg:col-span-1 col-span-4 lg:order-none order-last'>
           <div className='lg:w-full w-1/2'>
-            <p className='font-semibold text-base rounded-lg'>Transactions</p>
-            <Pie data={data2} />
-          </div>
-
-          <div className='lg:w-full w-1/2'>
             <p className='font-semibold text-base rounded-lg'>Sales</p>
             <Pie
               data={{
                 labels: ['prescriptions', 'products'],
                 datasets: [
                   {
-                    data: [12, 19],
+                    data: statsReducers.pieCharts.sales,
                     backgroundColor: [
                       'rgba(255, 30, 30, 0.5)',
                       'rgba(30, 255, 30, 0.5)',
@@ -271,12 +244,78 @@ export default function Revenue() {
               }}
             />
           </div>
+          <div className='lg:w-full w-1/2'>
+            <p className='font-semibold text-base rounded-lg'>
+              Product Transactions
+            </p>
+            <Pie
+              data={{
+                labels: statsReducers.pieCharts.productTransactions.map(
+                  (el) => el.status
+                ),
+                datasets: [
+                  {
+                    // label: '# of Votes',
+                    data: statsReducers.pieCharts.productTransactions.map(
+                      (el) => el.count
+                    ),
+                    backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                    ],
+                    borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)',
+                    ],
+                  },
+                ],
+              }}
+            />
+          </div>
 
           <div className='lg:w-full w-1/2'>
             <p className='font-semibold text-base pt-2 rounded-lg'>
-              Carted Items
+              Prescription Transactions
             </p>
-            <Pie data={data2} />
+            <Pie
+              data={{
+                labels: statsReducers.pieCharts.prescriptionTransactions.map(
+                  (el) => el.status
+                ),
+                datasets: [
+                  {
+                    // label: '# of Votes',
+                    data: statsReducers.pieCharts.prescriptionTransactions.map(
+                      (el) => el.count
+                    ),
+                    backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                    ],
+                    borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)',
+                    ],
+                  },
+                ],
+              }}
+            />
           </div>
         </div>
 

@@ -11,7 +11,6 @@ import axios from 'axios';
 import { API_URL } from '../constants/api';
 import './styles/Products.css';
 import { toRupiah } from '../helpers/toRupiah';
-import Footer from '../components/Footer';
 import EmptyProducts from './Asset/empty-products.svg';
 import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
@@ -213,7 +212,7 @@ const Products = () => {
       setDataDeskripsi(res.data);
       setOpen(!open);
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response?.data.message);
     }
   };
 
@@ -281,7 +280,7 @@ const Products = () => {
         );
         setProducts(res.data[0].product_length);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       }
     };
     getProducts();
@@ -292,7 +291,7 @@ const Products = () => {
         let res = await axios.get(`${API_URL}/product/getcategories`);
         setDataKategori(res.data);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       }
     };
     getCategories();
@@ -316,7 +315,7 @@ const Products = () => {
         );
         setPaginatedProducts(res.data);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       } finally {
         setSpinner(true);
         setHideProductlist(false);
@@ -378,7 +377,7 @@ const Products = () => {
           <div hidden={hideproductlist} className='text-center mt-24 mb-10'>
             <img
               src={EmptyProducts}
-              alt='hai'
+              alt='EmptyProducts'
               className='w-1/3 phone:w-48 mx-auto mb-6'
             />
             <p className='text-lg phone:text-sm font-bold text-primary1'>
@@ -393,7 +392,6 @@ const Products = () => {
             onChange={handleChange}
           />
         </div>
-        <Footer />
       </div>
     </div>
   );

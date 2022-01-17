@@ -1,39 +1,48 @@
 import React from 'react';
 // ? react-router-dom
-import { Routes, Route, Navigate, Link } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Navigate,
+  Link,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 
 import RawMaterialsRecord from './RawMaterialsRecord';
 import PrescriptionHistory from './PrescriptionHistory';
 import OrderHistory from './OrderHistory';
 
 export default function History() {
-  // const loc = useLocation();
+  const location = useLocation();
   // const [baseURL, setbaseURL] = React.useState(
   //   loc.pathname.split('/').slice(0, -1).join('/')
   // );
+  const navigate = useNavigate();
+  const [links] = React.useState([
+    { to: 'raw_materials', label: 'Raw Materials' },
+    { to: 'orders', label: 'Orders' },
+    { to: 'prescriptions', label: 'Prescriptions' },
+  ]);
   return (
-<<<<<<< HEAD
-    <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins  items-center'>
-=======
-    <div className='bg-secondary1 flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins items-center'>
->>>>>>> develop-fe
-      <div className='bg-fourth2 flex w-11/12 h-10 rounded-full mt-2 justify-evenly border-black border-2'>
-        <button className='flex-1 rounded-l-full font-semibold cursor-default'>
-          <Link to='raw_materials' className='hover:text-white cursor-pointer'>
-            Raw Materials
-          </Link>
-        </button>
-        <button className='hover:text-white flex-1 border-black border-r-2 border-l-2 font-semibold cursor-default'>
-          <Link to='orders' className='hover:text-white cursor-pointer'>
-            Orders
-          </Link>
-        </button>
-        <button className='hover:text-white flex-1 rounded-r-full font-semibold cursor-default'>
-          <Link to='prescriptions' className='hover:text-white cursor-pointer'>
-            Prescriptions
-          </Link>
-        </button>
+    // <<<<<<< HEAD
+    <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins items-center'>
+      {/* <div className='bg-secondary1 flex w-11/12 h-10 rounded-full mt-2 justify-evenly border-black border-2'> */}
+      <div className='bg-fourth2 flex w-full h-12 justify-evenly shadow-lg'>
+        {links.map((el) => {
+          return (
+            <button
+              className={`flex-1 text-white btn-primary font-semibold ${
+                location.pathname.includes(el.to) && 'bg-secondary1'
+              }`}
+              onClick={() => navigate(el.to)}
+            >
+              {el.label}
+            </button>
+          );
+        })}
       </div>
+
       <Routes>
         <Route
           path='/'
