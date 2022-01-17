@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  Link,
   useNavigate,
   useLocation,
 } from 'react-router-dom';
@@ -15,9 +14,6 @@ import OrderHistory from './OrderHistory';
 
 export default function History() {
   const location = useLocation();
-  // const [baseURL, setbaseURL] = React.useState(
-  //   loc.pathname.split('/').slice(0, -1).join('/')
-  // );
   const navigate = useNavigate();
   const [links] = React.useState([
     { to: 'raw_materials', label: 'Raw Materials' },
@@ -25,9 +21,7 @@ export default function History() {
     { to: 'prescriptions', label: 'Prescriptions' },
   ]);
   return (
-    // <<<<<<< HEAD
     <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins items-center'>
-      {/* <div className='bg-secondary1 flex w-11/12 h-10 rounded-full mt-2 justify-evenly border-black border-2'> */}
       <div className='bg-fourth2 flex w-full h-12 justify-evenly shadow-lg'>
         {links.map((el) => {
           return (
