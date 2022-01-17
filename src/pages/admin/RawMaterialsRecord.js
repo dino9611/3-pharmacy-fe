@@ -116,14 +116,22 @@ export default function RawMaterialsRecordTable() {
                 row.inventoryChange < 0
                   ? Math.ceil(row.inventoryChange / row.unitPerBottle)
                   : Math.floor(row.inventoryChange / row.unitPerBottle)
-              } bottles ${(row.inventoryChange % row.unitPerBottle).toFixed(
-                2
-              )} ${row.unit}`,
+              } bottles ${(
+                row.inventoryChange %
+                (row.unitPerBottle / 1000)
+              ).toFixed(2)} ${
+                row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
+              }`,
           },
           {
             label: 'Unit Per Bottle',
             className: '',
-            format: (row) => `${row.unitPerBottle} ${row.unit} per bottle`,
+            format: (row) =>
+              `${(row.unitPerBottle / 1000).toLocaleString('en-US', {
+                maximumFractionDigits: 2,
+              })} ${
+                row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
+              } per bottle`,
           },
         ]}
         rows={rows}

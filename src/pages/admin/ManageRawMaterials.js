@@ -85,19 +85,24 @@ export default function RawMaterialsTable() {
                 className: '',
                 format: (row) =>
                   `${Math.floor(row.inventory / row.unitPerBottle)} bottles ${(
-                    row.inventory % row.unitPerBottle
-                  ).toFixed(2)} ${row.unit}`,
+                    row.inventory %
+                    (row.unitPerBottle / 1000)
+                  ).toFixed(2)} ${
+                    row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
+                  }`,
               },
               {
                 label: 'Unit Per Bottle',
                 className: '',
                 format: (row) =>
-                  `${row.unitPerBottle.toLocaleString('en-US', {
+                  `${(row.unitPerBottle / 1000).toLocaleString('en-US', {
                     maximumFractionDigits: 2,
-                  })} ${row.unit} per bottle`,
+                  })} ${
+                    row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
+                  } per bottle`,
               },
               {
-                label: 'Price Per Bottle',
+                label: 'cost Per Bottle',
                 className: '',
                 format: (row) =>
                   `Rp ${(row.priceRpPerUnit * row.unitPerBottle).toLocaleString(
@@ -163,7 +168,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
             .integer('must be integer')
             .moreThan(-1 * bottles.current - 1),
           unitPerBottle: yup.number().moreThan(0),
-          priceRpPerUnit: yup.number().moreThan(0),
+          priceRpPerUnit: yup.number().moreThan(0, `can't be negative`),
         })}
       >
         <Form className='flex flex-col items-center font-poppins'>
@@ -226,14 +231,14 @@ const EditModal = ({ toggleModal, initialValues }) => {
             className='block text-gray-700 text-sm font-bold mb-2 self-start'
             htmlFor='priceRpPerUnit'
           >
-            Price Per Unit
+            Cost Per Unit
           </label>
           <Field
             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             id='priceRpPerUnit'
             name='priceRpPerUnit'
             type='number'
-            placeholder='price per unit in Rp'
+            placeholder='cost per unit in Rp'
           />
           <p className='text-red-500 text-sm h-6 self-start'>
             <ErrorMessage name='priceRpPerUnit' />
@@ -253,7 +258,6 @@ const EditModal = ({ toggleModal, initialValues }) => {
           >
             <option value={'mg'}>mg</option>
             <option value={'ml'}>ml</option>
-            <option value={'gr'}>gr</option>
           </Field>
           <p className='text-red-500 text-sm h-6 self-start'>
             <ErrorMessage name='unit' />
@@ -319,7 +323,7 @@ const CreateModal = ({ toggleModal }) => {
           priceRpPerUnit: yup
             .number()
             .moreThan(0, 'has to be greater than 0')
-            .required(),
+            .required('required!'),
         })}
       >
         <Form className='flex flex-col items-center font-poppins'>
@@ -382,14 +386,14 @@ const CreateModal = ({ toggleModal }) => {
             className='block text-gray-700 text-sm font-bold mb-2 self-start'
             htmlFor='priceRpPerUnit'
           >
-            Price Per Unit
+            Cost Per Unit
           </label>
           <Field
             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             id='priceRpPerUnit'
             name='priceRpPerUnit'
             type='number'
-            placeholder='price per unit in Rp'
+            placeholder='Cost per unit in Rp'
           />
           <p className='text-red-500 text-sm h-6 self-start'>
             <ErrorMessage name='priceRpPerUnit' />
@@ -409,7 +413,6 @@ const CreateModal = ({ toggleModal }) => {
           >
             <option value={'mg'}>mg</option>
             <option value={'ml'}>ml</option>
-            <option value={'gr'}>gr</option>
           </Field>
           <p className='text-red-500 text-sm h-6 self-start'>
             <ErrorMessage name='unit' />
