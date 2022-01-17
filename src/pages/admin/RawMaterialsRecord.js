@@ -57,7 +57,7 @@ export default function RawMaterialsRecordTable() {
   const emptyRows = rowsPerPage - rows.length;
 
   return (
-    <>
+    <div className='px-3'>
       <div className='flex items-center'>
         <div className='flex border-2 rounded h-12'>
           <input
@@ -76,9 +76,9 @@ export default function RawMaterialsRecordTable() {
             </svg>
           </div>
         </div>
-        <div className='rounded-lg px-4 my-3 flex justify-around bg-white'>
+        <div className='rounded-lg px-4 my-3 flex justify-around'>
           <p className='font-semibold text-sm rounded-lg self-center'>
-            Filter by Year-Month
+            Year-Month Range
           </p>
           <div className='flex'>
             <ViewsDatePicker
@@ -121,12 +121,6 @@ export default function RawMaterialsRecordTable() {
             className: '',
             format: (row) => `${row.unitPerBottle} ${row.unit} per bottle`,
           },
-          // {
-          //   label: 'Datetime',
-          //   className: '',
-          //   format: (row) => row.datetime.slice(0, 19).replace('T', ' '),
-          // },
-          { label: '' },
         ]}
         rows={rows}
         emptyRows={emptyRows}
@@ -134,6 +128,6 @@ export default function RawMaterialsRecordTable() {
           setPage,
         }}
       />
-    </>
+    </div>
   );
 }
