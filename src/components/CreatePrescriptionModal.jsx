@@ -8,13 +8,12 @@ import TextField from '@mui/material/TextField';
 import { API_URL } from '../constants/api';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import Swal from 'sweetalert2';
 import {
   getRawMaterials,
   resetState as resetStateRawMaterial,
 } from '../redux/actions/rawMaterialActions';
 import CompositionSelect from './ProductCompSelect';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify';
 
 const style = {
   position: 'absolute',
@@ -84,7 +83,7 @@ const CreatePrescription = ({
       compositionsAmount: [],
       id: dataCustom?.id,
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [dataPrescription, setdataPrescription] = useState(initialInputVal);
 
   const inputHandler = (e) => {
@@ -99,7 +98,7 @@ const CreatePrescription = ({
     setdataPrescription(initialInputVal);
   };
 
-  const onConfirm = async() => {
+  const onConfirm = async () => {
     if (
       !(
         dataPrescription.medicineName &&
@@ -124,10 +123,10 @@ const CreatePrescription = ({
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       });
-      toast.success("Add Medicine Success", {
+      toast.success('Add Medicine Success', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
-      })
+      });
       handleClosetest();
     } catch (error) {
       console.log(error);

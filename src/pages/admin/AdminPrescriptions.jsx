@@ -111,7 +111,7 @@ const AdminPrescriptions = () => {
   };
   useEffect(() => {
     getCustom();
-  }, [status]);
+  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   //! untuk menghitung grand total
   const [totalPrice, settotalPrice] = useState(0);

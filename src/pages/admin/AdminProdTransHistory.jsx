@@ -423,7 +423,7 @@ const AdminProdTransHistory = () => {
     getOrder();
 
     setFilter(filter);
-  }, [filter, rowsPerPage, page, timeRange]);
+  }, [filter, rowsPerPage, page, timeRange, dispatch]);
 
   return (
     <div className='ml-64 px-8 min-h-screen'>

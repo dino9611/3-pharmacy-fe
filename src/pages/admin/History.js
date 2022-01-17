@@ -26,6 +26,7 @@ export default function History() {
         {links.map((el) => {
           return (
             <button
+              key={el.to}
               className={`flex-1 text-white btn-primary font-semibold ${
                 location.pathname.includes(el.to) && 'bg-secondary1'
               }`}

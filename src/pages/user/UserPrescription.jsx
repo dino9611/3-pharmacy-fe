@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { API_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import Header from '../../components/Header';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -68,12 +67,12 @@ const UserPrescription = () => {
     getPrescription();
   }, []);
 
-  const dummyButt = (index) => {
-    // console.log(authState)
-    // console.log(id)
-    console.log(dataCust);
-    console.log(dataCust[index].id);
-  };
+  // const dummyButt = (index) => {
+  //   // console.log(authState)
+  //   // console.log(id)
+  //   console.log(dataCust);
+  //   console.log(dataCust[index].id);
+  // };
 
   // Modal Custom ORDER
   const [openCustom, setopenCustom] = useState(false);
@@ -136,7 +135,7 @@ const UserPrescription = () => {
   };
 
   //! Dialog Details & Handler
-  const [totalPrice, settotalPrice] = useState(0);
+  const [, settotalPrice] = useState(0);
   const [indexProduct, setindexProduct] = useState(-1);
   const [openDialog, setopenDialog] = useState(false);
   const [detailData, setdetailData] = useState([]);
