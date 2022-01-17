@@ -212,7 +212,7 @@ const Products = () => {
       setDataDeskripsi(res.data);
       setOpen(!open);
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response?.data.message);
     }
   };
 
@@ -280,7 +280,7 @@ const Products = () => {
         );
         setProducts(res.data[0].product_length);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       }
     };
     getProducts();
@@ -291,7 +291,7 @@ const Products = () => {
         let res = await axios.get(`${API_URL}/product/getcategories`);
         setDataKategori(res.data);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       }
     };
     getCategories();
@@ -315,7 +315,7 @@ const Products = () => {
         );
         setPaginatedProducts(res.data);
       } catch (error) {
-        alert(error.response.data.message);
+        alert(error.response?.data.message);
       } finally {
         setSpinner(true);
         setHideProductlist(false);

@@ -491,7 +491,7 @@ const AdminProdTransHistory = () => {
       ) : (
         <div className='mt-40'>
           <img className='w-72 mx-auto mb-4' src={EmptyData} alt='empty-data' />
-          <p className='text-green-dark text-center text-xl font-medium'>
+          <p className='text-primary1 text-center text-xl font-medium'>
             No data
           </p>
         </div>

@@ -97,6 +97,8 @@ const ProductTransactionHistory = () => {
           `${API_URL}/transaction/transactionreq/${orderId}`,
           {
             type: 'delivered',
+            user_id: authState.id,
+            limit: 5
           }
         );
         dispatch({ type: 'setuserorder', payload: res.data });
@@ -257,26 +259,26 @@ const ProductTransactionHistory = () => {
         {!val.product_list
           ? ''
           : val.product_list.map((val, index) => (
-              <div
-                key={index + 1}
-                className=' mb-1 flex items-center shadow-md p-2 rounded'
-              >
-                <img
-                  src={API_URL + val.imagePath}
-                  alt={val.productName}
-                  className='w-16 h-16 mr-5'
-                />
-                <div>
-                  <p className='font-bold text-sm phone:text-xs'>
-                    {capitalize(val.productName)}
-                  </p>
-                  <p className='text-sm phone:text-xs'>
-                    {toRupiah(val.productPriceRp)}
-                  </p>
-                  <p className='text-sm phone:text-xs'>{val.qty} x</p>
-                </div>
+            <div
+              key={index + 1}
+              className=' mb-1 flex items-center shadow-md p-2 rounded'
+            >
+              <img
+                src={API_URL + val.imagePath}
+                alt={val.productName}
+                className='w-16 h-16 mr-5'
+              />
+              <div>
+                <p className='font-bold text-sm phone:text-xs'>
+                  {capitalize(val.productName)}
+                </p>
+                <p className='text-sm phone:text-xs'>
+                  {toRupiah(val.productPriceRp)}
+                </p>
+                <p className='text-sm phone:text-xs'>{val.qty} x</p>
               </div>
-            ))}
+            </div>
+          ))}
         <hr className='my-5' />
         <div className='text-right'>
           {val.status === 'checkout' && !val.paymentProof ? (
