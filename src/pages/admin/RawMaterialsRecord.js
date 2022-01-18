@@ -1,4 +1,9 @@
 import React from 'react';
+// ? mui
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 // ? redux
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -7,12 +12,9 @@ import {
 } from '../../redux/actions/rawMaterialActions';
 // ? components
 import AdminTable from '../../components/Tables/AdminTable';
-import ViewsDatePicker from '../../components/ViewsDatePicker';
 
 import { toast } from 'react-toastify';
 import { useDebounce } from '../../hooks';
-
-const currYear = new Date().getFullYear();
 
 export default function RawMaterialsRecordTable() {
   const dispatch = useDispatch();
@@ -23,13 +25,7 @@ export default function RawMaterialsRecordTable() {
   const [page, setPage] = React.useState(0);
   // const [rowsPerPage, setRowsPerPage] = React.useState(8);
 
-  const [yearMonthStart, setyearMonthStart] = React.useState(
-    new Date(currYear - 1, 0, 1)
-  );
-  const [yearMonthEnd, setyearMonthEnd] = React.useState(
-    // new Date(currYear, 11, 1)
-    new Date()
-  );
+  const [date, setdate] = React.useState(new Date());
 
   const [search, setsearch] = React.useState('');
   const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 700);
@@ -51,8 +47,7 @@ export default function RawMaterialsRecordTable() {
         {
           page: 1,
           limit: rowsPerPage * maxPage,
-          yearMonthStart,
-          yearMonthEnd,
+          date,
           search,
         },
         {
@@ -66,12 +61,12 @@ export default function RawMaterialsRecordTable() {
       )
     );
     return () => dispatch(resetState('rawMaterials'));
-  }, [dispatch, page, rowsPerPage, yearMonthStart, yearMonthEnd, search]);
+  }, [dispatch, page, rowsPerPage, date, search]);
   // const emptyRows = rowsPerPage - rows.length;
   const emptyRows = rowsPerPage - currRows.length;
 
   return (
-    <div className='px-3'>
+    <div className='px-3 w-full'>
       <div className='flex items-center'>
         <div className='flex border-2 rounded h-12'>
           <input
@@ -91,20 +86,22 @@ export default function RawMaterialsRecordTable() {
           </div>
         </div>
         <div className='rounded-lg px-4 my-3 flex justify-around'>
-          <p className='font-semibold text-sm rounded-lg self-center'>
-            Year-Month Range
+          <p className='font-semibold text-sm rounded-lg self-center mx-3'>
+            Filter by Date
           </p>
           <div className='flex'>
-            <ViewsDatePicker
-              value={yearMonthStart}
-              setvalue={setyearMonthStart}
-              label='From'
-            />
-            <ViewsDatePicker
-              value={yearMonthEnd}
-              setvalue={setyearMonthEnd}
-              label='Up To'
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label='Basic example'
+                value={date}
+                minDate={new Date(`2012-03-01`)}
+                maxDate={new Date()}
+                onChange={(newValue) => {
+                  setdate(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
           </div>
         </div>
       </div>

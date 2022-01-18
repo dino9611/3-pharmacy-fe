@@ -192,7 +192,7 @@ export default function Revenue() {
 
       <div className='bg-white rounded-lg m-5 flex justify-around pl-4'>
         <p className='font-semibold text-base rounded-lg self-center'>
-          Filter by Year-Month
+          Filter by Year-Month Range
         </p>
         <div className='flex'>
           <ViewsDatePicker
