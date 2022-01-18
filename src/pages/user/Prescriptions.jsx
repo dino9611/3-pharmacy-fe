@@ -77,15 +77,16 @@ export default function Prescriptions() {
         >
           <h3
             className={`text-md phone:text-sm text-black font-bold ${
-              filter === 'waitingPayment' ? 'w-1/6' : 'w-3/6'
+              filter === 'waitingPayment' ? 'w-2/6' : 'w-3/6'
             }`}
           >
             {el.prescriptionName ? el.prescriptionName : '...'}
           </h3>
 
-          <p className='w-2/6'>{parseDate(el.createdAt)}</p>
-          {filter === 'waitingPayment' && (
-            <p className='w-2/6'>{'expired at: ' + parseDate(el.expiredAt)}</p>
+          {filter === 'waitingPayment' ? (
+            <p className='w-3/6'>{'expired at: ' + parseDate(el.expiredAt)}</p>
+          ) : (
+            <p className='w-2/6'>{parseDate(el.createdAt)}</p>
           )}
           <button
             className='w-1/6 text-sm phone:text-xs text-primary1 font-bold hover:text-lightblue'
