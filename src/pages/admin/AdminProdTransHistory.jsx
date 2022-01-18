@@ -47,8 +47,6 @@ const AdminProdTransHistory = () => {
     { status: 'Accepted', value: 'paymentAcc' },
     { status: 'On Process', value: 'processing' },
     { status: 'On Delivery', value: 'otw' },
-    { status: 'Delivered', value: 'delivered' },
-    { status: 'Rejected', value: 'paymentRej' },
   ];
 
   const pickFilter = (value) => {
@@ -160,9 +158,7 @@ const AdminProdTransHistory = () => {
                     : ''}
                   {history?.status === 'processing' ? 'On process' : ''}
                   {history?.status === 'otw' ? 'On Delivery' : ''}
-                  {history?.status === 'delivered' ? 'Delivered' : ''}
                   {history?.status === 'paymentAcc' ? 'Accepted' : ''}
-                  {history?.status === 'paymentRej' ? 'Rejected' : ''}
                 </p>
               </div>
               <div className='flex justify-between mb-2'>
