@@ -37,7 +37,10 @@ export default function RawMaterialsRecordTable() {
   React.useEffect(() => {
     setcurrRow(
       rows.filter(
-        (el, i) => rowsPerPage * page <= i && i < rowsPerPage * (page + 1)
+        (el, i) =>
+          rowsPerPage * page <= i &&
+          i < rowsPerPage * (page + 1) &&
+          el.inventoryChange !== 0
       )
     );
   }, [page, rowsPerPage, rows]);
@@ -124,9 +127,9 @@ export default function RawMaterialsRecordTable() {
                   ? Math.ceil(row.inventoryChange / row.unitPerBottle)
                   : Math.floor(row.inventoryChange / row.unitPerBottle)
               } bottles ${(
-                row.inventoryChange %
-                (row.unitPerBottle / 1000)
-              ).toFixed(2)} ${
+                (row.inventoryChange % row.unitPerBottle) /
+                1000
+              ).toFixed(3)} ${
                 row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
               }`,
           },

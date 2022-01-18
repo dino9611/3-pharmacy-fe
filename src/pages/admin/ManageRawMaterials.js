@@ -80,8 +80,8 @@ export default function RawMaterialsTable() {
                 className: '',
                 format: (row) =>
                   `${Math.floor(row.inventory / row.unitPerBottle)} bottles ${(
-                    row.inventory %
-                    (row.unitPerBottle / 1000)
+                    (row.inventory % row.unitPerBottle) /
+                    1000
                   ).toFixed(2)} ${
                     row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
                   }`,

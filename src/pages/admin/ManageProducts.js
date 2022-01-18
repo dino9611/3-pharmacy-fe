@@ -266,7 +266,6 @@ const EditModal = ({ toggleModal, initialValues }) => {
               // id: yup.number().moreThan(0, 'has to be greater than 0'),
               amountInUnit: yup
                 .number()
-                .integer('must be integer')
                 .moreThan(0, 'has to be greater than 0')
                 .required('required'),
             })
@@ -689,7 +688,6 @@ const CreateModal = ({ toggleModal }) => {
               // id: yup.number().moreThan(0, 'has to be greater than 0'),
               amountInUnit: yup
                 .number()
-                .integer('must be integer')
                 .moreThan(0, 'has to be greater than 0')
                 .required('required'),
             })
