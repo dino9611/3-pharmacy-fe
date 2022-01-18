@@ -415,7 +415,7 @@ const SingleStats = ({ label, change, svgPath, iconColor }) => {
                 : Math.round(change * 100)}
               %{' '}
             </span>
-            since last day
+            since last week
           </p>
         </div>
       </div>
