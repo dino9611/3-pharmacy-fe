@@ -249,23 +249,24 @@ const EditModal = ({ toggleModal, initialValues }) => {
           return errors;
         }}
         validationSchema={yup.object({
-          productName: yup.string().required(),
+          productName: yup.string().required('required'),
           productProfitRp: yup
             .number()
+            .required('required')
             .integer('must be integer')
             .moreThan(0, 'has to be greater than 0'),
           stock: yup
             .number()
             .integer('must be integer')
             .moreThan(0, 'has to be greater than 0')
-            .required(),
-          description: yup.string().required(),
+            .required('required'),
+          description: yup.string().required('required'),
           compositions: yup.array().of(
             yup.object({
               // id: yup.number().moreThan(0, 'has to be greater than 0'),
               amountInUnit: yup
                 .number()
-                .integer()
+                .integer('must be integer')
                 .moreThan(0, 'has to be greater than 0')
                 .required('required'),
             })
@@ -671,23 +672,24 @@ const CreateModal = ({ toggleModal }) => {
           return errors;
         }}
         validationSchema={yup.object({
-          productName: yup.string().required(),
+          productName: yup.string().required('required'),
           productProfitRp: yup
             .number()
+            .required('required')
             .integer('must be integer')
             .moreThan(0, 'has to be greater than 0'),
           stock: yup
             .number()
             .integer('must be integer')
             .moreThan(0, 'has to be greater than 0')
-            .required(),
-          description: yup.string().required(),
+            .required('required'),
+          description: yup.string().required('required'),
           compositions: yup.array().of(
             yup.object({
               // id: yup.number().moreThan(0, 'has to be greater than 0'),
               amountInUnit: yup
                 .number()
-                .integer()
+                .integer('must be integer')
                 .moreThan(0, 'has to be greater than 0')
                 .required('required'),
             })
@@ -736,7 +738,7 @@ const CreateModal = ({ toggleModal }) => {
                   placeholder='profit of product in Rupiah'
                 />
                 <p className='text-red-500 text-sm h-6 self-start'>
-                  <ErrorMessage name='productprofitrp' />
+                  <ErrorMessage name='productProfitRp' />
                 </p>
 
                 <label
