@@ -29,10 +29,10 @@ const style = {
 };
 const ColorButton = styled(Button)(({ theme }) => ({
   borderRadius: 10,
-  color: 'black',
-  backgroundColor: '#FFC286',
+  color: 'white',
+  backgroundColor: '#22577A',
   '&:hover': {
-    backgroundColor: '#66806A',
+    backgroundColor: '#38A3A5',
     color: 'white',
   },
 }));

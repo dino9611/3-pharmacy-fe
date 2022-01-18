@@ -37,10 +37,7 @@ export default function RawMaterialsRecordTable() {
   React.useEffect(() => {
     setcurrRow(
       rows.filter(
-        (el, i) =>
-          rowsPerPage * page <= i &&
-          i < rowsPerPage * (page + 1) &&
-          el.inventoryChange !== 0
+        (el, i) => rowsPerPage * page <= i && i < rowsPerPage * (page + 1)
       )
     );
   }, [page, rowsPerPage, rows]);
