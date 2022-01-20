@@ -1,0 +1,41 @@
+.top-cont {
+    background-color: #66806A;
+    max-width: 100%;
+    max-height: 70vh;
+}
+.change-cont{
+    max-width: 100%;
+}
+.header-cont {
+    background-color: bisque;
+}
+
+.logo-set {
+    font-size: 2.5rem;
+}
+
+.img-cont {
+    height: 20rem;
+}
+.image-1 {
+    width: 100%;
+    max-height: 20rem;
+}
+
+.neu-change {
+    border-radius: 25px;
+    background: #22577a;
+    box-shadow:  20px 20px 60px #1d4a68,
+                -20px -20px 60px #27648c;
+}
+
+.image-2 {
+    width: 100%;
+    max-height: 20rem;
+}
+.Forgot-Register {
+    text-align: end;
+}
+.shop-bttn div:last-child{
+    text-align: center;
+}
