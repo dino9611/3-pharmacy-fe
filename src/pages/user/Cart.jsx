@@ -40,7 +40,12 @@ const Cart = () => {
     const getCart = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/getcart/${authState.id}`
+          `${API_URL}/transaction/getcart/${authState.id}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch({ type: 'setcart', payload: res.data });
       } catch (error) {
@@ -60,11 +65,16 @@ const Cart = () => {
         confirmButtonColor: '#22577A',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
-      })
+        cancelButtonText: 'No',
+      });
       if (dialog.isConfirmed) {
         let res = await axios.delete(
-          `${API_URL}/transaction/deletefromcart/${authState.id}/${cartState[index].product_id}`
+          `${API_URL}/transaction/deletefromcart/${authState.id}/${cartState[index].product_id}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch({ type: 'setcart', payload: res.data });
         openSnackbar();
@@ -87,6 +97,11 @@ const Cart = () => {
         {
           qty,
           product_id: cartState[index].product_id,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
         }
       );
       dispatch({ type: 'setcart', payload: res.data });

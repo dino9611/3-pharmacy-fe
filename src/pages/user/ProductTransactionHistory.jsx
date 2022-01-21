@@ -94,11 +94,15 @@ const ProductTransactionHistory = () => {
       });
       if (result.isConfirmed) {
         let res = await axios.patch(
-          `${API_URL}/transaction/transactionreq/${orderId}`,
+          `${API_URL}/transaction/confirm_delivery/${orderId}`,
           {
             type: 'delivered',
-            user_id: authState.id,
-            limit: 5
+            limit: 5,
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
           }
         );
         dispatch({ type: 'setuserorder', payload: res.data });
@@ -122,11 +126,21 @@ const ProductTransactionHistory = () => {
   const modalHandler = async (id) => {
     try {
       let historyRes = await axios.get(
-        `${API_URL}/transaction/historydetails/${id}`
+        `${API_URL}/transaction/historydetails/${id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setHistorydetails(historyRes.data);
       let boughtRes = await axios.get(
-        `${API_URL}/transaction/boughtproducts/${id}`
+        `${API_URL}/transaction/boughtproducts/${id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setBoughtProducts(boughtRes.data);
       setOpen(!open);
@@ -259,26 +273,26 @@ const ProductTransactionHistory = () => {
         {!val.product_list
           ? ''
           : val.product_list.map((val, index) => (
-            <div
-              key={index + 1}
-              className=' mb-1 flex items-center shadow-md p-2 rounded'
-            >
-              <img
-                src={API_URL + val.imagePath}
-                alt={val.productName}
-                className='w-16 h-16 mr-5'
-              />
-              <div>
-                <p className='font-bold text-sm phone:text-xs'>
-                  {capitalize(val.productName)}
-                </p>
-                <p className='text-sm phone:text-xs'>
-                  {toRupiah(val.productPriceRp)}
-                </p>
-                <p className='text-sm phone:text-xs'>{val.qty} x</p>
+              <div
+                key={index + 1}
+                className=' mb-1 flex items-center shadow-md p-2 rounded'
+              >
+                <img
+                  src={API_URL + val.imagePath}
+                  alt={val.productName}
+                  className='w-16 h-16 mr-5'
+                />
+                <div>
+                  <p className='font-bold text-sm phone:text-xs'>
+                    {capitalize(val.productName)}
+                  </p>
+                  <p className='text-sm phone:text-xs'>
+                    {toRupiah(val.productPriceRp)}
+                  </p>
+                  <p className='text-sm phone:text-xs'>{val.qty} x</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         <hr className='my-5' />
         <div className='text-right'>
           {val.status === 'checkout' && !val.paymentProof ? (
@@ -365,7 +379,12 @@ const ProductTransactionHistory = () => {
     const getOrderLength = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/orderlength/${authState.id}?filter=${filter}&range=${timeRange}`
+          `${API_URL}/transaction/orderlength/${authState.id}?filter=${filter}&range=${timeRange}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         setOrderLength(res.data[0].order_length);
       } catch (error) {
@@ -382,7 +401,12 @@ const ProductTransactionHistory = () => {
     const getOrder = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/getorder/${authState.id}/${offset}?filter=${filter}&range=${timeRange}`
+          `${API_URL}/transaction/getorder/${authState.id}/${offset}?filter=${filter}&range=${timeRange}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch({ type: 'setuserorder', payload: res.data });
       } catch (error) {

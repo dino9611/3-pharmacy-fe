@@ -77,11 +77,21 @@ const OrderHistory = () => {
   const modalHandler = async (id) => {
     try {
       let historyRes = await axios.get(
-        `${API_URL}/transaction/historydetails/${id}`
+        `${API_URL}/transaction/historydetails/${id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setHistorydetails(historyRes.data);
       let boughtRes = await axios.get(
-        `${API_URL}/transaction/boughtproducts/${id}`
+        `${API_URL}/transaction/boughtproducts/${id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setBoughtProducts(boughtRes.data);
       setOpen(!open);
@@ -266,7 +276,12 @@ const OrderHistory = () => {
     const getOrderLength = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/adminorderlength?filter=${filter}&range=${timeRange}`
+          `${API_URL}/transaction/adminorderlength?filter=${filter}&range=${timeRange}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         setOrderLength(res.data[0].order_length);
       } catch (error) {
@@ -286,7 +301,12 @@ const OrderHistory = () => {
     const getOrder = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/admingetorder?filter=${filter}&limit=${rowsPerPage}&offset=${offset}&range=${timeRange}`
+          `${API_URL}/transaction/admingetorder?filter=${filter}&limit=${rowsPerPage}&offset=${offset}&range=${timeRange}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch({ type: 'setadminorder', payload: res.data });
       } catch (error) {
