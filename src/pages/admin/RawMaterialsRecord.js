@@ -22,20 +22,18 @@ export default function RawMaterialsRecordTable() {
   const rows = useSelector(
     (state) => state.rawMaterialReducers.rawMaterialsRecord
   );
-  const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(8);
-
   const [date, setdate] = React.useState(new Date());
 
   const [search, setsearch] = React.useState('');
   const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 700);
 
-  const rowsPerPage = 7;
   const maxPage = 5;
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(6);
   // * modal states
-  const [currRows, setcurrRow] = React.useState([]);
+  const [currRows, setcurrRows] = React.useState([]);
   React.useEffect(() => {
-    setcurrRow(
+    setcurrRows(
       rows.filter(
         (el, i) => rowsPerPage * page <= i && i < rowsPerPage * (page + 1)
       )
@@ -53,10 +51,6 @@ export default function RawMaterialsRecordTable() {
         {
           handleFail: (err) =>
             toast.error(err.response?.data.message || 'server error'),
-          handleFinally: (rowLength) =>
-            !rowLength &&
-            !search &&
-            toast.error('no results', { autoClose: 2000 }),
         }
       )
     );
@@ -66,7 +60,7 @@ export default function RawMaterialsRecordTable() {
   const emptyRows = rowsPerPage - currRows.length;
 
   return (
-    <div className='px-3 w-full'>
+    <div className='px-3 w-full bg-lightblue'>
       <div className='flex items-center'>
         <div className='flex border-2 rounded h-12'>
           <input
@@ -142,10 +136,13 @@ export default function RawMaterialsRecordTable() {
           },
         ]}
         rows={currRows}
+        rowsPerPage={rowsPerPage}
         emptyRows={emptyRows}
         actions={{
           setPage,
+          setRowsPerPage,
         }}
+        notFound={!rows.length}
       />
     </div>
   );

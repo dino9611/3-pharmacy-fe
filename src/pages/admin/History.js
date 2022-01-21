@@ -22,12 +22,12 @@ export default function History() {
   ]);
   return (
     <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins items-center'>
-      <div className='bg-fourth2 flex w-full h-12 justify-evenly shadow-lg'>
+      <div className='bg-fourth2 flex w-full justify-evenly shadow-lg'>
         {links.map((el) => {
           return (
             <button
               key={el.to}
-              className={`flex-1 text-white btn-primary font-semibold ${
+              className={`flex-1 h-12 text-white btn-primary font-semibold ${
                 location.pathname.includes(el.to) && 'bg-secondary1'
               }`}
               onClick={() => navigate(el.to)}

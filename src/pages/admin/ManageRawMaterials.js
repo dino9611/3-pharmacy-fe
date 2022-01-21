@@ -20,101 +20,124 @@ export default function RawMaterialsTable() {
   const dispatch = useDispatch();
   // * pagination states
   const rows = useSelector((state) => state.rawMaterialReducers.rawMaterials);
-  const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(8);
-  const rowsPerPage = 8;
 
   const [search, setsearch] = React.useState('');
   const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 700);
+
+  const maxPage = 5;
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
   // * modal states
+  const [currRows, setcurrRows] = React.useState([]);
+  React.useEffect(() => {
+    setcurrRows(
+      rows.filter(
+        (el, i) => rowsPerPage * page <= i && i < rowsPerPage * (page + 1)
+      )
+    );
+  }, [page, rowsPerPage, rows]);
   React.useEffect(() => {
     dispatch(
       getRawMaterials(
-        { page: page + 1, limit: rowsPerPage, search },
+        { page: 1, limit: rowsPerPage * maxPage, search },
         {
           handleFail: (err) =>
-            toast.error(err.response.data.message || 'server error'),
+            toast.error(err.response?.data.message || 'server error'),
         }
       )
     );
     return () => dispatch(resetState('rawMaterials'));
   }, [dispatch, page, rowsPerPage, search]);
-  const emptyRows = rowsPerPage - rows.length;
+  const emptyRows = rowsPerPage - currRows.length;
 
   return (
     <>
-      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 px-4 w-full absolute right-0 font-poppins'>
-        <div className='flex flex-col h-full justify-start'>
-          <div className='flex m-3'>
-            <div className='flex border-2 rounded'>
-              <input
-                type='text'
-                className='px-4 py-2 w-80'
-                placeholder='Search Raw Materials...'
-                onChange={handleSearchChange}
-              />
-              <div className='flex items-center justify-center px-4 border-l bg-white'>
-                <svg
-                  className='w-6 h-6 text-gray-600'
-                  fill='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
-                </svg>
+      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
+        <div className='px-3 w-full bg-lightblue'>
+          <div className='flex flex-col h-full justify-start'>
+            <div className='flex m-3'>
+              <div className='flex border-2 rounded'>
+                <input
+                  type='text'
+                  className='px-4 py-2 w-80'
+                  placeholder='Search Raw Materials...'
+                  onChange={handleSearchChange}
+                />
+                <div className='flex items-center justify-center px-4 border-l bg-white'>
+                  <svg
+                    className='w-6 h-6 text-gray-600'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                  >
+                    <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          <AdminTable
-            name='Raw Materials'
-            page={page}
-            maxPage={5}
-            cols={[
-              {
-                label: 'Raw Material Name',
-                className: 'font-semibold',
-                format: (row) => row.materialName,
-              },
-              {
-                label: 'Inventory',
-                className: '',
-                format: (row) =>
-                  `${Math.floor(row.inventory / row.unitPerBottle)} bottles ${(
-                    (row.inventory % row.unitPerBottle) /
-                    1000
-                  ).toFixed(2)} ${
-                    row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
-                  }`,
-              },
-              {
-                label: 'Unit Per Bottle',
-                className: '',
-                format: (row) =>
-                  `${(row.unitPerBottle / 1000).toLocaleString('en-US', {
-                    maximumFractionDigits: 2,
-                  })} ${
-                    row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
-                  } per bottle`,
-              },
-              {
-                label: 'cost Per Bottle',
-                className: '',
-                format: (row) =>
-                  `Rp ${(row.priceRpPerUnit * row.unitPerBottle).toLocaleString(
-                    'en-US',
-                    { maximumFractionDigits: 2 }
-                  )}`,
-              },
-              { label: '' },
-            ]}
-            rows={rows}
-            emptyRows={emptyRows}
-            actions={{
-              setPage,
-            }}
-            CreateModal={CreateModal}
-            EditModal={EditModal}
-          />
+            <AdminTable
+              name='Raw Materials'
+              page={page}
+              maxPage={Math.ceil(rows.length / rowsPerPage)}
+              cols={[
+                {
+                  label: 'Raw Material Name',
+                  className: 'font-semibold',
+                  format: (row) => row.materialName,
+                },
+                {
+                  label: 'Inventory',
+                  className: '',
+                  format: (row) =>
+                    `${Math.floor(
+                      row.inventory / row.unitPerBottle
+                    )} bottles ${(
+                      (row.inventory % row.unitPerBottle) /
+                      1000
+                    ).toFixed(2)} ${
+                      row.unit === 'mg'
+                        ? 'gr'
+                        : row.unit === 'ml'
+                        ? 'liter'
+                        : ''
+                    }`,
+                },
+                {
+                  label: 'Unit Per Bottle',
+                  className: '',
+                  format: (row) =>
+                    `${(row.unitPerBottle / 1000).toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })} ${
+                      row.unit === 'mg'
+                        ? 'gr'
+                        : row.unit === 'ml'
+                        ? 'liter'
+                        : ''
+                    } per bottle`,
+                },
+                {
+                  label: 'cost Per Bottle',
+                  className: '',
+                  format: (row) =>
+                    `Rp ${(
+                      row.priceRpPerUnit * row.unitPerBottle
+                    ).toLocaleString('en-US', { maximumFractionDigits: 2 })}`,
+                },
+                { label: '' },
+              ]}
+              rows={currRows}
+              emptyRows={emptyRows}
+              rowsPerPage={rowsPerPage}
+              actions={{
+                setPage,
+                setRowsPerPage,
+              }}
+              notFound={!rows.length}
+              CreateModal={CreateModal}
+              EditModal={EditModal}
+            />
+          </div>
         </div>
       </div>
     </>
