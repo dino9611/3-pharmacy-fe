@@ -132,9 +132,9 @@ const CheckOut = () => {
   }, [form]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className='font-poppins'>
+    <div className='font-poppins py-5'>
       <span
-        className='flex text-xl phone:text-base items-center px-20 phone:px-2 text-primary1 font-bold py-5 phone:py-2 hover:opacity-80 cursor-pointer'
+        className='flex text-xl phone:text-base items-center px-20 phone:px-2 text-primary1 font-bold mb-5 phone:py-2 hover:opacity-80 cursor-pointer'
         onClick={() => navigate('/cart')}
       >
         <svg
