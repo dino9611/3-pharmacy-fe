@@ -5,6 +5,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { TablePagination } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { API_URL } from '../../constants/api';
@@ -25,6 +26,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -80,6 +82,17 @@ const AdminPrescriptions = () => {
     setopenCreate(!openCreate);
     setindexProduct(-1);
   };
+  //! Pagination
+  const [prescriptionLength, setprescriptionLength] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (e, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(e.target.value);
+  };
+
   // const [value, setValue] = useState(1);
   //! tabs Setting
   //* status adalah tempat untuk menampung value dari tabs
@@ -93,25 +106,51 @@ const AdminPrescriptions = () => {
     setindexTab(newValue);
     setStatus(dataStatus[newValue].status);
     setnextStatus(dataStatus[newValue + 1].status);
+    setPage(0)
   };
-
+  const offset = page * rowsPerPage;
   //? Fetch prescription data
   const getCustom = async () => {
     try {
       let results = await axios.get(`${API_URL}/custom`, {
-        params: { status },
+        params: { status, rowsPerPage, offset },
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       });
       setcustomData(results.data);
     } catch (error) {
-      alert(error);
+      console.log(error)
+      toast.error(error || 'Server Error', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
     }
   };
+  const getLength = async () => {
+    try {
+      let result = await axios.get(`${API_URL}/custom/prescriptionlength`, {
+        params: { status },
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      })
+      setprescriptionLength(result.data[0].prescription_length)
+      console.log(result.data[0].prescription_length)
+    } catch (error) {
+      console.log(error)
+      toast.error(error || 'Server Error', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
+    }
+  }
   useEffect(() => {
+    getLength()
+    setRowsPerPage(rowsPerPage);
+    setPage(page);
     getCustom();
-  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [status, rowsPerPage, page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   //! untuk menghitung grand total
   const [totalPrice, settotalPrice] = useState(0);
@@ -189,7 +228,10 @@ const AdminPrescriptions = () => {
   const acceptHandler = async (index) => {
     try {
       if (!customData[index].prescriptionName) {
-        alert('check prescriptionName');
+        toast.error('Check Prescription Name', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000,
+        });
         return;
       }
       console.log(customData[index]);
@@ -221,7 +263,10 @@ const AdminPrescriptions = () => {
       // console.log(nextStatus)
     } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
+      toast.error(error.response.data.message || 'Server Error', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
     }
   };
   const closeAcceptDialog = () => {
@@ -259,12 +304,18 @@ const AdminPrescriptions = () => {
         },
       });
       getCustom();
-      alert('berhasil');
+      toast.success("Commited", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
       setcommitProtect(!commitProtect);
       closeAcceptDialog();
     } catch (error) {
       console.log(error);
-      alert(error);
+      toast.error(error || 'Server Error', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
     }
   };
   const dialogAccept = () => {
@@ -361,11 +412,17 @@ const AdminPrescriptions = () => {
       });
       // console.log(updateData.customName)
       getCustom();
-      alert('berhasil');
+      toast.success('Success', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
       handlecloseDialog();
     } catch (error) {
       console.log(error);
-      alert(error);
+      toast.error(error || 'Server Error', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
     }
   };
   const handleopenDialog = async (index) => {
@@ -388,7 +445,10 @@ const AdminPrescriptions = () => {
       // alert("Create Medicine First")
     } catch (error) {
       console.log(error);
-      alert(error);
+      toast.error(error || 'Server Error', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 5000,
+      });
     }
   };
   const handlecloseDialog = () => {
@@ -523,7 +583,7 @@ const AdminPrescriptions = () => {
                 <Button disabled>Accept</Button>
               ) : (
                 <Button
-                  sx={{ display: status == 'delivered' ? 'none' : 'block' }}
+                  sx={{ display: status == 'otw' ? 'none' : 'block' }}
                   onClick={() => acceptHandler(index)}
                 >
                   Accept
@@ -567,7 +627,6 @@ const AdminPrescriptions = () => {
           <Tab value={3} label='Payment Accepted' />
           <Tab value={4} label='Processing' />
           <Tab value={5} label='Delivery' />
-          <Tab value={6} label='Delivered' />
         </Tabs>
       </Box>
       <TableContainer component={Paper} sx={{ mt: 3 }}>
@@ -596,6 +655,16 @@ const AdminPrescriptions = () => {
           </TableHead>
           {renderBody()}
         </Table>
+        <TablePagination
+            component='div'
+            count={prescriptionLength}
+            rowsPerPageOptions={[5, 10, 15]}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{ color: 'white', backgroundColor: '#22577A' }}
+          />
       </TableContainer>
     </div>
   );

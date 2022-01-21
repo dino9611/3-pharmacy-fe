@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { API_URL } from '../../constants/api';
 import { Button } from '@mui/material';
+import { TablePagination } from '@mui/material';
 
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -65,11 +66,26 @@ const PrescriptionHistory = () => {
     // console.log(dataStatus[newValue].id)
     setindexTab(newValue);
     setStatus(dataStatus[newValue].status);
+    setPage(0)
   };
+
+  //! Pagination
+  const [prescriptionLength, setprescriptionLength] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (e, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(e.target.value);
+  };
+  const offset = page * rowsPerPage;
+
+
   const getCustom = async () => {
     try {
       let results = await axios.get(`${API_URL}/custom`, {
-        params: { status },
+        params: { status, rowsPerPage, offset },
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
@@ -79,9 +95,27 @@ const PrescriptionHistory = () => {
       alert(error);
     }
   };
+  const getLength = async () => {
+    try {
+      let result = await axios.get(`${API_URL}/custom/prescriptionlength`, {
+        params: { status },
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      })
+      setprescriptionLength(result.data[0].prescription_length)
+      console.log(result.data[0].prescription_length)
+    } catch (error) {
+      alert(error)
+      console.log(error)
+    }
+  }
   useEffect(() => {
+    getLength()
+    setRowsPerPage(rowsPerPage);
+    setPage(page);
     getCustom();
-  }, [status]);
+  }, [status, rowsPerPage, page]);
 
   //! PaymentProof Handler
   const imagePayment = (index) => {
@@ -253,6 +287,16 @@ const PrescriptionHistory = () => {
           </TableHead>
           {renderBody()}
         </Table>
+        <TablePagination
+            component='div'
+            count={prescriptionLength}
+            rowsPerPageOptions={[5, 10, 15]}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{ color: 'white', backgroundColor: '#22577A' }}
+        />
       </TableContainer>
     </div>
   );
