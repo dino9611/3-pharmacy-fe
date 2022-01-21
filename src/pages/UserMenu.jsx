@@ -15,6 +15,7 @@ import ProductTransactionHistory from './user/ProductTransactionHistory';
 import Prescriptions from './user/Prescriptions';
 import CheckOut from './user/CheckOut';
 import UploadPayment from './user/UploadPayment';
+import ChangePassFromProfile from './user/ChangePassFromProfile';
 
 const UserMenu = () => {
   return (
@@ -37,6 +38,8 @@ const UserMenu = () => {
         <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
 
         <Route path={'*'} element={<Navigate to={'/404'} />} />
+
+        <Route path='change-password' element={<ChangePassFromProfile />} />
       </Routes>
       <Footer />
     </div>

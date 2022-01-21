@@ -16,6 +16,7 @@ import { API_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const CssTextField = styled(TextField)({
   // '& label.Mui-focused': {
@@ -132,6 +133,7 @@ const Userprofile = () => {
   });
   const authState = useSelector((state) => state.auth);
   const id = authState.id;
+  const navigate = useNavigate()
 
   const fetchData = async () => {
     try {
@@ -405,6 +407,12 @@ const Userprofile = () => {
           </>
         )}
       </div>
+      <button
+        className='mt-14 ml-20 text-sm font-bold text-primary1 hover:bg-primary1 hover:bg-opacity-10 px-2 py-1 border-2 border-primary1 rounded-md'
+        onClick={() => navigate('/change-password')}
+      >
+        Change password?
+      </button>
     </div>
   );
 };
