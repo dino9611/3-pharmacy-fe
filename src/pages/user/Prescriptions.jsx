@@ -114,6 +114,7 @@ export default function Prescriptions() {
       <input
         ref={fileInput}
         type='file'
+        accept='image/*'
         className='hidden'
         onChange={(e) => {
           if (e.target.files[0]) {
@@ -321,6 +322,7 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
         <input
           ref={fileInput}
           type='file'
+          accept='image/*'
           className='hidden'
           onChange={(e) => {
             if (e.target.files[0]) {

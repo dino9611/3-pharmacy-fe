@@ -57,7 +57,7 @@ export default function RawMaterialsTable() {
   return (
     <>
       <div className='bg-lightblue flex flex-col h-full lg:w-4/5 px-4 w-full absolute right-0 font-poppins'>
-        <div className='flex flex-col h-full justify-around'>
+        <div className='flex flex-col h-full justify-start'>
           <div className='flex m-3'>
             <div className='flex border-2 rounded'>
               <input
@@ -563,6 +563,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
                 ref={fileInput}
                 type='file'
                 className='hidden'
+                accept='image/*'
                 onChange={(e) => {
                   if (e.target.files[0]) {
                     setfile(e.target.files[0]);
@@ -983,6 +984,7 @@ const CreateModal = ({ toggleModal }) => {
               <input
                 ref={fileInput}
                 type='file'
+                accept='image/*'
                 className='hidden'
                 onChange={(e) => {
                   if (e.target.files[0]) {
