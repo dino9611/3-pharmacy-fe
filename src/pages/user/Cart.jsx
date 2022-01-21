@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EmptyCart from './assets/empty-cart.svg';
 import { capitalize } from '../../helpers/capitalize';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
   // global states
@@ -18,6 +19,8 @@ const Cart = () => {
 
   // dispatch
   const dispatch = useDispatch();
+
+  const navigate = useNavigate()
 
   // snackbar for added to cart
   const [snackbar, setSnackbar] = useState(false);
@@ -113,72 +116,86 @@ const Cart = () => {
   const renderCart = () => {
     return cartState.map((val, index) => (
       <div
-        className='font-poppins bg-white shadow-md h-44 phone:h-36 my-5 phone:my-2 rounded-lg flex overflow-hidden'
         key={index + 1}
+        className='flex w-full bg-white shadow-md my-5 phone:my-2 rounded-md p-5 phone:p-2'
       >
-        <div className='w-11/12 p-4 phone:p-4 flex items-center'>
-          <img
-            src={API_URL + val.imagePath}
-            alt={val.productName}
-            className='bg-gray-200 w-40 phone:w-20 h-full object-contain rounded-lg mr-8 phone:mr-4'
-          />
-          <div className='flex items-center phone:flex-col phone:justify-start'>
-            <p className='mr-8 phone:mr-auto phone:mb-1 phone:order-1 phone:text-xs font-bold'>
-              {capitalize(val.productName)}
-            </p>
-            <p className='mr-8 phone:mr-0 phone:hidden'>
+        <img
+          src={API_URL + val.imagePath}
+          alt=""
+          className='w-1/5 h-1/5 mr-4 border-2 rounded-md'
+        />
+        <div className='flex flex-col justify-between w-4/5'>
+          <div className='phone:mb-2'>
+            <div className='flex items-center justify-between'>
+              <p
+                className='mb-2 phone:mb-0 phone:text-sm'
+              >
+                {val.productName}
+              </p>
+              <svg
+                className="w-6 h-6 phone:w-5 phone:h-5 text-primary1 hover:opacity-50 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                onClick={() => deleteFromCart(index)}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            <p
+              className='font-bold phone:text-sm'
+            >
               {toRupiah(val.productPriceRp)}
             </p>
-            <div className='mr-8 phone:mr-auto phone:flex phone:items-center phone:order-3'>
-              {val.qty >= val.stock ? (
-                <button
-                  disabled
-                  className='border-2 border-r-0 bg-white h-10 w-10 phone:h-5 phone:w-5 phone:text-xs cursor-not-allowed'
-                >
-                  +
-                </button>
-              ) : (
-                <button
-                  className='border-2 border-r-0 bg-white hover:bg-peach-dark h-10 w-10 phone:h-5 phone:w-5 phone:text-xs'
-                  onClick={() => editQuantity(index, 'tambah')}
-                >
-                  +
-                </button>
-              )}
-              <input
-                type='text'
-                className='h-10 w-14 phone:h-5 phone:w-7 focus:outline-none text-center phone:text-xs border-2'
-                value={val.qty}
-              />
-              {val.qty <= 1 ? (
-                <button
-                  disabled
-                  className='border-2 border-l-0 bg-white h-10 w-10 phone:h-5 phone:w-5 phone:text-xs cursor-not-allowed'
-                >
-                  -
-                </button>
-              ) : (
-                <button
-                  className='border-2 border-l-0 bg-white hover:bg-peach-dark h-10 w-10 phone:h-5 phone:text-xs phone:w-5'
-                  onClick={() => editQuantity(index, 'kurang')}
-                >
-                  -
-                </button>
-              )}
-            </div>
-            <p className='phone:text-xs phone:order-2 phone:mb-1 font-bold text-primary1'>
-              {toRupiah(val.productPriceRp * val.qty)}
+          </div>
+          <div className='flex phone:flex-col phone:items-start justify-between items-center'>
+            <p
+              className='text-primary1 font-bold phone:text-sm phone:mb-1'
+            >
+              Total = {toRupiah(val.productPriceRp * val.qty)}
             </p>
+            <div className='flex items-center'>
+              <button
+                onClick={() => editQuantity(index, 'kurang')}
+                disabled={(val.qty <= 1 ? true : false)}
+              >
+                <svg
+                  className={"w-6 h-6 rounded-full" +
+                    (val.qty <= 1
+                      ? ' text-gray-300'
+                      : ' text-primary1')
+                  }
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+              <p className='mx-3 '>{val.qty}</p>
+              <button
+                onClick={() => editQuantity(index, 'tambah')}
+                disabled={(val.qty >= val.stock ? true : false)}
+              >
+                <svg
+                  className={"w-6 h-6 rounded-full" +
+                    (val.qty >= val.stock
+                      ? ' text-gray-300'
+                      : ' text-primary1')
+                  }
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          className='bg-primary1 hover:bg-secondary1 w-1/12 phone:w-3/12 text-white phone:text-xs'
-          onClick={() => deleteFromCart(index)}
-        >
-          Remove
-        </button>
       </div>
     ));
+  };
+
+  const renderTotal = () => {
+    let total = 0;
+    cartState.forEach((val) => {
+      total += val.productPriceRp * val.qty;
+    });
+    return total;
   };
 
   return (
@@ -192,8 +209,35 @@ const Cart = () => {
       />
       {cartState.length ? (
         <>
-          <div className='px-20 phone:px-2 pb-28'>{renderCart()}</div>
-          <CartFooter />
+          <div className='px-20 phone:px-2 pb-28 flex phone:flex-col items-start font-poppins'>
+            <div className='w-4/6 phone:w-full mr-4'>
+              {renderCart()}
+            </div>
+            <div
+              className='w-2/6 phone:w-full block phone:hidden bg-white mt-5 rounded-md p-5 shadow-md'
+            >
+              <p
+                className='text-xl font-bold text-primary1'
+              >
+                Total spending
+              </p>
+              <hr className='border-2 my-2' />
+              <p
+                className='mb-2'
+              >
+                {toRupiah(renderTotal())}
+              </p>
+              <button
+                className='bg-primary1 w-full py-2 text-white rounded-md hover:opacity-70'
+                onClick={() => navigate('/checkout')}
+              >
+                Check out
+              </button>
+            </div>
+          </div>
+          <div className='hidden phone:block'>
+            <CartFooter />
+          </div>
         </>
       ) : (
         <div className='text-center pt-28 phone:pt-14'>
