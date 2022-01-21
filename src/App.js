@@ -20,8 +20,8 @@ axios.interceptors.response.use(
   (error) => {
     // console.log(error.response);
     if (error.response.status === 401)
-      // document.location.reload();
-      window.location.reload();
+      // window.location.reload();
+      window.location.assign('/');
     return Promise.reject(error);
   }
 );

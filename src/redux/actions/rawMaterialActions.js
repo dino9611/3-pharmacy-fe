@@ -129,7 +129,7 @@ export const getRawMaterialsRecord = (
       } catch (error) {
         handleFail !== undefined && handleFail(error);
       } finally {
-        handleFinally !== undefined && handleFinally(data.result.length);
+        handleFinally !== undefined && handleFinally(data?.result.length);
       }
     }, DEBOUNCE_DELAY);
   };

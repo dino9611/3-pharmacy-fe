@@ -220,7 +220,10 @@ export default function Prescriptions() {
             <button
               className='h-10 btn btn-primary flex'
               onClick={() => {
-                if (!isLogin) toast.error('Login to upload prescription');
+                if (!isLogin) {
+                  toast.error('Login to upload prescription');
+                  return;
+                }
                 dispatch(
                   uploadPrescription(file, {
                     handleSuccess: () => {
@@ -232,6 +235,8 @@ export default function Prescriptions() {
                       setfile(null);
                       dispatch(getPrescriptions());
                     },
+                    handleFail: (err) =>
+                      toast.error(err.response?.data.message),
                   })
                 );
               }}
