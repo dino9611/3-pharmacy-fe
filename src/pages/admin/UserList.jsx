@@ -250,7 +250,7 @@ const UserList = () => {
   }, [dSearch, rowsPerPage, page]);
 
   return (
-    <div className='ml-64 px-8 py-6 font-poppins min-h-screen'>
+    <div className='bg-lightblue absolute w-full lg:w-4/5 right-0 px-8 py-6 font-poppins min-h-screen'>
       {detailModal()}
       <input
         type='text'

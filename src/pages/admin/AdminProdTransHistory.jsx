@@ -447,7 +447,7 @@ const AdminProdTransHistory = () => {
   }, [filter, rowsPerPage, page, timeRange, dispatch]);
 
   return (
-    <div className='ml-64 px-8 min-h-screen'>
+    <div className='bg-lightblue absolute w-full lg:w-4/5 right-0 px-8 min-h-screen'>
       {modalDetail()}
       <div class='poppins pt-5'>
         <select
