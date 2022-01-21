@@ -162,6 +162,11 @@ const Products = () => {
         {
           qty: 1,
           product_id: paginatedProducts[index].id,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
         }
       );
       dispatch({ type: 'setcart', payload: res.data });
