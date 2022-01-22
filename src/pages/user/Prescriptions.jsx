@@ -147,14 +147,14 @@ export default function Prescriptions() {
               onChange={(e) => setfilter(e.target.value)}
               className='h-14 shadow-md phone:h-10 phone:text-xs mr-2 bg-white px-4 rounded-md focus:outline-none appearance-none w-full phone:mx-auto phone:mb-2'
             >
-              <option value='initial'>processing image</option>
-              <option value='waitingPayment'>waiting for payment</option>
-              <option value='waitPaymentApproval'>processing payment</option>
-              <option value='paymentAcc'>payment accepted</option>
-              <option value='processing'>processing order</option>
-              <option value='otw'>on delivery</option>
-              <option value='delivered'>delivered</option>
-              <option value='failed'>rejected or expired</option>
+              <option value='initial'>Processing image</option>
+              <option value='waitingPayment'>Waiting for payment</option>
+              <option value='waitPaymentApproval'>Processing payment</option>
+              <option value='paymentAcc'>Payment accepted</option>
+              <option value='processing'>Processing order</option>
+              <option value='otw'>On delivery</option>
+              <option value='delivered'>Delivered</option>
+              <option value='failed'>Rejected or expired</option>
             </select>
           </div>
         </div>
