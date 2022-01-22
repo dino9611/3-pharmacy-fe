@@ -10,14 +10,16 @@ import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import Products from './Products';
 import UserProfile from './user/UserProfile';
 import Cart from './user/Cart';
-import ProductTransactionHistory from './user/ProductTransactionHistory';
-// import UserPrescription from './user/UserPrescription';
+import UserTransactions from './user/UserTransactions';
 import Prescriptions from './user/Prescriptions';
 import CheckOut from './user/CheckOut';
 import UploadPayment from './user/UploadPayment';
 import ChangePassFromProfile from './user/ChangePassFromProfile';
+import { useSelector } from 'react-redux';
 
 const UserMenu = () => {
+  const role = useSelector((state) => state.auth.role);
+
   return (
     <div>
       <Header />
@@ -31,11 +33,16 @@ const UserMenu = () => {
 
         <Route path='/cart' element={<Cart />} />
 
-        <Route path={'/order-list'} element={<ProductTransactionHistory />} />
-
-        <Route path={'/checkout'} element={<CheckOut />} />
-
-        <Route path={'/uploadpayment/:order_id'} element={<UploadPayment />} />
+        {role === 'user' && (
+          <>
+            <Route path={'/order-list/*'} element={<UserTransactions />} />
+            <Route path={'/checkout'} element={<CheckOut />} />
+            <Route
+              path={'/uploadpayment/:order_id'}
+              element={<UploadPayment />}
+            />
+          </>
+        )}
 
         <Route path={'*'} element={<Navigate to={'/404'} />} />
 
