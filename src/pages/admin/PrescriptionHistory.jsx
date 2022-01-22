@@ -40,9 +40,9 @@ const StyledTabs = styled((props) => (
 });
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
   ({ theme }) => ({
-    color: '#fff',
+    color: 'black',
     '&.Mui-selected': {
-      color: '#fff',
+      color: 'black',
     },
     '&.Mui-focusVisible': {
       backgroundColor: 'rgba(100, 95, 228, 0.32)',
@@ -250,7 +250,7 @@ const PrescriptionHistory = () => {
   };
 
   return (
-    <div className='relative flex flex-col min-w-0 break-words w-full shadow-lg rounded'>
+    <div className='bg-lightblue relative flex flex-col min-w-0 break-words w-full shadow-lg rounded'>
       {dialogUpdate()}
       <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <StyledTabs
@@ -258,7 +258,7 @@ const PrescriptionHistory = () => {
           onChange={handleChange}
           variant='fullWidth'
           scrollButtons='auto'
-          sx={{ backgroundColor: '#38a3a5' }}
+          sx={{ backgroundColor: '#ceeaeb', p:1 }}
         >
           <StyledTab value={0} label='Image Rejected' />
           <StyledTab value={1} label='Rejected' />
@@ -266,7 +266,7 @@ const PrescriptionHistory = () => {
           <StyledTab value={3} label='Delivered' />
         </StyledTabs>
       </Box>
-      <TableContainer component={Paper} sx={{ mt: 3 }}>
+      <TableContainer component={Paper} sx={{ mt: 1, p:1, backgroundColor: '#ceeaeb' }}>
         <Table sx={{ minWidth: 650 }} size='medium' aria-label='a dense table'>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#22577a' }}>
