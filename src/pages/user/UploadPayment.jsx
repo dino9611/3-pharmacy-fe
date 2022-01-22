@@ -40,6 +40,7 @@ const UploadPayment = () => {
         formData,
         {
           headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
             'Content-Type': 'multipart/form-data',
           },
         }
@@ -61,7 +62,12 @@ const UploadPayment = () => {
     const getCheckout = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/getcheckout/${order_id}`
+          `${API_URL}/transaction/getcheckout/${order_id}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         setCheckout(res.data);
       } catch (error) {

@@ -316,7 +316,7 @@ const ProductTransactionHistory = () => {
           {val.status === 'paymentRej' ? (
             <Link to={`/uploadpayment/${val.id}`}>
               <button className=' text-sm phone:text-xs text-white font-bold bg-primary1 hover:bg-lightblue px-2 py-2 rounded-lg'>
-                Resent Payment Proof
+                Resend Payment Proof
               </button>
             </Link>
           ) : (
