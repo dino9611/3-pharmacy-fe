@@ -54,8 +54,10 @@ export default function RawMaterialsRecordTable() {
         }
       )
     );
-    return () => dispatch(resetState('rawMaterials'));
   }, [dispatch, page, rowsPerPage, date, search]);
+  React.useEffect(() => {
+    return () => dispatch(resetState('rawMaterialsRecord'));
+  }, [dispatch]);
   // const emptyRows = rowsPerPage - rows.length;
   const emptyRows = rowsPerPage - currRows.length;
 

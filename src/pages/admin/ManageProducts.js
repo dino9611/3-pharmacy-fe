@@ -55,8 +55,10 @@ export default function RawMaterialsTable() {
         }
       )
     );
-    return () => dispatch(resetStateProduct('products'));
   }, [dispatch, page, rowsPerPage, search]);
+  React.useEffect(() => {
+    return () => dispatch(resetStateProduct('products'));
+  }, [dispatch]);
   const emptyRows = rowsPerPage - currRows.length;
 
   return (
