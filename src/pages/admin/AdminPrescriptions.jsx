@@ -106,7 +106,7 @@ const AdminPrescriptions = () => {
     setindexTab(newValue);
     setStatus(dataStatus[newValue].status);
     setnextStatus(dataStatus[newValue + 1].status);
-    setPage(0)
+    setPage(0);
   };
   const offset = page * rowsPerPage;
   //? Fetch prescription data
@@ -120,7 +120,7 @@ const AdminPrescriptions = () => {
       });
       setcustomData(results.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error(error || 'Server Error', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
@@ -134,19 +134,19 @@ const AdminPrescriptions = () => {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      })
-      setprescriptionLength(result.data[0].prescription_length)
-      console.log(result.data[0].prescription_length)
+      });
+      setprescriptionLength(result.data[0].prescription_length);
+      console.log(result.data[0].prescription_length);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error(error || 'Server Error', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
       });
     }
-  }
+  };
   useEffect(() => {
-    getLength()
+    getLength();
     setRowsPerPage(rowsPerPage);
     setPage(page);
     getCustom();
@@ -206,11 +206,11 @@ const AdminPrescriptions = () => {
             getCustom();
             Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
           })
-          .catch(() => {
+          .catch((err) => {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: err.response?.data.message || 'Something went wrong!',
             });
           });
       }
@@ -304,7 +304,7 @@ const AdminPrescriptions = () => {
         },
       });
       getCustom();
-      toast.success("Commited", {
+      toast.success('Commited', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
       });
@@ -656,15 +656,15 @@ const AdminPrescriptions = () => {
           {renderBody()}
         </Table>
         <TablePagination
-            component='div'
-            count={prescriptionLength}
-            rowsPerPageOptions={[5, 10, 15]}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{ color: 'white', backgroundColor: '#22577A' }}
-          />
+          component='div'
+          count={prescriptionLength}
+          rowsPerPageOptions={[5, 10, 15]}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{ color: 'white', backgroundColor: '#22577A' }}
+        />
       </TableContainer>
     </div>
   );

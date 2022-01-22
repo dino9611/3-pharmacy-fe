@@ -150,7 +150,7 @@ export default function Prescriptions() {
               <img
                 src={EmptyPrescriptions}
                 alt='EmptyPrescriptions'
-                className='w-9/12 mx-auto mb-6'
+                className='w-3/5 phone:w-9/12 mx-auto mb-6'
               />
               <p className='text-lg phone:text-sm font-bold text-primary1 text-center'>
                 {isLogin ? 'No results' : 'Login to view your history'}
