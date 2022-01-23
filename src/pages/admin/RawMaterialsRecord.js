@@ -115,16 +115,14 @@ export default function RawMaterialsRecordTable() {
             label: 'Inventory Change',
             className: '',
             format: (row) =>
-              `${row.inventoryChange < 0 ? '' : '+'}${
+              `${row.inventoryChange < 0 ? '-' : '+'}${
                 row.inventoryChange < 0
                   ? Math.ceil(row.inventoryChange / row.unitPerBottle)
                   : Math.floor(row.inventoryChange / row.unitPerBottle)
-              } bottles ${(
-                (row.inventoryChange % row.unitPerBottle) /
-                1000
-              ).toFixed(3)} ${
-                row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''
-              }`,
+              } bottles ${
+                (row.inventoryChange < 0 ? -1 : 1) *
+                ((row.inventoryChange % row.unitPerBottle) / 1000).toFixed(3)
+              } ${row.unit === 'mg' ? 'gr' : row.unit === 'ml' ? 'liter' : ''}`,
           },
           {
             label: 'Unit Per Bottle',
