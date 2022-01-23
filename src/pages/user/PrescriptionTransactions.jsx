@@ -262,7 +262,9 @@ const DetailsModal = ({ status, details, detailsIsOpen, setdetailsIsOpen }) => {
                   <div key={index} className=' flex text-center mt-1'>
                     <div className='flex-1'>{val.medicineName}</div>
                     <div className='flex-1'>{val.qty}</div>
-                    <div className='flex-1'>{val.priceRp * (1 + 2 / 10)}</div>
+                    <div className='flex-1'>
+                      {(val.priceRp * (1 + 2 / 10)).toFixed(2)}
+                    </div>
                   </div>
                 );
               })}
