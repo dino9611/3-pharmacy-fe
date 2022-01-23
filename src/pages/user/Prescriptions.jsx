@@ -39,12 +39,14 @@ export default function Prescriptions() {
             // className='object-contain phone:h-52 phone:w-11/12 border-dashed border-4 border-gray-700 h-96 w-full bg-gray-300 rounded-lg flex justify-center items-center text-gray-600 cursor-pointer'
             className='p-1 object-contain h-96 phone:h-72 w-3/5 phone:w-11/12 border-dashed border-2 border-black rounded-md bg-black flex justify-center items-center text-gray-600 cursor-pointer bg-opacity-20'
             k
+            style={{ maxWidth: '600px' }}
             src={URL.createObjectURL(file)}
             alt={file}
           ></img>
         ) : (
           <div
             onClick={() => fileInput.current.click()}
+            style={{ maxWidth: '600px' }}
             className='object-contain phone:h-72 w-3/5 phone:w-11/12 border-dashed border-2 border-black rounded-md h-96 bg-black flex justify-center items-center text-gray-600 cursor-pointer bg-opacity-20'
           >
             <svg
