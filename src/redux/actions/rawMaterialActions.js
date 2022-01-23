@@ -144,14 +144,15 @@ export const editRawMaterial = (input, handleResult = {}) => {
 
     editRawMaterial_timeoutID = setTimeout(async () => {
       try {
-        const { index } = input;
+        // const { index } = input;
         delete input.index;
         await axios.patch(API_URL + `/raw_material/${input.id}`, input, {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         });
-        dispatch(getRawMaterial(input.id, index));
+        // dispatch(getRawMaterial(input.id, index));
+        dispatch(getRawMaterials());
 
         handleSuccess !== undefined && handleSuccess();
       } catch (error) {
