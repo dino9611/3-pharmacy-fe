@@ -1,0 +1,17 @@
+.top-prof {
+    /* background: linear-gradient(to bottom, #38A3A5, #38A3A5 50%, #ceeaeb 50% ); */
+    background: linear-gradient(to bottom, #22577a, #22577a 50%, #ceeaeb 50% );
+    /* background: linear-gradient(to bottom, #00f70d, #00f70d 50%, #8b00fd 50% ); */
+}
+.left-boxx {
+    border-radius: 50px;
+    background: linear-gradient(145deg, #dcfafb, #b9d3d4);
+    box-shadow:  20px 20px 60px #afc7c8,
+                -20px -20px 60px #edffff;
+}
+.right-boxx {
+    border-radius: 50px;
+    background: #ceeaeb;
+    box-shadow: inset 20px 20px 60px #afc7c8,
+                inset -20px -20px 60px #edffff;
+}

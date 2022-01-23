@@ -1,5 +1,10 @@
 import React from 'react';
 import { createPopper } from '@popperjs/core';
+// ? mui
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 // ? hooks
 import { useOnClickOutside } from '../../hooks';
 // ? components
@@ -12,12 +17,14 @@ export default function AdminTable({
   maxPage,
   cols,
   rows,
+  rowsPerPage,
   emptyRows,
-  actions: { setPage },
+  actions: { setPage, setRowsPerPage },
   CreateModal,
   EditModal,
   DeleteModal,
   DetailsModal,
+  notFound,
 }) {
   const [createIsOpen, setcreateIsOpen] = React.useState(false);
   const [editIsOpen, seteditIsOpen] = React.useState(false);
@@ -78,8 +85,8 @@ export default function AdminTable({
           />
         </ModalOverlay>
       )}
-      <div className='relative flex flex-col min-w-0 break-words w-full shadow-lg rounded bg-white my-1'>
-        <div className='rounded-t mb-0 px-4 py-3 bg-primary1 text-white border-black border border-solid'>
+      <div className='relative flex flex-col min-w-0 break-words w-full shadow-lg rounded my-1'>
+        <div className='rounded-t mb-0 px-4 py-3 bg-primary1 text-white'>
           <div className='flex flex-wrap items-center'>
             <div className='relative w-full px-4 max-w-full flex justify-between'>
               <h3 className='text-base font-semibold self-center'>{name}</h3>
@@ -152,10 +159,15 @@ export default function AdminTable({
                   )}
                 </tr>
               ))}
-              {emptyRows > 0 && renderEmptyRows(emptyRows, cols)}
+              {emptyRows > 0 && renderEmptyRows(emptyRows, cols, notFound)}
             </tbody>
           </table>
-          <div className='flex justify-end rounded-b mb-0 px-12 py-3 bg-primary1 text-white border-black border border-solid'>
+          <div className='flex justify-end items-center rounded-b mb-0 px-12 py-3 bg-primary1 text-white '>
+            <p className='text-sm'>Rows per page</p>
+            <BasicSelect
+              value={rowsPerPage}
+              handleChange={(e) => setRowsPerPage(e.target.value)}
+            />
             <button
               onClick={() => setPage(page - 1)}
               className={`mx-4 ${
@@ -198,14 +210,28 @@ export default function AdminTable({
   );
 }
 
-const renderEmptyRows = (n, cols) => {
+const renderEmptyRows = (n, cols, notFound) => {
   let out = [];
-  for (let i = 0; i < n; i++)
+  for (let i = 0; i < n; i++) {
+    if (notFound && !i) {
+      out.push(
+        <tr key={i} className='h-12 bg-white'>
+          <td
+            colSpan={cols.length}
+            className='text-center font-semibold text-lg'
+          >
+            No Data Found!
+          </td>
+        </tr>
+      );
+      continue;
+    }
     out.push(
       <tr key={i} className='h-12 bg-white'>
         <td colSpan={cols.length}></td>
       </tr>
     );
+  }
   return out;
 };
 
@@ -314,3 +340,30 @@ const AdminTableDropdown = ({
     </>
   );
 };
+
+function BasicSelect({ value, handleChange }) {
+  return (
+    <Box sx={{ mx: 2, width: 60, height: 20 }}>
+      <FormControl fullWidth sx={{ width: 60, height: 20 }}>
+        {/* <InputLabel id='demo-simple-select-label'>Age</InputLabel> */}
+        <Select
+          sx={{
+            width: 70,
+            height: 20,
+            color: 'white',
+            fontWeight: '600',
+            fontFamily: `'Poppins', sans-serif`,
+          }}
+          // labelId='demo-simple-select-label'
+          // id='demo-simple-select'
+          value={value}
+          onChange={handleChange}
+        >
+          <MenuItem value={6}>6</MenuItem>
+          <MenuItem value={12}>12</MenuItem>
+          <MenuItem value={18}>18</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  );
+}

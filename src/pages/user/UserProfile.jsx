@@ -16,6 +16,14 @@ import { API_URL } from '../../constants/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import "./styles/Userprofile.css"
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import AlternateEmailOutlinedIcon from '@mui/icons-material/AlternateEmailOutlined';
+import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
+import TransgenderOutlinedIcon from '@mui/icons-material/TransgenderOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import CakeOutlinedIcon from '@mui/icons-material/CakeOutlined';
 
 const CssTextField = styled(TextField)({
   // '& label.Mui-focused': {
@@ -132,6 +140,7 @@ const Userprofile = () => {
   });
   const authState = useSelector((state) => state.auth);
   const id = authState.id;
+  const navigate = useNavigate()
 
   const fetchData = async () => {
     try {
@@ -229,17 +238,17 @@ const Userprofile = () => {
 
   return (
     <div className='h-screen bg-lightblue font-poppins'>
-      <div className='top-prof bg-primary1 h-52 flex items-center'>
+      <div className='top-prof bg-primary1 h-40 flex items-center'>
         <div className='pl-40'>
           <Avatar
             // alt='Aemy Sharp'
             src={API_URL + user?.avatar}
-            sx={{ width: 140, height: 140 }}
+            sx={{ width: 140, height: 140, border: 3, borderColor: 'white' }}
           />
         </div>
         <div className='pl-10'>
-          <div className='text-4xl mb-1 tracking-wide text-white font-semibold'>
-            {user?.username ? user?.username : 'None'}
+          <div className='text-4xl mb-14 tracking-wide text-white font-semibold'>
+            <AlternateEmailOutlinedIcon sx={{fontSize: 35}} />{user?.username ? user?.username : 'None'}
           </div>
           <div className={editMode ? 'flex' : 'hidden'}>
             <label htmlFor='contained-button-file'>
@@ -254,14 +263,11 @@ const Userprofile = () => {
                 variant='contained'
                 component='span'
                 size='small'
-                sx={{ mt: 2, mr: 3 }}
+                sx={{ mr: 3 }}
               >
                 Upload Profile Pic
               </ColorButton>
             </label>
-            {/* <ColorButton variant='contained' sx={{ mt: 2 }} size='small'>
-              Remove
-            </ColorButton> */}
           </div>
         </div>
       </div>
@@ -273,138 +279,134 @@ const Userprofile = () => {
           label={editMode ? 'Save' : 'Edit Mode'}
         />
       </div>
-      <div className='flex justify-evenly w-full'>
         {editMode ? (
           <>
-            <div className='w-2/5 '>
-              <div>
-                <CssTextField
-                  defaultValue={user?.firstName}
-                  name='firstName'
-                  onChange={inputHandler}
-                  fullWidth
-                  label='First Name'
-                  id='custom-css-outlined-input'
-                />
-              </div>
-              <div className='mt-8'>
-                <CssTextField
-                  name='address'
-                  defaultValue={user?.address}
-                  onChange={inputHandler}
-                  fullWidth
-                  multiline
-                  label='Address'
-                  id='custom-css-outlined-input'
-                />
-              </div>
-              <div className='mt-8'>
-                <CssFormControl fullWidth>
-                  <InputLabel id='demo-simple-select-standard-label'>
-                    Gender
-                  </InputLabel>
-                  <Select
-                    labelId='demo-simple-select-standard-label'
-                    id='demo-simple-select-standard'
-                    name='gender'
-                    defaultValue=''
+            <div className='flex justify-evenly w-full'>
+              <div className='w-2/5 '>
+                <div>
+                  <CssTextField
+                    defaultValue={user?.firstName}
+                    name='firstName'
                     onChange={inputHandler}
-                    label='Gender'
-                  >
-                    <MenuItem value={'male'}>Male</MenuItem>
-                    <MenuItem value={'female'}>Female</MenuItem>
-                    <MenuItem value={'others'}>Others</MenuItem>
-                  </Select>
-                </CssFormControl>
-              </div>
-            </div>
-            <div className='w-2/5 '>
-              <div>
-                <CssTextField
-                  defaultValue={user?.lastName}
-                  name='lastName'
-                  onChange={inputHandler}
-                  fullWidth
-                  label='Last Name'
-                  id='custom-css-outlined-input'
-                />
-              </div>
-              <div className='mt-8'>
-                <CssTextField
-                  name='email'
-                  defaultValue={user?.email}
-                  onChange={inputHandler}
-                  fullWidth
-                  label='Email'
-                  id='custom-css-outlined-input'
-                />
-              </div>
-              <div className='mt-8'>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label='Pick Date'
-                    // views={['year', 'month', 'day']}
-                    inputFormat='MM/dd/yyyy'
-                    // type="date"
-                    value={date}
-                    onChange={(newValue) => {
-                      setDate(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
+                    fullWidth
+                    label='First Name'
+                    id='custom-css-outlined-input'
                   />
-                </LocalizationProvider>
+                </div>
+                <div className='mt-8'>
+                  <CssTextField
+                    name='address'
+                    defaultValue={user?.address}
+                    onChange={inputHandler}
+                    fullWidth
+                    multiline
+                    label='Address'
+                    id='custom-css-outlined-input'
+                  />
+                </div>
+                <div className='mt-8'>
+                  <CssFormControl fullWidth>
+                    <InputLabel id='demo-simple-select-standard-label'>
+                      Gender
+                    </InputLabel>
+                    <Select
+                      labelId='demo-simple-select-standard-label'
+                      id='demo-simple-select-standard'
+                      name='gender'
+                      defaultValue=''
+                      onChange={inputHandler}
+                      label='Gender'
+                    >
+                      <MenuItem value={'male'}>Male</MenuItem>
+                      <MenuItem value={'female'}>Female</MenuItem>
+                      <MenuItem value={'others'}>Others</MenuItem>
+                    </Select>
+                  </CssFormControl>
+                </div>
+              </div>
+              <div className='w-2/5 '>
+                <div>
+                  <CssTextField
+                    defaultValue={user?.lastName}
+                    name='lastName'
+                    onChange={inputHandler}
+                    fullWidth
+                    label='Last Name'
+                    id='custom-css-outlined-input'
+                  />
+                </div>
+                <div className='mt-8'>
+                  <CssTextField
+                    name='email'
+                    defaultValue={user?.email}
+                    onChange={inputHandler}
+                    fullWidth
+                    label='Email'
+                    id='custom-css-outlined-input'
+                  />
+                </div>
+                <div className='mt-8'>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label='Pick Date'
+                      // views={['year', 'month', 'day']}
+                      inputFormat='MM/dd/yyyy'
+                      // type="date"
+                      value={date}
+                      onChange={(newValue) => {
+                        setDate(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                </div>
               </div>
             </div>
           </>
         ) : (
           <>
-            <div className='w-2/5 '>
-              <div>
-                <div className='text-xl font-light tracking-wide'>
-                  First Name
+            <div className='flex justify-around w-full  '>
+              <div className='w-2/5 p-2  h-60 text-center left-boxx'>
+                <div className='mt-6 flex items-center '>
+                  <BadgeOutlinedIcon sx={{fontSize: 40}} />
+                  <div className='text-5xl font-medium tracking-wide break-words ml-4 '> 
+                    {user?.firstName} {user?.lastName}
+                  </div>
                 </div>
-                <div className='text-lg break-words font-medium pl-5'>
-                  {user?.firstName}
+                <div className='pt-5 flex items-center '>
+                  <MailOutlinedIcon sx={{fontSize: 40}} />
+                  <div className='text-3xl font-light ml-4'>{user?.email}</div>
                 </div>
-              </div>
-              <div className='pt-5'>
-                <div className='text-xl font-light tracking-wide'>Address</div>
-                <div className='text-lg break-words font-medium pl-5'>
-                  {user?.address ? user?.address : 'None'}
-                </div>
-              </div>
-              <div className='pt-5'>
-                <div className='text-xl font-light tracking-wide'>Gender</div>
-                <div className='text-lg font-medium pl-5'>
-                  {user?.gender ? user?.gender : 'None'}
+                <div className='pt-5 flex items-center capitalize '>
+                  <TransgenderOutlinedIcon sx={{fontSize: 40}} />
+                  <div className='text-3xl font-medium ml-4'>
+                    {user?.gender ? user?.gender : 'None'}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className='w-2/5 '>
-              <div>
-                <div className='text-xl font-light tracking-wide'>
-                  Last Name
+              <div className='w-2/5 p-2 h-60 bg-gray-400 right-boxx'>
+                <div className='mt-8 flex items-center'>
+                  <HomeOutlinedIcon sx={{fontSize: 40}} />
+                  <div className='text-xl break-words font-light ml-4'>
+                    {user?.address ? user?.address : 'None'}
+                  </div>
                 </div>
-                <div className='text-lg break-words font-medium pl-5'>
-                  {user?.lastName}
+                <div className='pt-5 flex items-center'>
+                  <CakeOutlinedIcon sx={{fontSize: 40}} />
+                  <div className='text-2xl font-light ml-4'>
+                    {user?.birthdate ? user?.birthdate.split('T')[0] : 'None'}
+                  </div>
                 </div>
-              </div>
-              <div className='pt-5'>
-                <div className='text-xl font-light tracking-wide'>Email</div>
-                <div className='text-lg font-medium pl-5'>{user?.email}</div>
-              </div>
-              <div className='pt-5'>
-                <div className='text-xl font-light tracking-wide'>
-                  Birth Date
-                </div>
-                <div className='text-lg font-medium pl-5'>
-                  {user?.birthdate ? user?.birthdate.split('T')[0] : 'None'}
-                </div>
+                <button
+                  className='ml-14 mt-5 text-sm font-bold text-primary1 hover:bg-primary1 hover:bg-opacity-10 px-2 py-1 border-2 border-primary1 rounded-md'
+                  onClick={() => navigate('/change-password')}
+                >
+                  Change password?
+                </button>
               </div>
             </div>
           </>
         )}
-      </div>
     </div>
   );
 };

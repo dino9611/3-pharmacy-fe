@@ -94,6 +94,11 @@ const AdminProdTransHistory = () => {
           {
             type: action,
             limit: rowsPerPage,
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
           }
         );
         dispatch({ type: 'setadminorder', payload: res.data });
@@ -117,11 +122,21 @@ const AdminProdTransHistory = () => {
   const modalHandler = async (id) => {
     try {
       let historyRes = await axios.get(
-        `${API_URL}/transaction/historydetails/${id}`
+        `${API_URL}/transaction/historydetails/${id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setHistorydetails(historyRes.data);
       let boughtRes = await axios.get(
-        `${API_URL}/transaction/boughtproducts/${id}`
+        `${API_URL}/transaction/boughtproducts/${id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
       );
       setBoughtProducts(boughtRes.data);
       setOpen(!open);
@@ -389,7 +404,12 @@ const AdminProdTransHistory = () => {
     const getOrderLength = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/adminorderlength?filter=${filter}&range=${timeRange}`
+          `${API_URL}/transaction/adminorderlength?filter=${filter}&range=${timeRange}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         setOrderLength(res.data[0].order_length);
       } catch (error) {
@@ -409,7 +429,12 @@ const AdminProdTransHistory = () => {
     const getOrder = async () => {
       try {
         let res = await axios.get(
-          `${API_URL}/transaction/admingetorder?filter=${filter}&limit=${rowsPerPage}&offset=${offset}&range=${timeRange}`
+          `${API_URL}/transaction/admingetorder?filter=${filter}&limit=${rowsPerPage}&offset=${offset}&range=${timeRange}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
         );
         dispatch({ type: 'setadminorder', payload: res.data });
       } catch (error) {
@@ -422,7 +447,7 @@ const AdminProdTransHistory = () => {
   }, [filter, rowsPerPage, page, timeRange, dispatch]);
 
   return (
-    <div className='ml-64 px-8 min-h-screen'>
+    <div className='bg-lightblue absolute w-full lg:w-4/5 right-0 px-8 min-h-screen'>
       {modalDetail()}
       <div class='poppins pt-5'>
         <select

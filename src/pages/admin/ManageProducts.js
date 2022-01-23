@@ -28,93 +28,105 @@ export default function RawMaterialsTable() {
   const dispatch = useDispatch();
   // * pagination states
   const rows = useSelector((state) => state.productReducers.products);
-  const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(8);
-  const rowsPerPage = 8;
 
   const [search, setsearch] = React.useState('');
   const handleSearchChange = useDebounce((e) => setsearch(e.target.value), 700);
+
+  const maxPage = 5;
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
+  // * modal states
+  const [currRows, setcurrRows] = React.useState([]);
+  React.useEffect(() => {
+    setcurrRows(
+      rows.filter(
+        (el, i) => rowsPerPage * page <= i && i < rowsPerPage * (page + 1)
+      )
+    );
+  }, [page, rowsPerPage, rows]);
   // * modal states
   React.useEffect(() => {
     dispatch(
       getProducts(
-        { page: page + 1, limit: rowsPerPage, search },
+        { page: 1, limit: rowsPerPage * maxPage, search },
         {
           handleFail: (err) =>
             toast.error(err.response?.data.message || 'server error'),
         }
       )
     );
-    return () => dispatch(resetStateProduct('products'));
   }, [dispatch, page, rowsPerPage, search]);
-  const emptyRows = rowsPerPage - rows.length;
-
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRowsPerPage(parseInt(event.target.value, 10));
-  //   setPage(0);
-  // };
+  React.useEffect(() => {
+    return () => dispatch(resetStateProduct('products'));
+  }, [dispatch]);
+  const emptyRows = rowsPerPage - currRows.length;
 
   return (
     <>
-      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 px-4 w-full absolute right-0 font-poppins'>
-        <div className='flex flex-col h-full justify-between'>
-          <div className='flex m-3'>
-            <div className='flex border-2 rounded'>
-              <input
-                type='text'
-                className='px-4 py-2 w-80'
-                placeholder='Search Products...'
-                onChange={handleSearchChange}
-              />
-              <div className='flex items-center justify-center px-4 border-l bg-white'>
-                <svg
-                  className='w-6 h-6 text-gray-600'
-                  fill='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
-                </svg>
+      <div className='bg-lightblue flex flex-col h-full lg:w-4/5 w-full absolute right-0 font-poppins'>
+        <div className='px-3 w-full bg-lightblue'>
+          <div className='flex flex-col h-full justify-start'>
+            <div className='flex m-3'>
+              <div className='flex border-2 rounded'>
+                <input
+                  type='text'
+                  className='px-4 py-2 w-80'
+                  placeholder='Search Products...'
+                  onChange={handleSearchChange}
+                />
+                <div className='flex items-center justify-center px-4 border-l bg-white'>
+                  <svg
+                    className='w-6 h-6 text-gray-600'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                  >
+                    <path d='M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z' />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          <AdminTable
-            name='Products'
-            page={page}
-            maxPage={5}
-            cols={[
-              {
-                label: 'Product Name',
-                className: 'font-semibold',
-                format: (row) => row.productName,
-              },
-              {
-                label: 'Price',
-                className: '',
-                format: (row) =>
-                  `Rp ${(
-                    row.productProfitRp + row.productPriceRp
-                  ).toLocaleString('en-US', {
-                    maximumFractionDigits: 2,
-                  })}`,
-              },
-              {
-                label: 'Stock',
-                className: '',
-                format: (row) => row.stock,
-              },
-              { label: '' },
-            ]}
-            rows={rows}
-            emptyRows={emptyRows}
-            actions={{
-              setPage,
-            }}
-            CreateModal={CreateModal}
-            EditModal={EditModal}
-            // DetailsModal={DetailsModal}
-            DeleteModal={DeleteModal}
-          />
+            <AdminTable
+              name='Products'
+              page={page}
+              maxPage={Math.ceil(rows.length / rowsPerPage)}
+              cols={[
+                {
+                  label: 'Product Name',
+                  className: 'font-semibold',
+                  format: (row) => row.productName,
+                },
+                {
+                  label: 'Price',
+                  className: '',
+                  format: (row) =>
+                    `Rp ${(
+                      row.productProfitRp + row.productPriceRp
+                    ).toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })}`,
+                },
+                {
+                  label: 'Stock',
+                  className: '',
+                  format: (row) => row.stock,
+                },
+                { label: '' },
+              ]}
+              rows={currRows}
+              emptyRows={emptyRows}
+              rowsPerPage={rowsPerPage}
+              actions={{
+                setPage,
+                setRowsPerPage,
+              }}
+              notFound={!rows.length}
+              CreateModal={CreateModal}
+              EditModal={EditModal}
+              // DetailsModal={DetailsModal}
+              DeleteModal={DeleteModal}
+            />
+          </div>
         </div>
       </div>
     </>
@@ -563,6 +575,7 @@ const EditModal = ({ toggleModal, initialValues }) => {
                 ref={fileInput}
                 type='file'
                 className='hidden'
+                accept='image/*'
                 onChange={(e) => {
                   if (e.target.files[0]) {
                     setfile(e.target.files[0]);
@@ -983,6 +996,7 @@ const CreateModal = ({ toggleModal }) => {
               <input
                 ref={fileInput}
                 type='file'
+                accept='image/*'
                 className='hidden'
                 onChange={(e) => {
                   if (e.target.files[0]) {

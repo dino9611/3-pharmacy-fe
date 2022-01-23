@@ -127,6 +127,7 @@ const CreatePrescription = ({
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
       });
+      setdataPrescription(initialInputVal);
       handleClosetest();
     } catch (error) {
       console.log(error);
