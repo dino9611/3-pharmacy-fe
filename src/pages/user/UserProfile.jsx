@@ -366,7 +366,7 @@ const Userprofile = () => {
         ) : (
           <>
             <div className='flex justify-around w-full  '>
-              <div className='w-2/5 p-2  h-60 text-center left-boxx'>
+              <div className='w-2/5 p-2  h-80 text-center left-boxx'>
                 <div className='mt-6 flex items-center '>
                   <BadgeOutlinedIcon sx={{fontSize: 40}} />
                   <div className='text-5xl font-medium tracking-wide break-words ml-4 '> 
@@ -384,7 +384,7 @@ const Userprofile = () => {
                   </div>
                 </div>
               </div>
-              <div className='w-2/5 p-2 h-60 bg-gray-400 right-boxx'>
+              <div className='w-2/5 p-2 h-80 bg-gray-400 right-boxx'>
                 <div className='mt-8 flex items-center'>
                   <HomeOutlinedIcon sx={{fontSize: 40}} />
                   <div className='text-xl break-words font-light ml-4'>
